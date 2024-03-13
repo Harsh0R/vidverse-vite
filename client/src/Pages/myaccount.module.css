@@ -1,0 +1,110 @@
+/* Assuming these styles will be added to a CSS module or a global stylesheet */
+
+.myAccountContainer {
+  /* width: 100%; */
+  color: #ffffff;
+  /* Light text color */
+  padding: 5px;
+  /* Padding around the content */
+  margin-top: 80px;
+}
+
+.heading1 {
+  color: #24f1c5;
+}
+
+.heading {
+  text-align: start;
+  color: #7cffe3;
+}
+
+.inputGroup {
+  margin: 10px;
+  display: flex;
+}
+
+.inputGroup div {
+  margin-right: 10px;
+  display: flex;
+}
+
+.inputGroup input {
+  background-color: transparent;
+  display: flex;
+  color: white;
+}
+
+.uploadVidBlock {
+  padding: 10px;
+  margin: 20px;
+  background-color: #1e1e1e;
+  box-shadow: 0 10px 10px 5px rgb(51, 51, 51);
+}
+
+.uploadVidBlock button {
+  color: #ffffff;
+  padding: 10px;
+  background-color: #3d3d3d;
+  border: 3px solid #2b2b2b;
+  border-radius: 10px;
+  transition: all 0.3s ease-in-out;
+
+}
+
+.uploadVidBlock button:hover {
+  background-color: #00e5d2;
+  color: black;
+}
+
+.formcontrol {
+  background-color: #217070;
+  border: 1px solid #444;
+  color: #fff;
+  margin-bottom: 15px;
+}
+
+.actionButton {
+  margin-top: 20px;
+}
+
+.btnPrimary {
+  text-decoration: none;
+  color: #ffffff;
+  padding: 10px;
+  background-color: transparent;
+  border: 3px solid #34aeff;
+  border-radius: 10px;
+  transition: all 0.3s ease-in-out;
+}
+
+.btnPrimary:hover {
+  background-color: #00e5d2;
+  color: black;
+}
+
+.listgroupitem {
+  background-color: #1e1e1e;
+  /* Dark background for list items */
+  color: #fff;
+  /* Light text color */
+  border-color: #333;
+  /* Dark border for separation */
+  margin-bottom: 10px;
+  /* Space between list items */
+}
+
+.listgroupitem small {
+  color: #777;
+  /* Muted text for less important details (CID) */
+}
+
+video {
+  width: 100%;
+  /* Ensure video takes full width of its container */
+  height: auto;
+  /* Maintain aspect ratio */
+  border-radius: 8px;
+  /* Rounded corners for videos */
+  margin-top: 10px;
+  /* Space above the video */
+}
