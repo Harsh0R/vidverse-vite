@@ -1,11 +1,8 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
 import './App.css'
-import Home from "./Pages/home";
-import About from "./Pages/aboute";
-import Myaccount from "./Pages/myaccount";
-import Livestreams from "./Pages/livestream";
+import Home from "./Pages/Home/home.jsx";
+import About from "./Pages/About/aboute.jsx";
+import Myaccount from "./Pages/MyAccount/myaccount.jsx";
+import Livestreams from "./Pages/Livestream/livestream.jsx";
 import { VidverseProvider } from "./Context/VidverseContext.jsx";
 import Navbar from "./Components/Navbar/Navbar";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";

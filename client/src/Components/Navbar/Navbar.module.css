@@ -1,153 +1,67 @@
-/* Style.module.css */
-
 .navbar {
-  /* border: 2px solid wheat; */
-  /* width: 1859px; */
-  width: 97%;
-  position: fixed;
-  top: 0;
-  padding: 10px 20px;
   display: flex;
-  box-shadow: 0 10px 10px rgb(0, 0, 0);
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 20px;
+  background-color: #303438;
+  box-shadow: 0 10px 10px rgba(0, 0, 0, 0.1);
   z-index: 100;
 }
 
-.navbarLogo {
-  font-size: 24px;
-  font-weight: bold;
-  margin: auto;
-  width: auto;
-  float: left;
-  border-radius: 10px;
-  object-fit: cover;
-  overflow: hidden;
+.logo {
+  color: #fff;
+  margin: 0;
 }
 
-
-.listitem {
-  float: right;
-  margin: auto;
-
-}
-
-.listitem li {
-  float: left;
-  margin: 10px;
-  padding: 5px 10px;
+.menu {
   list-style: none;
-  font-size: 20px;
-  border-radius: 5px;
-  transition: all .4s ease-in-out;
+  display: flex;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
 }
 
-.listitem li a {
+.item a {
   text-decoration: none;
   color: #ffffff;
+  padding: 5px 10px;
+  border-radius: 5px;
+  transition: background-color 0.4s ease-in-out;
 }
 
-.listitem li:hover {
+.item a:hover, .item a.active {
   background-color: #275e59;
 }
 
-.activeItem {
-  background-color: #3e9790;
+.accountInfo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
-.connectBtn {
+.accountAddress, .balance {
+  color: #fff;
+  background-color: #164b4e;
+  padding: 5px 15px;
+  border-radius: 20px;
+}
+
+.copyButton {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+.connectButton {
   background-color: #3e9790;
   color: #fff;
   border: none;
-  margin-left: 0px;
   padding: 10px 20px;
   border-radius: 20px;
   cursor: pointer;
-  transition: all 0.2s ease-in-out;
+  transition: background-color 0.2s ease-in-out;
 }
 
-.connectBtn:hover {
-  background-color: #9e0303;
-}
-
-.navbarItem {
-  display: flex;
-}
-
-.acc {
-  margin: auto;
-  margin-right: -5px;
-  background-color: #303438;
-  padding: 0px 20px;
-  border-top-left-radius: 20px;
-  border-bottom-left-radius: 20px;
-  border-top-right-radius: 0px;
-  border-bottom-right-radius: 0px;
-}
-
-.account {
-  font-size: 15px;
-}
-
-.copyBtn {
-  padding-top: 5px;
-  margin: 5px;
-  background-color: transparent;
-  border: none;
-  cursor: pointer;
-  transition: all 0.2s ease-in-out;
-}
-
-.copyBtn:hover {
-  text-decoration: underline;
-}
-
-.balance {
-  font-size: 15px;
-  color: #fff;
-  /* Adjust text color for dark mode */
-}
-
-/* Animations */
-
-.navbarLink:hover {
-  animation: linkHover 0.2s ease-in-out;
-}
-
-@keyframes linkHover {
-  0% {
-    transform: scale(1);
-  }
-
-  100% {
-    transform: scale(1.05);
-  }
-}
-
-.activeItem {
-  animation: itemActive 0.2s ease-in-out;
-}
-
-@keyframes itemActive {
-  0% {
-    background-color: #3c4044;
-    /* Adjust active item animation color for dark mode */
-  }
-
-  100% {
-    background-color: #404448;
-    /* Adjust active item animation color for dark mode */
-  }
-}
-
-.connectBtn:hover {
-  animation: buttonHover 0.2s ease-in-out;
-}
-
-@keyframes buttonHover {
-  0% {
-    transform: scale(1);
-  }
-
-  100% {
-    transform: scale(1.05);
-  }
+.connectButton:hover {
+  background-color: #039e7c;
 }

@@ -15,7 +15,7 @@ import protobuf from "protobufjs";
 const ChatBox = ({ chat }) => {
 
 
-  console.log("name = ", chat);
+  console.log("name in chat box = ", chat);
   const [status, setStatus] = useState("connecting...");
   const [localPeerId, setLocalPeerId] = useState("");
   const [remotePeerIds, setRemotePeerIds] = useState([]);
@@ -29,9 +29,7 @@ const ChatBox = ({ chat }) => {
   const CONTENT_TOPIC = `/toy-chat/1/${chat}/proto`;
   let sendMessageFunc = null;
   useEffect(() => {
-    // Your initialization logic here
     setMessageObj(fetchData());
-    // You can call functions such as initUI and runApp here
   }, []);
   async function fetchData() {
     try {
@@ -55,12 +53,13 @@ const ChatBox = ({ chat }) => {
 
 
   console.log("Node and Decoder = ", decoderD, nodeD);
+
   // const { messages: storeMessages } = useStoreMessages({ nodeD, decoderD });
 
   // Receive messages from Filter subscription
   // const { messages: filterMessages } = useFilterMessages({ nodeD, decoderD });
 
-  
+
   // useEffect(() => {
 
   //   const allMessages = storeMessages.concat(filterMessages);
@@ -81,7 +80,7 @@ const ChatBox = ({ chat }) => {
     console.log("init is running = ", contentTopic);
     const Decoder = createDecoder(contentTopic);
     setDecoderD(Decoder);
-    const Encoder = createEncoder({ contentTopic }); // Pass contentTopic here
+    const Encoder = createEncoder({ contentTopic }); 
     const ChatMessage = new protobuf.Type("ChatApp")
       .add(new protobuf.Field("timestamp", 1, "uint64"))
       .add(new protobuf.Field("nick", 2, "string"))
@@ -91,18 +90,12 @@ const ChatBox = ({ chat }) => {
     setNode(node);
     await node.start();
     await waitForRemotePeer(node);
-    // Set a filter by using Decoder for a given ContentTopic
+    
     const unsubscribeFromMessages = await node.filter.subscribe(
       [Decoder],
       (wakuMessage) => {
         const messageObj = ChatMessage.decode(wakuMessage.payload);
         console.log("=-=-=-=-=-=-==-=", messageObj);
-
-
-    
-
-
-
 
         const timestamp = new Date(messageObj.timestamp).toLocaleString();
         const text = bytesToUtf8(messageObj.text);

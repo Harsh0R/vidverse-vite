@@ -1,10 +1,12 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { VidverseContext } from '../Context/VidverseContext';
+import { VidverseContext } from '../../Context/VidverseContext';
 import { Link } from 'react-router-dom';
 import Style from "./myaccount.module.css";
+import StreamStarterFile from '../../Components/ForLiveStream/StreamStarterFile';
 
 const MyAccount = () => {
   const { allVideo, uploadVideos, account } = useContext(VidverseContext);
+  const [toggle, setToggle] = useState('');
   const [videoName, setVideoName] = useState('');
   const [videoDescription, setVideoDescription] = useState('');
   const [uploadedVid, setUploadedVid] = useState([]);
@@ -76,75 +78,84 @@ const MyAccount = () => {
   return (
     <div className={Style.myAccountContainer}>
       <h2 className={Style.heading1}>My Account : {account}</h2>
-      <div className={Style.uploadVidBlock}>
 
-        <h2 className={Style.heading}>Upload New Video</h2>
-        <div className={Style.inputGroup}>
-          <div>Video Name : </div>
-          <input
-            className={Style.formControl}
-            type="text"
-            placeholder="Video Name"
-            value={videoName}
-            onChange={(e) => setVideoName(e.target.value)}
-          />
-        </div>
-        <div className={Style.inputGroup}>
-          <div>Video Description : </div>
-          <input
-            className={Style.formControl}
-            type="text"
-            placeholder="Video Description"
-            value={videoDescription}
-            onChange={(e) => setVideoDescription(e.target.value)}
-          />
-        </div>
-        <div className={Style.inputGroup}>
-          <div>Upload New Video :</div>
-          <input
-            className={Style.formControl}
-            type="file"
-            onChange={changeHandler}
-          />
-        </div>
-        <div>
-          <button onClick={handleSubmission}>Upload video</button>
-        </div>
-      </div>
+      <button className={`${Style.listgroupitem} ${toggle === 'videos' ? Style.active : ''}`} onClick={() => setToggle('videos')}>
+        Upload Videos
+      </button>
+      <Link to='/livestream' className={Style.btnPrimary}>
+        <button className={`${Style.listgroupitem} ${toggle === 'livestream' ? Style.active : ''}`} onClick={() => setToggle('livestream')}>
+          Create LiveStream
+        </button>
+      </Link>
 
-      <div className={Style.actionButton}>
-        <Link to='/livestream' className={Style.btnPrimary}>
-          Start Your LiveStream
-        </Link>
-      </div>
-      <h3 className={Style.subheading}>Uploaded Videos</h3>
-      <div className={Style.listGroup}>
-        {uploadedVid.map((video, index) => (
-          <div key={index} className={Style.listGroupItem}>
-            <div className={Style.videoDetails}>
-              <h5 className={Style.videoTitle}>Title = {video.title}</h5>
-              <p className={Style.videoDescription}>des = {video.description}</p>
-              <small className={Style.videoCID}>CID: {video.ipfsHash}
-                <br />
-                https://{VITE_GATEWAY_URL}/ipfs/${video.ipfsHash}
-              </small>
+      {toggle == 'videos' &&
+        (
+          <div className={Style.uploadVidBlock}>
+            <h2 className={Style.heading}>Upload New Video</h2>
+            <div className={Style.inputGroup}>
+              <div>Video Name : </div>
+              <input
+                className={Style.formControl}
+                type="text"
+                placeholder="Video Name"
+                value={videoName}
+                onChange={(e) => setVideoName(e.target.value)}
+              />
             </div>
-            {video.ipfsHash && (
-              <>
-                <img
-                  src={`https://${VITE_GATEWAY_URL}/ipfs/${video.ipfsHash}`}
-                  alt="ipfs image"
-                />
-              </>
-            )}
-            {/* <video className={Style.videoPlayer} controls src={`https://gateway.lighthouse.storage/ipfs/${video.ipfsHash}`} /> */}
-            <br></br>
-            <br></br>
-            <br></br>
-            <br></br>
+            <div className={Style.inputGroup}>
+              <div>Video Description : </div>
+              <input
+                className={Style.formControl}
+                type="text"
+                placeholder="Video Description"
+                value={videoDescription}
+                onChange={(e) => setVideoDescription(e.target.value)}
+              />
+            </div>
+            <div className={Style.inputGroup}>
+              <div>Upload New Video :</div>
+              <input
+                className={Style.formControl}
+                type="file"
+                onChange={changeHandler}
+              />
+            </div>
+            <div>
+              <button onClick={handleSubmission}>Upload Video</button>
+            </div>
           </div>
-        ))}
+        )}
+ 
+      <div className={Style.uploadedVidBlock}>
+        <h2 className={Style.heading}>Uploaded Videos</h2>
+        <div className={Style.listGroup}>
+          {uploadedVid.map((video, index) => (
+            <div key={index} className={Style.listGroupItem}>
+              <div className={Style.videoDetails}>
+                <h5 className={Style.videoTitle}>Title = {video.title}</h5>
+                <p className={Style.videoDescription}>des = {video.description}</p>
+                <small className={Style.videoCID}>CID: {video.ipfsHash}
+                  <br />
+                  https://{VITE_GATEWAY_URL}/ipfs/${video.ipfsHash}
+                </small>
+              </div>
+              {video.ipfsHash && (
+                <>
+                  <img
+                    src={`https://${VITE_GATEWAY_URL}/ipfs/${video.ipfsHash}`}
+                    alt="ipfs image"
+                  />
+                </>
+              )}
+              <br></br>
+              <br></br>
+              <br></br>
+              <br></br>
+            </div>
+          ))}
+        </div>
       </div>
+
     </div>
   );
 };
@@ -154,3 +165,4 @@ export default MyAccount;
 
 // https://violet-rare-crawdad-98.mypinata.cloud/ipfs/QmVFmFMYYFxkhcV7Zse5ATHXaW3ix8bExBmZaf94GhMpYh
 // violet-rare-crawdad-98.mypinata.cloud/ipfs/$QmeXWi16h1Ca7ZzJGHAsft6Qfsbw22z9hKWrNqng2sTnZp
+{/* <video className={Style.videoPlayer} controls src={`https://gateway.lighthouse.storage/ipfs/${video.ipfsHash}`} /> */}

@@ -1,14 +1,18 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { Player } from "@livepeer/react";
 import ChatBox from "../ChatBox/ChatBox";
+import { VidverseContext } from "../../Context/VidverseContext";
 
-const Webplayer = () => {
+const Webplayer = ({ name1, playbackId1 }) => {
   const [playbackId, setPlaybackId] = useState("");
   const [streamName, setStreamName] = useState("");
-  const [flag, setFlag] = useState(false)
+  const [flag, setFlag] = useState(false);
 
+  console.log("Name and id = " , name1 , playbackId1);
+
+  const { getAllActiveLiveStreams } = useContext(VidverseContext);
   const handlefunc = (e) => {
-    e.preventDefault(); 
+    e.preventDefault();
     if (playbackId && streamName) {
       setFlag(true)
       console.log("Playback ID:", playbackId);
@@ -18,8 +22,14 @@ const Webplayer = () => {
     }
   };
 
+  const handleShowLiveStream = async () => {
+    const stream = await getAllActiveLiveStreams();
+    console.log("Stream = ", stream);
+  }
+
   return (
     <div>
+      <button onClick={handleShowLiveStream}>Show live stream</button>
       <form onSubmit={handlefunc}>
         <input
           type="text"
@@ -52,7 +62,7 @@ const Webplayer = () => {
                 radii: { containerBorderRadius: "10px" },
               }}
             />
-            <ChatBox chat={streamName}></ChatBox>
+            <ChatBox chat={name1}></ChatBox>
           </div>
         )}
       </div>

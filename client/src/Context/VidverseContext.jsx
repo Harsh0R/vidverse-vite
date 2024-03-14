@@ -29,45 +29,41 @@ export const VidverseProvider = ({ children }) => {
   let signer = new ethers.Wallet(config.privateKey, provider);
 
   const [account, setAccount] = useState("");
-  const [smartWallet, setSmartWallet] = useState()
+  const [smartWallet, setSmartWallet] = useState();
   const [livepeerCli, setlivepeerCli] = useState();
-
-  const fetchData = async () => {
-    try {
-      window.ethereum.on("chainChanged", () => {
-        window.location.reload();
-      });
-
-      window.ethereum.on("accountsChanged", () => {
-        window.location.reload();
-      });
-      // get account
-      const connectAccount = await connectWallet();
-      const contract = await connectingWithContract();
-
-      setAccount(connectAccount);
-
-      const smartWallet = await createSmartAccountClient({
-        signer,
-        biconomyPaymasterApiKey: config.biconomyPaymasterApiKey,
-        bundlerUrl: config.bundlerUrl,
-      });
-      setSmartWallet(smartWallet)
-
-      const livepeerClient = createReactClient({
-        provider: studioProvider({ apiKey: apiKey }),
-      });
-      setlivepeerCli(livepeerClient);
-
-    } catch (error) {
-      console.log("Error in fetching account in vidverseContext...", error);
-    }
-  };
-
+  const [livepeerClient, setLivepeerClient] = useState();
 
   useEffect(() => {
+    const initializeBlockchainConnections = async () => {
+      try {
+        const provider = new ethers.providers.JsonRpcProvider(config.rpcUrl);
+        const signer = new ethers.Wallet(config.privateKey, provider);
+        const smartWallet = await createSmartAccountClient({
+          signer,
+          biconomyPaymasterApiKey: config.biconomyPaymasterApiKey,
+          bundlerUrl: config.bundlerUrl,
+        });
 
-    fetchData();
+        setSmartWallet(smartWallet);
+        setLivepeerClient(createReactClient({
+          provider: studioProvider({ apiKey }),
+        }));
+
+        const account = await connectWallet();
+        setAccount(account);
+
+      } catch (error) {
+        console.error("Initialization error in VidverseContext:", error);
+      }
+    };
+
+    initializeBlockchainConnections();
+
+    return () => {
+      window.ethereum.removeListener('chainChanged', window.location.reload);
+      window.ethereum.removeListener('accountsChanged', window.location.reload);
+    };
+
   }, []);
 
   const allVideo = async () => {
@@ -89,25 +85,59 @@ export const VidverseProvider = ({ children }) => {
       console.error("Currently you have no videos.....😑", error);
     }
   };
-  // const uploadVideos = async (name, desc, cid) => {
-  //   try {
-  //     const contract = await connectingWithContract();
-  //     const ms = await contract.uploadVideo(name, desc, cid);
-  //     console.log("messagfe = ", ms);
-  //   } catch (error) {
-  //     console.error("Error accor while uploading videos.....😑");
-  //   }
-  // };
+
+  const getAllActiveLiveStreams = async () => {
+    try {
+      const contract = await connectingWithContract();
+      const vid = await contract.getAllActiveLiveStreams();
+      const processedVideos = vid.map((video) => {
+        const processedVideo = { ...video };
+        processedVideo.id = ethers.BigNumber.from(video.id._hex).toNumber();
+        processedVideo.tipAmount = ethers.BigNumber.from(
+          video.tipAmount._hex
+        ).toString();
+        return processedVideo;
+      });
+
+      console.log("All LiveStreams = ", processedVideos);
+      return processedVideos;
+    } catch (error) {
+      console.error("Currently you have no LiveStream .....😑", error);
+    }
+  };
+
+  const getMyActiveLiveStreams = async (account1) => {
+    try {
+
+      // console.log("Add = ",account1);
+      const contract = await connectingWithContract();
+      const vid = await contract.getMyActiveLiveStreams(account1);
+      const processedVideos = vid.map((video) => {
+        const processedVideo = { ...video };
+        processedVideo.id = ethers.BigNumber.from(video.id._hex).toNumber();
+        processedVideo.tipAmount = ethers.BigNumber.from(
+          video.tipAmount._hex
+        ).toString();
+        return processedVideo;
+      });
+
+      console.log("All My LiveStreams = ", processedVideos);
+      return processedVideos;
+    } catch (error) {
+      console.error("Error in get Active LiveStream .....😑", error);
+    }
+  };
+
   const uploadVideos = async (name, desc, cid, account1 = account) => {
     try {
-      const connectedAccount = await checkIfWalletConnected(); // This should return the current user's wallet address
+      const connectedAccount = await checkIfWalletConnected();
       if (!connectedAccount) throw new Error("Wallet not connected");
       console.log("Addres==", account1);
       const contract = await connectingWithContract();
       const uploadVideoTxData = contract.interface.encodeFunctionData("uploadVideo", [account1, name, desc, cid]);
 
       const uploadVideoTx = {
-        to: smartContractAddress, // Your contract address
+        to: smartContractAddress,
         data: uploadVideoTxData,
       };
 
@@ -118,32 +148,71 @@ export const VidverseProvider = ({ children }) => {
 
       const uploadVideoTxHash = await uploadVideoResponse.waitForTxHash();
       console.log("Upload Video Transaction Hash", uploadVideoTxHash);
-      console.log("Video uploaded by:", connectedAccount); // Log or handle the connected account as needed
+      console.log("Video uploaded by:", connectedAccount);
     } catch (error) {
       console.error("Error while uploading videos", error);
     }
   };
 
+  const createLiveStream = async (name, playbackId, streamKey, strId, desc = "", account1 = account) => {
+    try {
+      const connectedAccount = await checkIfWalletConnected();
+      if (!connectedAccount) throw new Error("Wallet not connected");
+      console.log("Addres==", account1);
+      const contract = await connectingWithContract();
+      const uploadVideoTxData = contract.interface.encodeFunctionData("createStream", [account1, name, desc, playbackId, streamKey, strId]);
 
-  // const tipVideoOwner = async (vidID, tipAmount) => {
-  //   try {
-  //     const contract = await connectingWithContract();
-  //     const amount = toWei(tipAmount);
-  //     console.log("Amount to transfer - ", amount);
-  //     await contract.tipVideoOwner(vidID, amount);
-  //   } catch (error) {
-  //     console.error("Error accor while tip to videos.....😑", error);
-  //   }
-  // };
-  
+      const uploadVideoTx = {
+        to: smartContractAddress,
+        data: uploadVideoTxData,
+      };
+
+      const uploadVideoResponse = await smartWallet.sendTransaction(uploadVideoTx, {
+        paymasterServiceData: { mode: PaymasterMode.SPONSORED },
+      });
+
+
+      const uploadVideoTxHash = await uploadVideoResponse.waitForTxHash();
+      console.log("Stream Start Transaction Hash", uploadVideoTxHash);
+      console.log("Stream created by:", connectedAccount);
+    } catch (error) {
+      console.error("Error while Createing stream = ", error);
+    }
+  };
+  const stopStreamByStreamID = async (id, account1 = account) => {
+    try {
+      const connectedAccount = await checkIfWalletConnected();
+      if (!connectedAccount) throw new Error("Wallet not connected");
+      console.log("Addres==", account1);
+      const contract = await connectingWithContract();
+      const uploadVideoTxData = contract.interface.encodeFunctionData("stopStreamByStreamID", [account1, id]);
+
+      const uploadVideoTx = {
+        to: smartContractAddress,
+        data: uploadVideoTxData,
+      };
+
+      const uploadVideoResponse = await smartWallet.sendTransaction(uploadVideoTx, {
+        paymasterServiceData: { mode: PaymasterMode.SPONSORED },
+      });
+
+
+      const uploadVideoTxHash = await uploadVideoResponse.waitForTxHash();
+      console.log("Stream Start Transaction Hash", uploadVideoTxHash);
+      console.log("Stream created by:", connectedAccount);
+    } catch (error) {
+      console.error("Error while Createing stream = ", error);
+    }
+  };
+
   const tipVideoOwner = async (vidID, tipAmount, account1 = account) => {
     try {
-      const amount = await toWei(tipAmount); // Convert tip amount to Wei
+      const amount = await toWei(tipAmount);
       const contract = await connectingWithContract();
       const tipVideoOwnerTxData = contract.interface.encodeFunctionData("tipVideoOwner", [account1, vidID, amount]);
 
       const tipVideoOwnerTx = {
-        to: smartContractAddress, // Your contract address
+        to: smartContractAddress,
         data: tipVideoOwnerTxData,
       };
 
@@ -220,7 +289,7 @@ export const VidverseProvider = ({ children }) => {
     <VidverseContext.Provider
       value={{
         account,
-        livepeerCli,
+        livepeerClient,
         connectWallet,
         checkIfWalletConnected,
         disconnectFromMetaMask,
@@ -229,10 +298,81 @@ export const VidverseProvider = ({ children }) => {
         tipVideoOwner,
         hasValideAllowance,
         increaseAllowance,
-        getBalance
+        getBalance,
+        createLiveStream,
+        getAllActiveLiveStreams,
+        stopStreamByStreamID,
+        getMyActiveLiveStreams
       }}
     >
       {children}
     </VidverseContext.Provider>
   );
 };
+
+
+
+
+
+// const stopStreamByStreamID = async (id, account1 = account) => {
+//   try {
+//     const contract = await connectingWithContract();
+//     await contract.stopStreamByStreamID(account1,id);
+//   } catch (error) {
+//     console.error("Error While Stop LiveStream .....😑", error);
+//   }
+// };
+
+// const uploadVideos = async (name, desc, cid) => {
+//   try {
+//     const contract = await connectingWithContract();
+//     const ms = await contract.uploadVideo(name, desc, cid);
+//     console.log("messagfe = ", ms);
+//   } catch (error) {
+//     console.error("Error accor while uploading videos.....😑");
+//   }
+// };
+
+// const tipVideoOwner = async (vidID, tipAmount) => {
+//   try {
+//     const contract = await connectingWithContract();
+//     const amount = toWei(tipAmount);
+//     console.log("Amount to transfer - ", amount);
+//     await contract.tipVideoOwner(vidID, amount);
+//   } catch (error) {
+//     console.error("Error accor while tip to videos.....😑", error);
+//   }
+// };
+
+
+  // const fetchData = async () => {
+  //   try {
+  //     window.ethereum.on("chainChanged", () => {
+  //       window.location.reload();
+  //     });
+
+  //     window.ethereum.on("accountsChanged", () => {
+  //       window.location.reload();
+  //     });
+  //     // get account
+  //     const connectAccount = await connectWallet();
+  //     const contract = await connectingWithContract();
+
+  //     setAccount(connectAccount);
+
+  //     const smartWallet = await createSmartAccountClient({
+  //       signer,
+  //       biconomyPaymasterApiKey: config.biconomyPaymasterApiKey,
+  //       bundlerUrl: config.bundlerUrl,
+  //     });
+  //     setSmartWallet(smartWallet)
+
+  //     const livepeerClient = createReactClient({
+  //       provider: studioProvider({ apiKey: apiKey }),
+  //     });
+  //     setlivepeerCli(livepeerClient);
+
+  //   } catch (error) {
+  //     console.log("Error in fetching account in vidverseContext...", error);
+  //   }
+  // };

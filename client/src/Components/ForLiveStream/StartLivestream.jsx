@@ -1,113 +1,111 @@
-import React, { useState } from 'react';
-import { Broadcast, Player, useCreateStream } from "@livepeer/react";
+import React, { useContext, useEffect, useState } from 'react';
+import { Broadcast, LivepeerConfig, createReactClient, studioProvider, useCreateStream } from "@livepeer/react";
 import ChatBox from '../ChatBox/ChatBox';
+import Style from "./StreamCss.module.css"
+import { VidverseContext } from '../../Context/VidverseContext';
 
-const Livestream = () => {
+const LivestreamCom = () => {
     const [streamName, setStreamName] = useState('');
-    const [streamData, setStreamData] = useState('');
-    const [playbackId, setPlaybackId] = useState('');
-    const [streamId, setStreamId] = useState('')
     const [error, setError] = useState('');
-    const apiToken = '45cddd3a-e60e-4a8b-b121-e353f8b107b0'
-    const {
-        mutate: createStream,
-        data: createdStream,
-        status,
-    } = useCreateStream(
-        streamName
-            ? {
-                name: streamName,
-            }
-            : null
+    const [activeStream, setActiveStream] = useState(null);
+    const { createLiveStream, getMyActiveLiveStreams, stopStreamByStreamID, account } = useContext(VidverseContext);
+
+    const apiToken = '45cddd3a-e60e-4a8b-b121-e353f8b107b0';
+    const { mutate: createStream, data: createdStream, status } = useCreateStream(
+        streamName ? { name: streamName } : null
     );
 
-    const handleCreateStream = async () => {
+    useEffect(() => {
+        const fetchActiveStreams = async () => {
+            try {
+                // console.log("Acc in S l ", account);
+                if (account) {
+                    const streams = await getMyActiveLiveStreams(account);
+                    if (streams.length > 0) {
+                        setActiveStream(streams[0]); // Assuming you want the first active stream
+                    }
+                }
+            } catch (error) {
+                console.error("Error fetching active live streams:", error);
+            }
+        };
+
+        fetchActiveStreams();
+    }, [getMyActiveLiveStreams, account]);
+
+    const updateInContract = async () => {
         try {
-            setStreamData(createStream())
+            await createLiveStream(createdStream.name, createdStream.playbackId, createdStream.streamKey, createdStream.id);
+            setActiveStream({ ...createdStream, status: true });
+            window.location.reload();
         } catch (error) {
-            setError('Failed to create stream. Please try again.');
-            console.error('Error creating stream:', error);
+            console.error("Error updating stream in contract:", error);
+            setError("Failed to update stream. Please try again.");
         }
     };
+
+    const handleCreateStream = () => {
+        if (!streamName) {
+            setError('Stream name is required.');
+            return;
+        }
+        createStream();
+    };
+
     const handleStopStream = async () => {
         try {
-            console.log("Stream id", createdStream.id);
-            setStreamId(createdStream.id);
-            console.log("Stream id", streamId);
-            fetch(`https://livepeer.studio/api/stream/${createdStream.id}/terminate`, {
+            console.log("Strdt sr , =", activeStream.streamID);
+            const response = await fetch(`https://livepeer.studio/api/stream/${activeStream.streamID}/terminate`, {
                 method: 'DELETE',
-                headers: {
-                    'Authorization': `Bearer ${apiToken}` // Don't forget to define apiToken
-                }
-            })
-                .then(response => {
-                    if (response.status === 204) {
-                        console.log('Livestream terminated successfully');
-                    } else {
-                        console.error('Failed to terminate livestream');
-                    }
-                })
-                .catch(error => console.error('Error terminating livestream:', error));
+                headers: { 'Authorization': `Bearer ${apiToken}` }
+            });
+
+            if (response.status === 204) {
+                console.log('Livestream terminated successfully.');
+                await stopStreamByStreamID(activeStream.streamID);
+                setActiveStream(null); // Reset or remove the active stream from state
+            } else {
+                console.error('Failed to terminate livestream.');
+                setError('Failed to terminate the livestream. Please try again.');
+            }
         } catch (error) {
+            console.error('Error terminating livestream:', error);
             setError('Failed to stop stream. Please try again.');
-            console.error('Error Stop stream:', error);
         }
     };
 
-
     return (
-        <div className="container mt-4">
-            <div className="row justify-content-center">
-                <div className="col-md-6">
-                    <input
-                        type="text"
-                        className="form-control mb-3"
-                        placeholder="Stream Name"
-                        value={streamName}
-                        onChange={(e) => setStreamName(e.target.value)}
-                    />
-                    <button
-                        className="btn btn-primary btn-block"
-                        onClick={handleCreateStream}
-                        disabled={status === "loading"}
-                    >
-                        {status === "loading" ? 'Creating Stream...' : 'Create Stream'}
+        <div className={Style.container}>
+            <div>Enter Stream Name:</div>
+            <input
+                type="text"
+                className="form-control mb-3"
+                placeholder="Stream Name"
+                value={streamName}
+                onChange={(e) => setStreamName(e.target.value)}
+            />
+            <button className="btn btn-primary" onClick={handleCreateStream} disabled={status === "loading"}>
+                {status === "loading" ? 'Creating Stream...' : 'Create Stream'}
+            </button>
+            {createdStream && (
+                <button className="btn btn-success" onClick={updateInContract} disabled={!createdStream}>
+                    Start Stream
+                </button>
+            )}
+            {error && <p className="text-danger mt-3">{error}</p>}
+            {activeStream && (
+                <div className="mt-3">
+                    <p>Stream: {activeStream.stramName}</p>
+                    <p>Playback ID: {activeStream.playBackId}</p>
+                    <Broadcast streamKey={activeStream.streamKey} onError={console.error} />
+                    <ChatBox chat={activeStream.stramName} />
+                    <button className="btn btn-danger" onClick={handleStopStream}>
+                        Stop Stream
                     </button>
-                    <br />
-                    <br />
-                    <br />
-                    <br />
-                    <button
-                        className="btn btn-danger btn-block"
-                        onClick={handleStopStream}
-                        disabled={status === "loading"}
-                    >
-                        {status === "loading" ? 'Stoping Stream...' : 'Stoped Stream'}
-                    </button>
-
-                    {error && <p className="text-danger mt-3">Error: {error}</p>}
-                    {createdStream && streamName && (
-                        <div className="mt-3">
-                            <p>Stream Created: {createdStream.name}</p>
-                            <p>Stream Created playback id: {createdStream.playbackId}</p>
-                            <p>Stream Created id: {createdStream.id}</p>
-
-                            <div style={{ width: "100%" }}>
-                                <Broadcast
-                                    streamKey={createdStream.streamKey}
-                                    controls={{ autohide: 3000 }}
-                                    onError={(error) => console.log("Error in broadcat = ",error)}
-                                // Add any additional configurations for the Broadcast component
-                                />
-                                <ChatBox chat={streamName}></ChatBox>
-                            </div>
-
-                        </div>
-                    )}
                 </div>
-            </div>
+            )}
         </div>
     );
 };
 
-export default Livestream;
+export default LivestreamCom;

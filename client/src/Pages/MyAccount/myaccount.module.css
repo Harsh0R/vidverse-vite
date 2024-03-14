@@ -1,13 +1,25 @@
-/* Assuming these styles will be added to a CSS module or a global stylesheet */
-
 .myAccountContainer {
-  /* width: 100%; */
   color: #ffffff;
-  /* Light text color */
   padding: 5px;
-  /* Padding around the content */
-  margin-top: 80px;
 }
+
+.listgroupitem {
+  padding: 10px 15px;
+  text-align: left;
+  border: none;
+  border: 2px solid rgb(28, 143, 189);
+  border-radius: 20px;
+  margin: auto 10px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  color: rgb(28, 143, 189);
+}
+
+.listgroupitem:hover {
+  background-color: rgb(0, 183, 255);
+  color: #000000;
+}
+
 
 .heading1 {
   color: #24f1c5;
@@ -38,7 +50,7 @@
   padding: 10px;
   margin: 20px;
   background-color: #1e1e1e;
-  box-shadow: 0 10px 10px 5px rgb(51, 51, 51);
+  box-shadow: 0px 3px 25px -5px #ffffff;
 }
 
 .uploadVidBlock button {
@@ -70,41 +82,21 @@
 .btnPrimary {
   text-decoration: none;
   color: #ffffff;
-  padding: 10px;
-  background-color: transparent;
-  border: 3px solid #34aeff;
-  border-radius: 10px;
-  transition: all 0.3s ease-in-out;
 }
-
-.btnPrimary:hover {
-  background-color: #00e5d2;
-  color: black;
-}
-
 .listgroupitem {
   background-color: #1e1e1e;
-  /* Dark background for list items */
   color: #fff;
-  /* Light text color */
   border-color: #333;
-  /* Dark border for separation */
   margin-bottom: 10px;
-  /* Space between list items */
 }
 
 .listgroupitem small {
   color: #777;
-  /* Muted text for less important details (CID) */
 }
 
 video {
   width: 100%;
-  /* Ensure video takes full width of its container */
   height: auto;
-  /* Maintain aspect ratio */
   border-radius: 8px;
-  /* Rounded corners for videos */
   margin-top: 10px;
-  /* Space above the video */
 }

@@ -1,76 +1,60 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { VidverseContext } from '../../Context/VidverseContext';
 import { Link } from 'react-router-dom';
+import { VidverseContext } from '../../Context/VidverseContext';
 import { copyImg } from '../../assets/imgs';
-import Style from "./Navbar.module.css";
+import styles from "./Navbar.module.css";
 
 const Navbar = () => {
   const { account, connectWallet, disconnectFromMetaMask, getBalance } = useContext(VidverseContext);
-  const [currentAccount, setCurrentAccount] = useState('');
-  const [active, setActive] = useState(1);
-  const [balance, setBalance] = useState(0); 
-  
-  useEffect(() => {
-    setCurrentAccount(account);
-  }, [account]);
+  const [balance, setBalance] = useState(0);
 
   useEffect(() => {
-    if (currentAccount) {
-      getBalance(currentAccount)
-        .then(balance => setBalance(balance));
+    if (account) {
+      getBalance(account).then(setBalance);
     }
-  }, [currentAccount, getBalance]);
+  }, [account, getBalance]);
 
-  // Function to copy the account address to the clipboard
   const copyToClipboard = () => {
-    navigator.clipboard.writeText(currentAccount);
+    navigator.clipboard.writeText(account);
     alert("Address copied to clipboard!");
   };
 
-  // Function to truncate the account address
-  const truncatedAccount = currentAccount ? `${currentAccount.slice(0, 4)}...${currentAccount.slice(-4)}` : '';
+  const truncatedAccount = account ? `${account.slice(0, 6)}...${account.slice(-4)}` : '';
 
   const menuItems = [
     { menu: "Home", link: "/" },
-    { menu: "About", link: "/" },
+    { menu: "About", link: "/about" },
     { menu: "My Account", link: "/myAccount" },
-    { menu: "Setting", link: "/" },
-    { menu: "FAQs", link: "/" },
-    { menu: "Terms of Use", link: "/" },
+    { menu: "Setting", link: "/setting" },
+    { menu: "FAQs", link: "/faqs" },
+    { menu: "Terms of Use", link: "/terms" },
   ];
 
   return (
-    <div className={Style.navbar}>
-      <h1 className={Style.navbarLogo}>VIDVERSE</h1>
-
-
-      <div className={Style.listitem}>
-        {menuItems.map((el, i) => (
-          <li key={i} className={`${Style.navbarItem} ${active === i + 1 ? Style.activeItem : ''}`}>
-            <Link to={el.link} onClick={() => setActive(i + 1)}>
-              {el.menu}
-            </Link>
+    <nav className={styles.navbar}>
+      <h1 className={styles.logo}>VIDVERSE</h1>
+      <ul className={styles.menu}>
+        {menuItems.map((item, index) => (
+          <li key={index} className={styles.item}>
+            <Link to={item.link}>{item.menu}</Link>
           </li>
         ))}
-      </div>
-
-
-
-      <div className={Style.navbarItem}>
-        {currentAccount && (
-          <div className={Style.acc}>
-            <span className={Style.account}>Acc Address = {truncatedAccount}</span>
-            <button className={Style.copyBtn} onClick={copyToClipboard}>
-              <img height={15} src={copyImg} alt="Your SVG" />
+      </ul>
+      <div className={styles.accountInfo}>
+        {account && (
+          <>
+            <span className={styles.accountAddress}>Acc: {truncatedAccount}</span>
+            <button className={styles.copyButton} onClick={copyToClipboard}>
+              <img src={copyImg} alt="Copy" height="15" />
             </button>
-            <span className={Style.balance}>Balance: {balance}VT</span>
-          </div>
+            <span className={styles.balance}>Balance: {balance} NVT</span>
+          </>
         )}
-        <button className={Style.connectBtn} onClick={currentAccount ? disconnectFromMetaMask : connectWallet}>
-          {currentAccount ? 'Disconnect' : 'Connect MetaMask'}
+        <button className={styles.connectButton} onClick={account ? disconnectFromMetaMask : connectWallet}>
+          {account ? 'Disconnect' : 'Connect Wallet'}
         </button>
       </div>
-    </div>
+    </nav>
   );
 };
 
