@@ -8,9 +8,9 @@ dataSources:
     name: VideoPlatform
     network: mumbai
     source:
-      address: "0xd0eE7A6b05df2Fa62961AF630900bc9f9A514270"
+      address: "0xE2F92C1c3EA2f987d1f93D38E514d35EF6576e79"
       abi: VideoPlatform
-      startBlock: 47188465
+      startBlock: 47191425
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7

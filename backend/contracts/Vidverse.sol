@@ -184,9 +184,7 @@ contract VideoPlatform {
         );
 
         // Update tip amount
-        video.tipAmount += _amount;
-        emit VideoUploaded(video.id, video.owner, video.title, video.description, video.ipfsHash , video.tipAmount);
-        
+        video.tipAmount += _amount; 
         emit VideoTipped(_videoId, video.owner, userAddre, _amount, video.tipAmount);
     }
 
