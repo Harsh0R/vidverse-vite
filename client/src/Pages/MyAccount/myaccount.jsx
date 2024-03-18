@@ -5,7 +5,7 @@ import Style from "./myaccount.module.css";
 import StreamStarterFile from '../../Components/ForLiveStream/StreamStarterFile';
 
 const MyAccount = () => {
-  const { allVideo, uploadVideos, account } = useContext(VidverseContext);
+  const { allVideo, uploadVideos, account ,allMyVideos} = useContext(VidverseContext);
   const [toggle, setToggle] = useState('');
   const [videoName, setVideoName] = useState('');
   const [videoDescription, setVideoDescription] = useState('');
@@ -20,9 +20,11 @@ const MyAccount = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const data = await allVideo();
-        const filteredVideos = data.filter(video => video.owner.toLowerCase() === account.toLowerCase());
-        setUploadedVid(filteredVideos);
+        const acc = await account;
+        const data = await allMyVideos(acc);
+        // const filteredVideos = data.filter(video => video.owner.toLowerCase() === account.toLowerCase());
+        // setUploadedVid(filteredVideos);
+        setUploadedVid(data);
       } catch (error) {
         console.error('Error fetching videos:', error);
       }

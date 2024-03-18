@@ -94,6 +94,12 @@
         "internalType": "string",
         "name": "ipfsHash",
         "type": "string"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "tipAmount",
+        "type": "uint256"
       }
     ],
     "name": "VideoUploaded",
@@ -106,7 +112,7 @@
       { "internalType": "string", "name": "_description", "type": "string" },
       { "internalType": "string", "name": "_playbackId", "type": "string" },
       { "internalType": "string", "name": "streamKey", "type": "string" },
-      { "internalType": "string", "name": "streamID", "type": "string" }
+      { "internalType": "string", "name": "_streamID", "type": "string" }
     ],
     "name": "createStream",
     "outputs": [],
@@ -134,36 +140,6 @@
         "type": "tuple[]"
       }
     ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "getAllVideos",
-    "outputs": [
-      {
-        "components": [
-          { "internalType": "uint256", "name": "id", "type": "uint256" },
-          { "internalType": "address", "name": "owner", "type": "address" },
-          { "internalType": "string", "name": "title", "type": "string" },
-          { "internalType": "string", "name": "description", "type": "string" },
-          { "internalType": "string", "name": "ipfsHash", "type": "string" },
-          { "internalType": "uint256", "name": "tipAmount", "type": "uint256" }
-        ],
-        "internalType": "struct VideoPlatform.Video[]",
-        "name": "",
-        "type": "tuple[]"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      { "internalType": "address", "name": "addr", "type": "address" }
-    ],
-    "name": "getBalance",
-    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
     "stateMutability": "view",
     "type": "function"
   },

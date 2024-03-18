@@ -7,7 +7,7 @@ import styles from "./Home.module.css";
 import { apiKey } from '../../Context/constants';
 
 const Home = () => {
-  const { allVideo, tipVideoOwner, hasValidAllowance, increaseAllowance } = useContext(VidverseContext);
+  const { allVideo, tipVideoOwner, hasValidAllowance, increaseAllowance  } = useContext(VidverseContext);
   const [contentToShow, setContentToShow] = useState('videos');
   const [videos, setVideos] = useState([]);
   const [livepeerClient, setLivepeerClient] = useState();

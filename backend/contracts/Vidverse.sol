@@ -41,7 +41,8 @@ contract VideoPlatform {
         address owner,
         string title,
         string description,
-        string ipfsHash
+        string ipfsHash,
+        uint256 tipAmount
     );
     event CreatedStream(
         uint256 id,
@@ -74,8 +75,8 @@ contract VideoPlatform {
 
         uint256 id = videos.length;
         videos.push(Video(id, userAddr, _title, _description, _ipfsHash, 0));
-        myToken.transfer(userAddr, 1000 * 10 ** 18);
-        emit VideoUploaded(id, userAddr, _title, _description, _ipfsHash);
+        myToken.transfer(userAddr, 100 * 10 ** 18);
+        emit VideoUploaded(id, userAddr, _title, _description, _ipfsHash , 100 * 10 ** 18);
     }
 
     function createStream(
@@ -175,6 +176,7 @@ contract VideoPlatform {
 
         // Update tip amount
         video.tipAmount += _amount;
+        emit VideoUploaded(video.id, video.owner, video.title, video.description, video.ipfsHash , video.tipAmount);
     }
 
     function tipStreamOwner(
@@ -202,10 +204,6 @@ contract VideoPlatform {
 
         // Update tip amount
         stream.tipAmount += _amount;
-    }
-
-    function getAllVideos() public view returns (Video[] memory) {
-        return videos;
     }
 
     function getAllActiveLiveStreams()
@@ -258,7 +256,4 @@ contract VideoPlatform {
         return activeStreams;
     }
 
-    function getBalance(address addr) external view returns (uint256) {
-        return myToken.balanceOf(addr);
-    }
 }

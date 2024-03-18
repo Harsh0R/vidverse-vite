@@ -27,6 +27,7 @@ type VideoUploaded @entity(immutable: true) {
   title: String! # string
   description: String! # string
   ipfsHash: String! # string
+  tipAmount: BigInt! # uint256
   blockNumber: BigInt!
   blockTimestamp: BigInt!
   transactionHash: Bytes!

@@ -1,4 +1,5 @@
 import { useEffect, useState, React, createContext } from "react";
+import { createClient } from 'urql';
 import { createSmartAccountClient, PaymasterMode } from "@biconomy/account";
 import {
   connectWallet,
@@ -31,6 +32,10 @@ export const VidverseProvider = ({ children }) => {
   const [account, setAccount] = useState("");
   const [smartWallet, setSmartWallet] = useState();
   const [livepeerClient, setLivepeerClient] = useState();
+
+  const client = createClient({
+    url: 'https://api.studio.thegraph.com/query/56822/vidversegraph/version/latest',
+  });
 
   useEffect(() => {
     const initializeBlockchainConnections = async () => {
@@ -66,24 +71,66 @@ export const VidverseProvider = ({ children }) => {
   }, []);
 
   const allVideo = async () => {
-    try {
-      const contract = await connectingWithContract();
-      const vid = await contract.getAllVideos();
-      const processedVideos = vid.map((video) => {
-        const processedVideo = { ...video };
-        processedVideo.id = ethers.BigNumber.from(video.id._hex).toNumber();
-        processedVideo.tipAmount = ethers.BigNumber.from(
-          video.tipAmount._hex
-        ).toString();
-        return processedVideo;
-      });
+    const query = `{
+      videoUploadeds {
+        id
+        title
+        ipfsHash
+        owner
+        description
+      }
+    }`;
 
-      console.log("All vid = ", processedVideos);
-      return processedVideos;
+    try {
+      const result = await client.query(query).toPromise();
+      if (result.data) {
+        return result.data.videoUploadeds;
+      }
     } catch (error) {
-      console.error("Currently you have no videos.....😑", error);
+      console.error('Error fetching stake data:', error);
     }
   };
+  const allMyVideos = async (account) => {
+    const query = `{
+      videoUploadeds(where: {owner: "${account}"}) {
+        id
+        title
+        ipfsHash
+        owner
+        description
+      }
+    }`;
+
+    try {
+      const result = await client.query(query).toPromise();
+      if (result.data) {
+        return result.data.videoUploadeds;
+      }
+
+    } catch (error) {
+      console.error('Error fetching stake data:', error);
+    }
+  };
+
+  // const allVideo = async () => {
+  //   try {
+  //     const contract = await connectingWithContract();
+  //     const vid = await contract.getAllVideos();
+  //     const processedVideos = vid.map((video) => {
+  //       const processedVideo = { ...video };
+  //       processedVideo.id = ethers.BigNumber.from(video.id._hex).toNumber();
+  //       processedVideo.tipAmount = ethers.BigNumber.from(
+  //         video.tipAmount._hex
+  //       ).toString();
+  //       return processedVideo;
+  //     });
+
+  //     console.log("All vid = ", processedVideos);
+  //     return processedVideos;
+  //   } catch (error) {
+  //     console.error("Currently you have no videos.....😑", error);
+  //   }
+  // };
 
   const getAllActiveLiveStreams = async () => {
     try {
@@ -261,9 +308,11 @@ export const VidverseProvider = ({ children }) => {
   }
 
   const getBalance = async (address) => {
-    try {
-      const contract = await connectingWithContract();
-      const balance = await contract.getBalance(address);
+    try {  
+      const contractObj = await connectingWithContract();
+      const address1 = await contractObj.myToken();
+      const tokenContractObj = await tokenContract(address1);
+      const balance = await tokenContractObj.balanceOf(address);
       const balEth = await toEth(balance);
       console.log("Token Balance at context = ", balEth);
       return balEth;
@@ -300,7 +349,8 @@ export const VidverseProvider = ({ children }) => {
         createLiveStream,
         getAllActiveLiveStreams,
         stopStreamByStreamID,
-        getMyActiveLiveStreams
+        getMyActiveLiveStreams,
+        allMyVideos,
       }}
     >
       {children}

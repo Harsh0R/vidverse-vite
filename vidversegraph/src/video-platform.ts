@@ -50,6 +50,7 @@ export function handleVideoUploaded(event: VideoUploadedEvent): void {
   entity.title = event.params.title
   entity.description = event.params.description
   entity.ipfsHash = event.params.ipfsHash
+  entity.tipAmount = event.params.tipAmount
 
   entity.blockNumber = event.block.number
   entity.blockTimestamp = event.block.timestamp
