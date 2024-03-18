@@ -1,3 +1,4 @@
+
 import {
   CreatedStream as CreatedStreamEvent,
   StreamStopped as StreamStoppedEvent,
@@ -8,8 +9,10 @@ import {
   CreatedStream,
   StreamStopped,
   VideoTipped,
-  VideoUploaded
+  VideoUploaded,
+  VideoData
 } from "../generated/schema"
+import { BigInt } from "@graphprotocol/graph-ts";
 
 export function handleCreatedStream(event: CreatedStreamEvent): void {
   let entity = new CreatedStream(
@@ -53,6 +56,19 @@ export function handleVideoTipped(event: VideoTippedEvent): void {
   entity.amount = event.params.amount
   entity.newTipAmount = event.params.newTipAmount
 
+  let id = event.params.videoId.toHexString() + "-" + event.params.videoId.toString();
+  let video = VideoData.load(id);
+  if (video) {
+    // If the video exists, update its totalTipAmount
+    let tipAmount = event.params.amount;
+    if (!video.totalTipAmount) {
+      video.totalTipAmount = tipAmount;
+    } else {
+      video.totalTipAmount = video.totalTipAmount.plus(tipAmount);
+    }
+    video.save();
+  }
+
   entity.blockNumber = event.block.number
   entity.blockTimestamp = event.block.timestamp
   entity.transactionHash = event.transaction.hash
@@ -69,10 +85,66 @@ export function handleVideoUploaded(event: VideoUploadedEvent): void {
   entity.title = event.params.title
   entity.description = event.params.description
   entity.ipfsHash = event.params.ipfsHash
+  entity.tipAmount = event.params.tipAmount
+
+    
+  let id = event.params.id.toHexString() + "-" + event.params.id.toString();
+  let videoData = VideoData.load(id);
+
+  if (!videoData) {
+    videoData = new VideoData(id);
+    videoData.VideoPlatform_id = event.params.id;
+    videoData.owner = event.params.owner;
+    videoData.tipAmount = event.params.tipAmount;
+    videoData.totalTipAmount = BigInt.fromI32(0);
+    videoData.title = event.params.title;
+    videoData.description = event.params.description
+    
+  }
+  videoData.save();
 
   entity.blockNumber = event.block.number
   entity.blockTimestamp = event.block.timestamp
   entity.transactionHash = event.transaction.hash
 
   entity.save()
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+type VideoData @entity{
+  id: ID!
+  VideoPlatform_id: BigInt!
+  owner: Bytes!
+  title: String!
+  description: String!
+  tipAmount: BigInt!
+  totalTipAmount: BigInt! 
 }

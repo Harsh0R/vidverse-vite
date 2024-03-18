@@ -103,8 +103,7 @@ export function createVideoUploadedEvent(
   owner: Address,
   title: string,
   description: string,
-  ipfsHash: string,
-  tipAmount: BigInt
+  ipfsHash: string
 ): VideoUploaded {
   let videoUploadedEvent = changetype<VideoUploaded>(newMockEvent())
 
@@ -127,12 +126,6 @@ export function createVideoUploadedEvent(
   )
   videoUploadedEvent.parameters.push(
     new ethereum.EventParam("ipfsHash", ethereum.Value.fromString(ipfsHash))
-  )
-  videoUploadedEvent.parameters.push(
-    new ethereum.EventParam(
-      "tipAmount",
-      ethereum.Value.fromUnsignedBigInt(tipAmount)
-    )
   )
 
   return videoUploadedEvent

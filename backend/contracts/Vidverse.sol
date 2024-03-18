@@ -41,8 +41,7 @@ contract VideoPlatform {
         address owner,
         string title,
         string description,
-        string ipfsHash,
-        uint256 tipAmount
+        string ipfsHash
     );
 
      event VideoTipped(
@@ -85,7 +84,7 @@ contract VideoPlatform {
         uint256 id = videos.length;
         videos.push(Video(id, userAddr, _title, _description, _ipfsHash, 0));
         myToken.transfer(userAddr, 100 * 10 ** 18);
-        emit VideoUploaded(id, userAddr, _title, _description, _ipfsHash , 100 * 10 ** 18);
+        emit VideoUploaded(id, userAddr, _title, _description, _ipfsHash);
     }
 
     function createStream(

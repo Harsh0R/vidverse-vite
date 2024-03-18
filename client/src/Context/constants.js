@@ -1,7 +1,7 @@
 import VideoPlatform from "./VideoPlatform.json"   
 import MyToken from "./MyToken.json"
 
-export const smartContractAddress = "0xE2F92C1c3EA2f987d1f93D38E514d35EF6576e79";
+export const smartContractAddress = "0x69090920B5Af5DeCfe5B400DFE0002d078827301";
 
 export const apiKey = "45cddd3a-e60e-4a8b-b121-e353f8b107b0";
 // export const ChatAppABI = chatAppJSON;
