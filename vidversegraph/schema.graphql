@@ -1,0 +1,33 @@
+type CreatedStream @entity(immutable: true) {
+  id: Bytes!
+  VideoPlatform_id: BigInt! # uint256
+  owner: Bytes! # address
+  stramName: String! # string
+  description: String! # string
+  playBackId: String! # string
+  status: Boolean! # bool
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type StreamStopped @entity(immutable: true) {
+  id: Bytes!
+  VideoPlatform_id: BigInt! # uint256
+  owner: Bytes! # address
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type VideoUploaded @entity(immutable: true) {
+  id: Bytes!
+  VideoPlatform_id: BigInt! # uint256
+  owner: Bytes! # address
+  title: String! # string
+  description: String! # string
+  ipfsHash: String! # string
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}

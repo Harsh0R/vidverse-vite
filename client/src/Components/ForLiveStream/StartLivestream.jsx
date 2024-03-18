@@ -63,7 +63,7 @@ const LivestreamCom = () => {
             if (response.status === 204) {
                 console.log('Livestream terminated successfully.');
                 await stopStreamByStreamID(activeStream.streamID);
-                setActiveStream(null); // Reset or remove the active stream from state
+                setActiveStream(null); 
             } else {
                 console.error('Failed to terminate livestream.');
                 setError('Failed to terminate the livestream. Please try again.');

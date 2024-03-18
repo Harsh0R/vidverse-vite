@@ -30,7 +30,6 @@ export const VidverseProvider = ({ children }) => {
 
   const [account, setAccount] = useState("");
   const [smartWallet, setSmartWallet] = useState();
-  const [livepeerCli, setlivepeerCli] = useState();
   const [livepeerClient, setLivepeerClient] = useState();
 
   useEffect(() => {
@@ -170,7 +169,6 @@ export const VidverseProvider = ({ children }) => {
       const uploadVideoResponse = await smartWallet.sendTransaction(uploadVideoTx, {
         paymasterServiceData: { mode: PaymasterMode.SPONSORED },
       });
-
 
       const uploadVideoTxHash = await uploadVideoResponse.waitForTxHash();
       console.log("Stream Start Transaction Hash", uploadVideoTxHash);
@@ -345,34 +343,34 @@ export const VidverseProvider = ({ children }) => {
 // };
 
 
-  // const fetchData = async () => {
-  //   try {
-  //     window.ethereum.on("chainChanged", () => {
-  //       window.location.reload();
-  //     });
+// const fetchData = async () => {
+//   try {
+//     window.ethereum.on("chainChanged", () => {
+//       window.location.reload();
+//     });
 
-  //     window.ethereum.on("accountsChanged", () => {
-  //       window.location.reload();
-  //     });
-  //     // get account
-  //     const connectAccount = await connectWallet();
-  //     const contract = await connectingWithContract();
+//     window.ethereum.on("accountsChanged", () => {
+//       window.location.reload();
+//     });
+//     // get account
+//     const connectAccount = await connectWallet();
+//     const contract = await connectingWithContract();
 
-  //     setAccount(connectAccount);
+//     setAccount(connectAccount);
 
-  //     const smartWallet = await createSmartAccountClient({
-  //       signer,
-  //       biconomyPaymasterApiKey: config.biconomyPaymasterApiKey,
-  //       bundlerUrl: config.bundlerUrl,
-  //     });
-  //     setSmartWallet(smartWallet)
+//     const smartWallet = await createSmartAccountClient({
+//       signer,
+//       biconomyPaymasterApiKey: config.biconomyPaymasterApiKey,
+//       bundlerUrl: config.bundlerUrl,
+//     });
+//     setSmartWallet(smartWallet)
 
-  //     const livepeerClient = createReactClient({
-  //       provider: studioProvider({ apiKey: apiKey }),
-  //     });
-  //     setlivepeerCli(livepeerClient);
+//     const livepeerClient = createReactClient({
+//       provider: studioProvider({ apiKey: apiKey }),
+//     });
+//     setlivepeerCli(livepeerClient);
 
-  //   } catch (error) {
-  //     console.log("Error in fetching account in vidverseContext...", error);
-  //   }
-  // };
+//   } catch (error) {
+//     console.log("Error in fetching account in vidverseContext...", error);
+//   }
+// };

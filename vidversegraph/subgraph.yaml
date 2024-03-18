@@ -1,0 +1,32 @@
+specVersion: 1.0.0
+indexerHints:
+  prune: auto
+schema:
+  file: ./schema.graphql
+dataSources:
+  - kind: ethereum
+    name: VideoPlatform
+    network: mumbai
+    source:
+      address: "0xf9bF8d2D37ff901e92BC5157Bf2b948422751aBa"
+      abi: VideoPlatform
+      startBlock: 47035988
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - CreatedStream
+        - StreamStopped
+        - VideoUploaded
+      abis:
+        - name: VideoPlatform
+          file: ./abis/VideoPlatform.json
+      eventHandlers:
+        - event: CreatedStream(uint256,address,string,string,string,bool)
+          handler: handleCreatedStream
+        - event: StreamStopped(indexed uint256,address)
+          handler: handleStreamStopped
+        - event: VideoUploaded(uint256,address,string,string,string)
+          handler: handleVideoUploaded
+      file: ./src/video-platform.ts
