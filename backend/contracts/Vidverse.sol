@@ -44,6 +44,15 @@ contract VideoPlatform {
         string ipfsHash,
         uint256 tipAmount
     );
+
+     event VideoTipped(
+        uint256 indexed videoId,
+        address indexed owner,
+        address tipper,
+        uint256 amount,
+        uint256 newTipAmount
+    );
+
     event CreatedStream(
         uint256 id,
         address owner,
@@ -152,7 +161,7 @@ contract VideoPlatform {
     }
 
     function tipVideoOwner(
-        address useAddre,
+        address userAddre,
         uint256 _videoId,
         uint256 _amount
     ) public payable {
@@ -162,11 +171,11 @@ contract VideoPlatform {
         Video storage video = videos[_videoId];
         require(video.owner != address(0), "Video not found");
         require(
-            myToken.allowance(useAddre, address(this)) >= _amount,
+            myToken.allowance(userAddre, address(this)) >= _amount,
             "Insufficient allowance"
         );
         require(
-            myToken.transferFrom(useAddre, address(this), _amount),
+            myToken.transferFrom(userAddre, address(this), _amount),
             "Fail to transfer token in address"
         );
         require(
@@ -177,6 +186,8 @@ contract VideoPlatform {
         // Update tip amount
         video.tipAmount += _amount;
         emit VideoUploaded(video.id, video.owner, video.title, video.description, video.ipfsHash , video.tipAmount);
+        
+        emit VideoTipped(_videoId, video.owner, userAddre, _amount, video.tipAmount);
     }
 
     function tipStreamOwner(

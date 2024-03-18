@@ -9,6 +9,7 @@ const VideoCard = ({ video, handleTip }) => {
     ? `${video.owner.slice(0, 4)}...${video.owner.slice(-4)}`
     : "";
 
+
   return <div className={styles.card}>
     <div className={styles.row}>
       <div className={styles.colMd4}>
@@ -37,7 +38,7 @@ const VideoCard = ({ video, handleTip }) => {
             onSubmit={(e) => {
               e.preventDefault();
               const tipAmount = e.target.elements.tipAmount.value;
-              handleTip(video.id, tipAmount);
+              handleTip(video.VideoPlatform_id, tipAmount);
             }}
           >
             <div className={styles.inputGroup}>

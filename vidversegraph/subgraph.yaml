@@ -8,9 +8,9 @@ dataSources:
     name: VideoPlatform
     network: mumbai
     source:
-      address: "0xDc875b9952E9136B6E0BB4d4Fb4A752e193bc368"
+      address: "0xd0eE7A6b05df2Fa62961AF630900bc9f9A514270"
       abi: VideoPlatform
-      startBlock: 47185329
+      startBlock: 47188465
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
@@ -18,6 +18,7 @@ dataSources:
       entities:
         - CreatedStream
         - StreamStopped
+        - VideoTipped
         - VideoUploaded
       abis:
         - name: VideoPlatform
@@ -27,6 +28,8 @@ dataSources:
           handler: handleCreatedStream
         - event: StreamStopped(indexed uint256,address)
           handler: handleStreamStopped
+        - event: VideoTipped(indexed uint256,indexed address,address,uint256,uint256)
+          handler: handleVideoTipped
         - event: VideoUploaded(uint256,address,string,string,string,uint256)
           handler: handleVideoUploaded
       file: ./src/video-platform.ts

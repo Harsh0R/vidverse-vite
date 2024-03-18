@@ -73,11 +73,12 @@ export const VidverseProvider = ({ children }) => {
   const allVideo = async () => {
     const query = `{
       videoUploadeds {
-        id
-        title
-        ipfsHash
         owner
+        tipAmount
+        VideoPlatform_id
+        ipfsHash
         description
+        title
       }
     }`;
 
@@ -93,11 +94,12 @@ export const VidverseProvider = ({ children }) => {
   const allMyVideos = async (account) => {
     const query = `{
       videoUploadeds(where: {owner: "${account}"}) {
-        id
-        title
-        ipfsHash
         owner
+        tipAmount
+        VideoPlatform_id
+        ipfsHash
         description
+        title
       }
     }`;
 
@@ -111,26 +113,6 @@ export const VidverseProvider = ({ children }) => {
       console.error('Error fetching stake data:', error);
     }
   };
-
-  // const allVideo = async () => {
-  //   try {
-  //     const contract = await connectingWithContract();
-  //     const vid = await contract.getAllVideos();
-  //     const processedVideos = vid.map((video) => {
-  //       const processedVideo = { ...video };
-  //       processedVideo.id = ethers.BigNumber.from(video.id._hex).toNumber();
-  //       processedVideo.tipAmount = ethers.BigNumber.from(
-  //         video.tipAmount._hex
-  //       ).toString();
-  //       return processedVideo;
-  //     });
-
-  //     console.log("All vid = ", processedVideos);
-  //     return processedVideos;
-  //   } catch (error) {
-  //     console.error("Currently you have no videos.....😑", error);
-  //   }
-  // };
 
   const getAllActiveLiveStreams = async () => {
     try {
@@ -250,11 +232,13 @@ export const VidverseProvider = ({ children }) => {
     }
   };
 
-  const tipVideoOwner = async (vidID, tipAmount, account1 = account) => {
+  const tipVideoOwner = async (_videoId, tipAmount, useAddre = account) => {
     try {
-      const amount = await toWei(tipAmount);
+      const _amount = await toWei(tipAmount);
       const contract = await connectingWithContract();
-      const tipVideoOwnerTxData = contract.interface.encodeFunctionData("tipVideoOwner", [account1, vidID, amount]);
+      
+      console.log("Tip data === ",_videoId ,"Amo =" , _amount ,"OW =>" , useAddre);
+      const tipVideoOwnerTxData = contract.interface.encodeFunctionData("tipVideoOwner", [useAddre, _videoId, _amount]);
 
       const tipVideoOwnerTx = {
         to: smartContractAddress,
@@ -273,7 +257,7 @@ export const VidverseProvider = ({ children }) => {
   };
 
 
-  const hasValideAllowance = async (owner) => {
+  const hasValideAllowance = async (owner = account) => {
     try {
       const contractObj = await connectingWithContract();
       const address = await contractObj.myToken();
@@ -308,7 +292,7 @@ export const VidverseProvider = ({ children }) => {
   }
 
   const getBalance = async (address) => {
-    try {  
+    try {
       const contractObj = await connectingWithContract();
       const address1 = await contractObj.myToken();
       const tokenContractObj = await tokenContract(address1);
@@ -360,6 +344,34 @@ export const VidverseProvider = ({ children }) => {
 
 
 
+
+
+
+
+
+
+
+
+
+  // const allVideo = async () => {
+  //   try {
+  //     const contract = await connectingWithContract();
+  //     const vid = await contract.getAllVideos();
+  //     const processedVideos = vid.map((video) => {
+  //       const processedVideo = { ...video };
+  //       processedVideo.id = ethers.BigNumber.from(video.id._hex).toNumber();
+  //       processedVideo.tipAmount = ethers.BigNumber.from(
+  //         video.tipAmount._hex
+  //       ).toString();
+  //       return processedVideo;
+  //     });
+
+  //     console.log("All vid = ", processedVideos);
+  //     return processedVideos;
+  //   } catch (error) {
+  //     console.error("Currently you have no videos.....😑", error);
+  //   }
+  // };
 
 
 // const stopStreamByStreamID = async (id, account1 = account) => {

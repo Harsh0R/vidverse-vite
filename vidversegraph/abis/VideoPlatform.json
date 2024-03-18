@@ -66,6 +66,43 @@
     "anonymous": false,
     "inputs": [
       {
+        "indexed": true,
+        "internalType": "uint256",
+        "name": "videoId",
+        "type": "uint256"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "owner",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "tipper",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "amount",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "newTipAmount",
+        "type": "uint256"
+      }
+    ],
+    "name": "VideoTipped",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
         "indexed": false,
         "internalType": "uint256",
         "name": "id",
@@ -218,7 +255,7 @@
   },
   {
     "inputs": [
-      { "internalType": "address", "name": "useAddre", "type": "address" },
+      { "internalType": "address", "name": "userAddre", "type": "address" },
       { "internalType": "uint256", "name": "_videoId", "type": "uint256" },
       { "internalType": "uint256", "name": "_amount", "type": "uint256" }
     ],

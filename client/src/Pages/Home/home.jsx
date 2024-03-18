@@ -7,7 +7,7 @@ import styles from "./Home.module.css";
 import { apiKey } from '../../Context/constants';
 
 const Home = () => {
-  const { allVideo, tipVideoOwner, hasValidAllowance, increaseAllowance  } = useContext(VidverseContext);
+  const { allVideo, tipVideoOwner, hasValideAllowance, increaseAllowance, checkIfWalletConnected } = useContext(VidverseContext);
   const [contentToShow, setContentToShow] = useState('videos');
   const [videos, setVideos] = useState([]);
   const [livepeerClient, setLivepeerClient] = useState();
@@ -22,6 +22,8 @@ const Home = () => {
       if (contentToShow === 'videos') {
         try {
           const data = await allVideo();
+
+          console.log("Vid =", data);
           setVideos(data);
         } catch (error) {
           console.error('Error fetching videos:', error);
@@ -35,8 +37,8 @@ const Home = () => {
 
   const handleTip = async (vidID, tipAmount) => {
     try {
-      const owner = await checkIfWalletConnected();
-      const allowance = await hasValidAllowance(owner, tipAmount);
+
+      const allowance = await hasValideAllowance();
 
       if (allowance < tipAmount) {
         await increaseAllowance(tipAmount);

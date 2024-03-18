@@ -3,6 +3,7 @@ import { ethereum, BigInt, Address } from "@graphprotocol/graph-ts"
 import {
   CreatedStream,
   StreamStopped,
+  VideoTipped,
   VideoUploaded
 } from "../generated/VideoPlatform/VideoPlatform"
 
@@ -59,6 +60,42 @@ export function createStreamStoppedEvent(
   )
 
   return streamStoppedEvent
+}
+
+export function createVideoTippedEvent(
+  videoId: BigInt,
+  owner: Address,
+  tipper: Address,
+  amount: BigInt,
+  newTipAmount: BigInt
+): VideoTipped {
+  let videoTippedEvent = changetype<VideoTipped>(newMockEvent())
+
+  videoTippedEvent.parameters = new Array()
+
+  videoTippedEvent.parameters.push(
+    new ethereum.EventParam(
+      "videoId",
+      ethereum.Value.fromUnsignedBigInt(videoId)
+    )
+  )
+  videoTippedEvent.parameters.push(
+    new ethereum.EventParam("owner", ethereum.Value.fromAddress(owner))
+  )
+  videoTippedEvent.parameters.push(
+    new ethereum.EventParam("tipper", ethereum.Value.fromAddress(tipper))
+  )
+  videoTippedEvent.parameters.push(
+    new ethereum.EventParam("amount", ethereum.Value.fromUnsignedBigInt(amount))
+  )
+  videoTippedEvent.parameters.push(
+    new ethereum.EventParam(
+      "newTipAmount",
+      ethereum.Value.fromUnsignedBigInt(newTipAmount)
+    )
+  )
+
+  return videoTippedEvent
 }
 
 export function createVideoUploadedEvent(
