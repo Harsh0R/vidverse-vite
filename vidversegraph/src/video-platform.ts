@@ -21,6 +21,8 @@ export function handleCreatedStream(event: CreatedStreamEvent): void {
   entity.description = event.params.description
   entity.playBackId = event.params.playBackId
   entity.status = event.params.status
+  entity.streamKey = event.params.streamKey
+  entity.streamID = event.params.streamID
 
   entity.blockNumber = event.block.number
   entity.blockTimestamp = event.block.timestamp

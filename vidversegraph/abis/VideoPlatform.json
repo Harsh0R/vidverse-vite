@@ -38,6 +38,18 @@
         "internalType": "bool",
         "name": "status",
         "type": "bool"
+      },
+      {
+        "indexed": false,
+        "internalType": "string",
+        "name": "streamKey",
+        "type": "string"
+      },
+      {
+        "indexed": false,
+        "internalType": "string",
+        "name": "streamID",
+        "type": "string"
       }
     ],
     "name": "CreatedStream",

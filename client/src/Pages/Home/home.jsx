@@ -43,6 +43,7 @@ const Home = () => {
       if (allowance < tipAmount) {
         await increaseAllowance(tipAmount);
       } else {
+        console.log("Tip amount => " , tipAmount);
         await tipVideoOwner(vidID, tipAmount);
       }
     } catch (error) {
@@ -58,7 +59,7 @@ const Home = () => {
       </div>
       <div className={styles.content}>
         {contentToShow === 'videos' && (
-          <div className={styles.videoGrid}>
+          <div>
             {videos.length ? videos.map((video, index) => (
               <VideoCard key={index} video={video} handleTip={handleTip} />
             )) : <p className={styles.noVideos}>No videos available.</p>}

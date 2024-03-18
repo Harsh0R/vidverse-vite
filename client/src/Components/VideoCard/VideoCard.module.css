@@ -31,16 +31,18 @@
   }
   
   .cardBody {
+    margin: 10px;
     padding: 15px;
   }
   
   .cardTitle {
-    margin-bottom: 15px;
-    color: #ff0000; /* YouTube-like red for titles */
+    text-align: start;
+    color: #00e1ff; /* YouTube-like red for titles */
   }
   
   .cardText {
     font-size: 14px;
+    text-align: start;
     color: #ccc; /* Lighter text for less emphasis */
   }
   
@@ -50,7 +52,6 @@
   
   .inputGroup {
     display: flex;
-    margin-top: 15px;
   }
   
   .formControl {
@@ -64,7 +65,7 @@
   
   .btn {
     padding: 10px 15px;
-    background-color: #ff0000; /* YouTube-like red for buttons */
+    background-color: #c54242; /* YouTube-like red for buttons */
     color: #fff;
     border: none;
     cursor: pointer;
@@ -72,12 +73,7 @@
   }
   
   .btn:hover {
-    background-color: #e50000; /* Darker red on hover */
-  }
-  
-  @media (max-width: 768px) {
-    .card {
-      width: 100%; /* Full width for smaller screens */
-    }
+    background-color: #b9b9b9; /* Darker red on hover */
+    color: black;
   }
   

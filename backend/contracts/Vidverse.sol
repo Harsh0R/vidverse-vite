@@ -58,7 +58,9 @@ contract VideoPlatform {
         string stramName,
         string description,
         string playBackId,
-        bool status
+        bool status,
+        string streamKey,
+        string streamID
     );
 
     constructor() {
@@ -124,7 +126,9 @@ contract VideoPlatform {
             _title,
             _description,
             _playbackId,
-            true
+            true,
+            streamKey,
+            _streamID
         );
     }
 

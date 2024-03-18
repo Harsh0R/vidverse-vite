@@ -6,6 +6,8 @@ type CreatedStream @entity(immutable: true) {
   description: String! # string
   playBackId: String! # string
   status: Boolean! # bool
+  streamKey: String! # string
+  streamID: String! # string
   blockNumber: BigInt!
   blockTimestamp: BigInt!
   transactionHash: Bytes!

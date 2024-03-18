@@ -23,13 +23,17 @@ describe("Describe entity assertions", () => {
     let description = "Example string value"
     let playBackId = "Example string value"
     let status = "boolean Not implemented"
+    let streamKey = "Example string value"
+    let streamID = "Example string value"
     let newCreatedStreamEvent = createCreatedStreamEvent(
       id,
       owner,
       stramName,
       description,
       playBackId,
-      status
+      status,
+      streamKey,
+      streamID
     )
     handleCreatedStream(newCreatedStreamEvent)
   })
@@ -74,6 +78,18 @@ describe("Describe entity assertions", () => {
       "0xa16081f360e3847006db660bae1c6d1b2e17ec2a-1",
       "status",
       "boolean Not implemented"
+    )
+    assert.fieldEquals(
+      "CreatedStream",
+      "0xa16081f360e3847006db660bae1c6d1b2e17ec2a-1",
+      "streamKey",
+      "Example string value"
+    )
+    assert.fieldEquals(
+      "CreatedStream",
+      "0xa16081f360e3847006db660bae1c6d1b2e17ec2a-1",
+      "streamID",
+      "Example string value"
     )
 
     // More assert options:

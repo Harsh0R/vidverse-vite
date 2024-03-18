@@ -72,20 +72,20 @@ export const VidverseProvider = ({ children }) => {
 
   const allVideo = async () => {
     const query = `{
-      videoUploadeds {
-        owner
-        tipAmount
-        VideoPlatform_id
-        ipfsHash
-        description
+      videoDatas {
         title
+        totalTipAmount
+        ipfsHash
+        VideoPlatform_id
+        description
+        owner
       }
     }`;
 
     try {
       const result = await client.query(query).toPromise();
       if (result.data) {
-        return result.data.videoUploadeds;
+        return result.data.videoDatas;
       }
     } catch (error) {
       console.error('Error fetching stake data:', error);
@@ -93,20 +93,20 @@ export const VidverseProvider = ({ children }) => {
   };
   const allMyVideos = async (account) => {
     const query = `{
-      videoUploadeds(where: {owner: "${account}"}) {
-        owner
-        tipAmount
-        VideoPlatform_id
-        ipfsHash
-        description
+      videoDatas(where: {owner: "${account}"}) {
         title
+        totalTipAmount
+        ipfsHash
+        VideoPlatform_id
+        description
+        owner
       }
     }`;
 
     try {
       const result = await client.query(query).toPromise();
       if (result.data) {
-        return result.data.videoUploadeds;
+        return result.data.videoDatas;
       }
 
     } catch (error) {
@@ -206,6 +206,7 @@ export const VidverseProvider = ({ children }) => {
       console.error("Error while Createing stream = ", error);
     }
   };
+  
   const stopStreamByStreamID = async (id, account1 = account) => {
     try {
       const connectedAccount = await checkIfWalletConnected();

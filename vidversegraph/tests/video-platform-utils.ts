@@ -13,7 +13,9 @@ export function createCreatedStreamEvent(
   stramName: string,
   description: string,
   playBackId: string,
-  status: boolean
+  status: boolean,
+  streamKey: string,
+  streamID: string
 ): CreatedStream {
   let createdStreamEvent = changetype<CreatedStream>(newMockEvent())
 
@@ -39,6 +41,12 @@ export function createCreatedStreamEvent(
   )
   createdStreamEvent.parameters.push(
     new ethereum.EventParam("status", ethereum.Value.fromBoolean(status))
+  )
+  createdStreamEvent.parameters.push(
+    new ethereum.EventParam("streamKey", ethereum.Value.fromString(streamKey))
+  )
+  createdStreamEvent.parameters.push(
+    new ethereum.EventParam("streamID", ethereum.Value.fromString(streamID))
   )
 
   return createdStreamEvent

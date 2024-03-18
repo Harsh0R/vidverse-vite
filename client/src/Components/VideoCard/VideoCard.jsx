@@ -24,16 +24,16 @@ const VideoCard = ({ video, handleTip }) => {
       </div>
       <div className={styles.colMd8}>
         <div className={styles.cardBody}>
-          <h5 className={styles.cardTitle}>{video.title}</h5>
+          <h1 className={styles.cardTitle}>{video.title}</h1>
           <p className={styles.cardText}>{video.description}</p>
-          <p className={styles.cardText}>
+          {/* <p className={styles.cardText}>
             <small className={styles.textMuted}>CID: {CID}</small>
-          </p>
+          </p> */}
           <p className={styles.cardText}>
             <small className={styles.textMuted}>Owner: {makerAdd}</small>
           </p>
-          {/* {console.log("Tip in conponent = ", video.tipAmount)} */}
-          <p className={styles.cardText}>Tip Amount: {video.tipAmount}</p>
+          {/* {console.log("Tip in conponent = ", video.totalTipAmount)} */}
+          <p className={styles.cardText}>Tip Amount: {video.totalTipAmount}</p>
           <form
             onSubmit={(e) => {
               e.preventDefault();

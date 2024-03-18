@@ -2,7 +2,6 @@ import React, { useContext, useEffect, useState } from 'react';
 import { VidverseContext } from '../../Context/VidverseContext';
 import { Link } from 'react-router-dom';
 import Style from "./myaccount.module.css";
-import StreamStarterFile from '../../Components/ForLiveStream/StreamStarterFile';
 
 const MyAccount = () => {
   const { allVideo, uploadVideos, account ,allMyVideos} = useContext(VidverseContext);
@@ -22,8 +21,7 @@ const MyAccount = () => {
       try {
         const acc = await account;
         const data = await allMyVideos(acc);
-        // const filteredVideos = data.filter(video => video.owner.toLowerCase() === account.toLowerCase());
-        // setUploadedVid(filteredVideos);
+        console.log('fetching videos:', data);
         setUploadedVid(data);
       } catch (error) {
         console.error('Error fetching videos:', error);
@@ -75,7 +73,6 @@ const MyAccount = () => {
       console.log("Error in upload videos : ", error);
     }
   };
-
 
   return (
     <div className={Style.myAccountContainer}>
@@ -149,6 +146,14 @@ const MyAccount = () => {
                   />
                 </>
               )}
+              <p className={Style.cardText}>Tip Amount: {video.totalTipAmount}</p>
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              const tipAmount = e.target.elements.totalTipAmount.value;
+              handleTip(video.VideoPlatform_id, tipAmount);
+            }}
+          ></form>
               <br></br>
               <br></br>
               <br></br>
