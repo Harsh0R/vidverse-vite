@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { VidverseContext } from '../../Context/VidverseContext';
-import { copyImg } from '../../assets/imgs';
+import imgs from '../../assets/imgs';
 import styles from "./Navbar.module.css";
 
 const Navbar = () => {
@@ -45,7 +45,7 @@ const Navbar = () => {
           <>
             <span className={styles.accountAddress}>Acc: {truncatedAccount}</span>
             <button className={styles.copyButton} onClick={copyToClipboard}>
-              <img src={copyImg} alt="Copy" height="15" />
+              <img src={imgs.copyImg} alt="Copy" height="15" />
             </button>
             <span className={styles.balance}>Balance: {balance} NVT</span>
           </>

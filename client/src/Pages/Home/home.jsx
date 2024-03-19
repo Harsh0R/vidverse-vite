@@ -4,6 +4,7 @@ import Webplayer from '../../Components/ForLiveStream/Webplayer';
 import VideoCard from '../../Components/VideoCard/VideoCard';
 import { LivepeerConfig, createReactClient, studioProvider } from "@livepeer/react";
 import styles from "./Home.module.css";
+import imgs from "../../assets/imgs"
 import { apiKey } from '../../Context/constants';
 
 const Home = () => {
@@ -43,7 +44,7 @@ const Home = () => {
       if (allowance < tipAmount) {
         await increaseAllowance(tipAmount);
       } else {
-        console.log("Tip amount => " , tipAmount);
+        console.log("Tip amount => ", tipAmount);
         await tipVideoOwner(vidID, tipAmount);
       }
     } catch (error) {
@@ -56,6 +57,9 @@ const Home = () => {
       <div className={styles.sidebar}>
         <button onClick={() => setContentToShow('videos')} className={contentToShow === 'videos' ? styles.active : ''}>Videos</button>
         <button onClick={() => setContentToShow('livestream')} className={contentToShow === 'livestream' ? styles.active : ''}>LiveStream</button>
+        {/* <button onClick={() => setContentToShow('livestream')} className={contentToShow === 'livestream' ? styles.active : ''}>
+          <img src={imgs[`image${2}`]} alt="Copy" height="50" />
+        </button> */}
       </div>
       <div className={styles.content}>
         {contentToShow === 'videos' && (

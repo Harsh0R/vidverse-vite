@@ -17,6 +17,10 @@ contract VideoPlatform {
         string description;
         string ipfsHash;
         uint256 tipAmount;
+        string username;
+        uint256 likes;
+        uint256 dislikes;
+        string genre;
     }
     struct LiveStream {
         uint256 id;
@@ -28,7 +32,26 @@ contract VideoPlatform {
         bool status;
         string streamKey;
         string streamID;
+        string username;
+        uint256 likes;
+        uint256 dislikes;
+        string genre;
     }
+
+    struct User {
+        address addr;
+        string username;
+    }
+
+    mapping(address => User) public users;
+    // Maps video ID to a mapping of user addresses to a boolean indicating if they've liked/disliked
+    mapping(uint256 => mapping(address => bool)) public videoLikes;
+    mapping(uint256 => mapping(address => bool)) public videoDislikes;
+
+    // Similar mappings for live streams
+    mapping(uint256 => mapping(address => bool)) public streamLikes;
+    mapping(uint256 => mapping(address => bool)) public streamDislikes;
+    mapping(string => bool) private usernameTaken;
 
     Video[] public videos;
     LiveStream[] public liveStreams;
@@ -44,7 +67,7 @@ contract VideoPlatform {
         string ipfsHash
     );
 
-     event VideoTipped(
+    event VideoTipped(
         uint256 indexed videoId,
         address indexed owner,
         address tipper,
@@ -68,13 +91,32 @@ contract VideoPlatform {
         myToken = token;
     }
 
+    function registerUser(
+        string memory _username,
+        address userAdderess
+    ) public {
+        require(!usernameTaken[_username], "Username is already taken");
+        require(
+            bytes(users[userAdderess].username).length == 0,
+            "Address already registered"
+        );
+
+        users[userAdderess] = User(userAdderess, _username);
+        usernameTaken[_username] = true;
+    }
+
     function uploadVideo(
         address userAddr,
         string memory _title,
         string memory _description,
-        string memory _ipfsHash
+        string memory _ipfsHash,
+        string memory _genre
     ) public {
-        // Check if the IPFS hash already exists
+        require(
+            bytes(users[userAddr].username).length > 0,
+            "User must be registered"
+        );
+
         for (uint256 i = 0; i < videos.length; i++) {
             require(
                 keccak256(abi.encodePacked(videos[i].ipfsHash)) !=
@@ -84,9 +126,49 @@ contract VideoPlatform {
         }
 
         uint256 id = videos.length;
-        videos.push(Video(id, userAddr, _title, _description, _ipfsHash, 0));
+        videos.push(
+            Video(
+                videos.length,
+                userAddr,
+                _title,
+                _description,
+                _ipfsHash,
+                0,
+                users[userAddr].username,
+                0,
+                0,
+                _genre 
+            )
+        );
         myToken.transfer(userAddr, 100 * 10 ** 18);
         emit VideoUploaded(id, userAddr, _title, _description, _ipfsHash);
+    }
+
+    function likeVideo(uint256 _videoId) public {
+        require(_videoId < videos.length, "Invalid video ID");
+        require(!videoLikes[_videoId][msg.sender], "Already liked this video");
+        require(
+            !videoDislikes[_videoId][msg.sender],
+            "Already disliked this video, cannot like"
+        );
+
+        videoLikes[_videoId][msg.sender] = true;
+        videos[_videoId].likes += 1;
+    }
+
+    function dislikeVideo(uint256 _videoId) public {
+        require(_videoId < videos.length, "Invalid video ID");
+        require(
+            !videoDislikes[_videoId][msg.sender],
+            "Already disliked this video"
+        );
+        require(
+            !videoLikes[_videoId][msg.sender],
+            "Already liked this video, cannot dislike"
+        );
+
+        videoDislikes[_videoId][msg.sender] = true;
+        videos[_videoId].dislikes += 1;
     }
 
     function createStream(
@@ -95,8 +177,14 @@ contract VideoPlatform {
         string memory _description,
         string memory _playbackId,
         string memory streamKey,
-        string memory _streamID
+        string memory _streamID,
+        string memory _genre
     ) public {
+        require(
+            bytes(users[userAddr].username).length > 0,
+            "User must be registered"
+        );
+
         for (uint256 i = 0; i < liveStreams.length; i++) {
             require(
                 keccak256(abi.encodePacked(liveStreams[i].playBackId)) !=
@@ -116,7 +204,11 @@ contract VideoPlatform {
                 0,
                 true,
                 streamKey,
-                _streamID
+                _streamID,
+                users[userAddr].username,
+                0,
+                0,
+                _genre 
             )
         );
         myToken.transfer(userAddr, 1000 * 10 ** 18);
@@ -132,7 +224,10 @@ contract VideoPlatform {
         );
     }
 
-    function stopStreamByStreamID(address useAddress ,string memory _streamID) public {
+    function stopStreamByStreamID(
+        address useAddress,
+        string memory _streamID
+    ) public {
         bool streamFound = false;
 
         for (uint256 i = 0; i < liveStreams.length; i++) {
@@ -187,8 +282,14 @@ contract VideoPlatform {
         );
 
         // Update tip amount
-        video.tipAmount += _amount; 
-        emit VideoTipped(_videoId, video.owner, userAddre, _amount, video.tipAmount);
+        video.tipAmount += _amount;
+        emit VideoTipped(
+            _videoId,
+            video.owner,
+            userAddre,
+            _amount,
+            video.tipAmount
+        );
     }
 
     function tipStreamOwner(
@@ -218,54 +319,53 @@ contract VideoPlatform {
         stream.tipAmount += _amount;
     }
 
-    function getAllActiveLiveStreams()
-        public
-        view
-        returns (LiveStream[] memory)
-    {
-        // Step 1: Count active streams
-        uint256 activeCount = 0;
-        for (uint256 i = 0; i < liveStreams.length; i++) {
-            if (liveStreams[i].status) {
-                activeCount++;
-            }
-        }
+    // function getAllActiveLiveStreams()
+    //     public
+    //     view
+    //     returns (LiveStream[] memory)
+    // {
+    //     // Step 1: Count active streams
+    //     uint256 activeCount = 0;
+    //     for (uint256 i = 0; i < liveStreams.length; i++) {
+    //         if (liveStreams[i].status) {
+    //             activeCount++;
+    //         }
+    //     }
 
-        // Step 2: Allocate memory array and populate with active streams
-        LiveStream[] memory activeStreams = new LiveStream[](activeCount);
-        uint256 activeIndex = 0;
-        for (uint256 i = 0; i < liveStreams.length; i++) {
-            if (liveStreams[i].status) {
-                activeStreams[activeIndex] = liveStreams[i];
-                activeIndex++;
-            }
-        }
+    //     // Step 2: Allocate memory array and populate with active streams
+    //     LiveStream[] memory activeStreams = new LiveStream[](activeCount);
+    //     uint256 activeIndex = 0;
+    //     for (uint256 i = 0; i < liveStreams.length; i++) {
+    //         if (liveStreams[i].status) {
+    //             activeStreams[activeIndex] = liveStreams[i];
+    //             activeIndex++;
+    //         }
+    //     }
 
-        return activeStreams;
-    }
+    //     return activeStreams;
+    // }
 
-    function getMyActiveLiveStreams(
-        address account
-    ) public view returns (LiveStream[] memory) {
-        uint256 activeCount = 0;
-        // First, count the active streams owned by the account
-        for (uint256 i = 0; i < liveStreams.length; i++) {
-            if (liveStreams[i].status && liveStreams[i].owner == account) {
-                activeCount++;
-            }
-        }
+    // function getMyActiveLiveStreams(
+    //     address account
+    // ) public view returns (LiveStream[] memory) {
+    //     uint256 activeCount = 0;
+    //     // First, count the active streams owned by the account
+    //     for (uint256 i = 0; i < liveStreams.length; i++) {
+    //         if (liveStreams[i].status && liveStreams[i].owner == account) {
+    //             activeCount++;
+    //         }
+    //     }
 
-        LiveStream[] memory activeStreams = new LiveStream[](activeCount);
-        uint256 activeIndex = 0;
-        // Then, allocate and populate the array with those streams
-        for (uint256 i = 0; i < liveStreams.length; i++) {
-            if (liveStreams[i].status && liveStreams[i].owner == account) {
-                activeStreams[activeIndex] = liveStreams[i];
-                activeIndex++;
-            }
-        }
+    //     LiveStream[] memory activeStreams = new LiveStream[](activeCount);
+    //     uint256 activeIndex = 0;
+    //     // Then, allocate and populate the array with those streams
+    //     for (uint256 i = 0; i < liveStreams.length; i++) {
+    //         if (liveStreams[i].status && liveStreams[i].owner == account) {
+    //             activeStreams[activeIndex] = liveStreams[i];
+    //             activeIndex++;
+    //         }
+    //     }
 
-        return activeStreams;
-    }
-
+    //     return activeStreams;
+    // }
 }

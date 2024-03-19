@@ -70,6 +70,8 @@ export const VidverseProvider = ({ children }) => {
 
   }, []);
 
+
+
   const allVideo = async () => {
     const query = `{
       videoDatas {
@@ -137,47 +139,9 @@ export const VidverseProvider = ({ children }) => {
     }
   };
 
-  const getAllActiveLiveStreams = async () => {
-    try {
-      const contract = await connectingWithContract();
-      const vid = await contract.getAllActiveLiveStreams();
-      const processedVideos = vid.map((video) => {
-        const processedVideo = { ...video };
-        processedVideo.id = ethers.BigNumber.from(video.id._hex).toNumber();
-        processedVideo.tipAmount = ethers.BigNumber.from(
-          video.tipAmount._hex
-        ).toString();
-        return processedVideo;
-      });
 
-      console.log("All LiveStreams = ", processedVideos);
-      return processedVideos;
-    } catch (error) {
-      console.error("Currently you have no LiveStream .....😑", error);
-    }
-  };
 
-  const getMyActiveLiveStreams = async (account1) => {
-    try {
 
-      // console.log("Add = ",account1);
-      const contract = await connectingWithContract();
-      const vid = await contract.getMyActiveLiveStreams(account1);
-      const processedVideos = vid.map((video) => {
-        const processedVideo = { ...video };
-        processedVideo.id = ethers.BigNumber.from(video.id._hex).toNumber();
-        processedVideo.tipAmount = ethers.BigNumber.from(
-          video.tipAmount._hex
-        ).toString();
-        return processedVideo;
-      });
-
-      console.log("All My LiveStreams = ", processedVideos);
-      return processedVideos;
-    } catch (error) {
-      console.error("Error in get Active LiveStream .....😑", error);
-    }
-  };
 
   const uploadVideos = async (name, desc, cid, account1 = account) => {
     try {
@@ -204,7 +168,6 @@ export const VidverseProvider = ({ children }) => {
       console.error("Error while uploading videos", error);
     }
   };
-
   const createLiveStream = async (name, playbackId, streamKey, strId, desc = "", account1 = account) => {
     try {
       const connectedAccount = await checkIfWalletConnected();
@@ -229,7 +192,6 @@ export const VidverseProvider = ({ children }) => {
       console.error("Error while Createing stream = ", error);
     }
   };
-
   const stopStreamByStreamID = async (id, account1 = account) => {
     try {
       const connectedAccount = await checkIfWalletConnected();
@@ -255,7 +217,6 @@ export const VidverseProvider = ({ children }) => {
       console.error("Error while Createing stream = ", error);
     }
   };
-
   const tipVideoOwner = async (_videoId, tipAmount, useAddre = account) => {
     try {
       const _amount = await toWei(tipAmount);
@@ -281,6 +242,8 @@ export const VidverseProvider = ({ children }) => {
   };
 
 
+
+
   const hasValideAllowance = async (owner = account) => {
     try {
       const contractObj = await connectingWithContract();
@@ -298,7 +261,6 @@ export const VidverseProvider = ({ children }) => {
       return console.error("Error in hasAllowes == ", e);
     }
   }
-
   const increaseAllowance = async (amount) => {
     try {
       const contractObj = await connectingWithContract();
@@ -314,7 +276,6 @@ export const VidverseProvider = ({ children }) => {
       return console.log("Error at Increase allowence = ", e);
     }
   }
-
   const getBalance = async (address) => {
     try {
       const contractObj = await connectingWithContract();
@@ -328,7 +289,6 @@ export const VidverseProvider = ({ children }) => {
       console.error("Error accor while uploading videos.....😑");
     }
   }
-
   const toWei = async (amount) => {
     const toWie = ethers.utils.parseUnits(amount.toString());
     return toWie.toString();
@@ -355,11 +315,11 @@ export const VidverseProvider = ({ children }) => {
         increaseAllowance,
         getBalance,
         createLiveStream,
-        getAllActiveLiveStreams,
         stopStreamByStreamID,
-        getMyActiveLiveStreams,
         allMyVideos,
         getAllLiveStreamData,
+        // getAllActiveLiveStreams,
+        // getMyActiveLiveStreams,
       }}
     >
       {children}
@@ -461,3 +421,46 @@ export const VidverseProvider = ({ children }) => {
 //     console.log("Error in fetching account in vidverseContext...", error);
 //   }
 // };
+
+
+  // const getAllActiveLiveStreams = async () => {
+  //   try {
+  //     const contract = await connectingWithContract();
+  //     const vid = await contract.getAllActiveLiveStreams();
+  //     const processedVideos = vid.map((video) => {
+  //       const processedVideo = { ...video };
+  //       processedVideo.id = ethers.BigNumber.from(video.id._hex).toNumber();
+  //       processedVideo.tipAmount = ethers.BigNumber.from(
+  //         video.tipAmount._hex
+  //       ).toString();
+  //       return processedVideo;
+  //     });
+
+  //     console.log("All LiveStreams = ", processedVideos);
+  //     return processedVideos;
+  //   } catch (error) {
+  //     console.error("Currently you have no LiveStream .....😑", error);
+  //   }
+  // };
+
+  // const getMyActiveLiveStreams = async (account1) => {
+  //   try {
+
+  //     // console.log("Add = ",account1);
+  //     const contract = await connectingWithContract();
+  //     const vid = await contract.getMyActiveLiveStreams(account1);
+  //     const processedVideos = vid.map((video) => {
+  //       const processedVideo = { ...video };
+  //       processedVideo.id = ethers.BigNumber.from(video.id._hex).toNumber();
+  //       processedVideo.tipAmount = ethers.BigNumber.from(
+  //         video.tipAmount._hex
+  //       ).toString();
+  //       return processedVideo;
+  //     });
+
+  //     console.log("All My LiveStreams = ", processedVideos);
+  //     return processedVideos;
+  //   } catch (error) {
+  //     console.error("Error in get Active LiveStream .....😑", error);
+  //   }
+  // };
