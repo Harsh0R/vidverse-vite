@@ -3,69 +3,54 @@ import { Player } from "@livepeer/react";
 import ChatBox from "../ChatBox/ChatBox";
 import { VidverseContext } from "../../Context/VidverseContext";
 
-const Webplayer = ({ name1, playbackId1 }) => {
-  const [playbackId, setPlaybackId] = useState("");
-  const [streamName, setStreamName] = useState("");
-  const [flag, setFlag] = useState(false);
+const Webplayer = () => {
+  const [liveStreams, setLiveStreams] = useState([]); 
 
-  console.log("Name and id = " , name1 , playbackId1);
-
-  const { getAllActiveLiveStreams } = useContext(VidverseContext);
-  const handlefunc = (e) => {
-    e.preventDefault();
-    if (playbackId && streamName) {
-      setFlag(true)
-      console.log("Playback ID:", playbackId);
-      console.log("Stream Name:", streamName);
-    } else {
-      console.error("Please enter both Playback ID and Stream Name");
-    }
-  };
+  const { getAllLiveStreamData } = useContext(VidverseContext);
 
   const handleShowLiveStream = async () => {
-    const stream = await getAllActiveLiveStreams();
-    console.log("Stream = ", stream);
+    const streams = await getAllLiveStreamData(); // Assume this returns an array of streams
+    setLiveStreams(streams); // Set the live streams state
+    console.log("Streams = ", streams);
   }
 
   return (
     <div>
       <button onClick={handleShowLiveStream}>Show live stream</button>
-      <form onSubmit={handlefunc}>
-        <input
-          type="text"
-          value={playbackId}
-          placeholder="Enter Playback ID"
-          onChange={(e) => setPlaybackId(e.target.value)}
-        />
-        <input
-          type="text"
-          value={streamName}
-          placeholder="Enter Stream Name"
-          onChange={(e) => setStreamName(e.target.value)}
-        />
-        <button type="submit">Show Stream</button>
-      </form>
-      <div style={{ width: "100%" }}>
-        {flag && (
-          <div>
-            <Player
-              title="Waterfalls"
-              playbackId={playbackId}
-              showPipButton
-              showTitle={false}
-              aspectRatio="16to9"
-              controls={{
-                autohide: 3000,
-              }}
-              theme={{
-                borderStyles: { containerBorderStyle: "hidden" },
-                radii: { containerBorderRadius: "10px" },
-              }}
-            />
-            <ChatBox chat={name1}></ChatBox>
-          </div>
-        )}
-      </div>
+      {liveStreams.length > 0 && (
+        <div>
+          {liveStreams.map((stream, index) => (
+            <div key={index}>
+              <div style={{ width: "20%" }}>
+                <p>Stream Name: {stream.stramName}</p> {/* Note the typo 'stramName' might be a mistake. */}
+                <p>Owner: {stream.owner}</p>
+                <p>Playback ID: {stream.playBackId}</p>
+
+                <>
+                  <Player
+                    title={stream.stramName}
+                    playbackId={stream.playBackId}
+                    showPipButton
+                    showTitle={false}
+                    aspectRatio="16to9"
+                    controls={{
+                      autohide: 3000,
+                    }}
+                    theme={{
+                      borderStyles: { containerBorderStyle: "hidden" },
+                      radii: { containerBorderRadius: "10px" },
+                    }}
+                  />
+                  <ChatBox chat={stream.stramName}></ChatBox>
+                </>
+              </div>
+
+            </div>
+
+          ))}
+        </div>
+      )}
+
     </div>
   );
 };

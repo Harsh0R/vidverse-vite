@@ -8,7 +8,7 @@ const LivestreamCom = () => {
     const [streamName, setStreamName] = useState('');
     const [error, setError] = useState('');
     const [activeStream, setActiveStream] = useState(null);
-    const { createLiveStream, getMyActiveLiveStreams, stopStreamByStreamID, account } = useContext(VidverseContext);
+    const { createLiveStream, getAllLiveStreamData, stopStreamByStreamID, account } = useContext(VidverseContext);
 
     const apiToken = '45cddd3a-e60e-4a8b-b121-e353f8b107b0';
     const { mutate: createStream, data: createdStream, status } = useCreateStream(
@@ -18,26 +18,23 @@ const LivestreamCom = () => {
     useEffect(() => {
         const fetchActiveStreams = async () => {
             try {
-                // console.log("Acc in S l ", account);
                 if (account) {
-                    const streams = await getMyActiveLiveStreams(account);
+                    const streams = await getAllLiveStreamData(account);
                     if (streams.length > 0) {
-                        setActiveStream(streams[0]); // Assuming you want the first active stream
+                        setActiveStream(streams[0]); 
                     }
                 }
             } catch (error) {
                 console.error("Error fetching active live streams:", error);
             }
         };
-
         fetchActiveStreams();
-    }, [getMyActiveLiveStreams, account]);
+    }, [account]);
 
     const updateInContract = async () => {
         try {
             await createLiveStream(createdStream.name, createdStream.playbackId, createdStream.streamKey, createdStream.id);
             setActiveStream({ ...createdStream, status: true });
-            window.location.reload();
         } catch (error) {
             console.error("Error updating stream in contract:", error);
             setError("Failed to update stream. Please try again.");
@@ -94,7 +91,7 @@ const LivestreamCom = () => {
             )}
             {error && <p className="text-danger mt-3">{error}</p>}
             {activeStream && (
-                <div className="mt-3">
+                <div className="mt-3" style={{ width: "80%", margin:'auto' }}>
                     <p>Stream: {activeStream.stramName}</p>
                     <p>Playback ID: {activeStream.playBackId}</p>
                     <Broadcast streamKey={activeStream.streamKey} onError={console.error} />
