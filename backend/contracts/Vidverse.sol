@@ -41,6 +41,7 @@ contract VideoPlatform {
     struct User {
         address addr;
         string username;
+        address[] subscriptions; // Add this line
     }
 
     mapping(address => User) public users;
@@ -58,6 +59,16 @@ contract VideoPlatform {
     ERC20 public myToken;
 
     event StreamStopped(uint256 indexed id, address owner);
+
+    event UserRegistered(address indexed userAddress, string username);
+    event SubscribedToCreator(
+        address indexed subscriber,
+        address indexed creator
+    );
+    event UnsubscribedFromCreator(
+        address indexed subscriber,
+        address indexed creator
+    );
 
     event VideoUploaded(
         uint256 id,
@@ -85,24 +96,30 @@ contract VideoPlatform {
         string streamKey,
         string streamID
     );
+    
+    event StreamTipped(
+        uint256 indexed streamId,
+        address indexed owner,
+        address tipper,
+        uint256 amount,
+        uint256 newTipAmount
+    );
 
     constructor() {
         MyToken token = new MyToken();
         myToken = token;
     }
 
-    function registerUser(
-        string memory _username,
-        address userAdderess
-    ) public {
+    function registerUser(string memory _username, address userAddress) public {
         require(!usernameTaken[_username], "Username is already taken");
         require(
-            bytes(users[userAdderess].username).length == 0,
+            bytes(users[userAddress].username).length == 0,
             "Address already registered"
         );
 
-        users[userAdderess] = User(userAdderess, _username);
+        users[userAddress] = User(userAddress, _username, new address[](0));
         usernameTaken[_username] = true;
+        emit UserRegistered(userAddress, _username); // Emit event here
     }
 
     function uploadVideo(
@@ -137,7 +154,7 @@ contract VideoPlatform {
                 users[userAddr].username,
                 0,
                 0,
-                _genre 
+                _genre
             )
         );
         myToken.transfer(userAddr, 100 * 10 ** 18);
@@ -208,7 +225,7 @@ contract VideoPlatform {
                 users[userAddr].username,
                 0,
                 0,
-                _genre 
+                _genre
             )
         );
         myToken.transfer(userAddr, 1000 * 10 ** 18);
@@ -258,6 +275,41 @@ contract VideoPlatform {
         );
     }
 
+    function subscribeToCreator(address creatorAddress) public {
+        User storage user = users[msg.sender];
+        require(user.addr != address(0), "User must be registered");
+        for (uint i = 0; i < user.subscriptions.length; i++) {
+            require(
+                user.subscriptions[i] != creatorAddress,
+                "Already subscribed"
+            );
+        }
+        user.subscriptions.push(creatorAddress);
+        emit SubscribedToCreator(msg.sender, creatorAddress); // Emit event here
+    }
+
+    function unsubscribeFromCreator(address creatorAddress) public {
+        User storage user = users[msg.sender];
+        require(user.addr != address(0), "User must be registered");
+        int256 index = -1;
+        for (uint i = 0; i < user.subscriptions.length; i++) {
+            if (user.subscriptions[i] == creatorAddress) {
+                index = int256(i);
+                break;
+            }
+        }
+        require(index >= 0, "Not subscribed to this creator");
+        user.subscriptions[uint256(index)] = user.subscriptions[
+            user.subscriptions.length - 1
+        ];
+        user.subscriptions.pop();
+        emit UnsubscribedFromCreator(msg.sender, creatorAddress); // Emit event here
+    }
+
+    function getMySubscriptions() public view returns (address[] memory) {
+        return users[msg.sender].subscriptions;
+    }
+
     function tipVideoOwner(
         address userAddre,
         uint256 _videoId,
@@ -293,79 +345,34 @@ contract VideoPlatform {
     }
 
     function tipStreamOwner(
-        address useAddre,
+        address userAddr,
         uint256 _streamId,
         uint256 _amount
     ) public payable {
         require(_streamId < liveStreams.length, "Invalid Stream ID");
         require(_amount > 0, "Amount must be greater than 0");
-
         LiveStream storage stream = liveStreams[_streamId];
         require(stream.owner != address(0), "Stream not found");
         require(
-            myToken.allowance(useAddre, address(this)) >= _amount,
+            myToken.allowance(userAddr, address(this)) >= _amount,
             "Insufficient allowance"
         );
         require(
-            myToken.transferFrom(useAddre, address(this), _amount),
+            myToken.transferFrom(userAddr, address(this), _amount),
             "Fail to transfer token in address"
         );
         require(
             myToken.transfer(stream.owner, _amount),
             "Fail to transfer token to stream owner"
         );
-
-        // Update tip amount
         stream.tipAmount += _amount;
+        emit StreamTipped(
+            _streamId,
+            stream.owner,
+            userAddr,
+            _amount,
+            stream.tipAmount
+        ); // Emit event here
     }
 
-    // function getAllActiveLiveStreams()
-    //     public
-    //     view
-    //     returns (LiveStream[] memory)
-    // {
-    //     // Step 1: Count active streams
-    //     uint256 activeCount = 0;
-    //     for (uint256 i = 0; i < liveStreams.length; i++) {
-    //         if (liveStreams[i].status) {
-    //             activeCount++;
-    //         }
-    //     }
-
-    //     // Step 2: Allocate memory array and populate with active streams
-    //     LiveStream[] memory activeStreams = new LiveStream[](activeCount);
-    //     uint256 activeIndex = 0;
-    //     for (uint256 i = 0; i < liveStreams.length; i++) {
-    //         if (liveStreams[i].status) {
-    //             activeStreams[activeIndex] = liveStreams[i];
-    //             activeIndex++;
-    //         }
-    //     }
-
-    //     return activeStreams;
-    // }
-
-    // function getMyActiveLiveStreams(
-    //     address account
-    // ) public view returns (LiveStream[] memory) {
-    //     uint256 activeCount = 0;
-    //     // First, count the active streams owned by the account
-    //     for (uint256 i = 0; i < liveStreams.length; i++) {
-    //         if (liveStreams[i].status && liveStreams[i].owner == account) {
-    //             activeCount++;
-    //         }
-    //     }
-
-    //     LiveStream[] memory activeStreams = new LiveStream[](activeCount);
-    //     uint256 activeIndex = 0;
-    //     // Then, allocate and populate the array with those streams
-    //     for (uint256 i = 0; i < liveStreams.length; i++) {
-    //         if (liveStreams[i].status && liveStreams[i].owner == account) {
-    //             activeStreams[activeIndex] = liveStreams[i];
-    //             activeIndex++;
-    //         }
-    //     }
-
-    //     return activeStreams;
-    // }
 }
