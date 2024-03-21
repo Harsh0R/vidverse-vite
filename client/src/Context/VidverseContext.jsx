@@ -26,15 +26,15 @@ export const VidverseProvider = ({ children }) => {
     rpcUrl: "https://rpc-mumbai.polygon.technology/",
   };
 
-  let provider = new ethers.providers.JsonRpcProvider(config.rpcUrl);
-  let signer = new ethers.Wallet(config.privateKey, provider);
+  // let provider = new ethers.providers.JsonRpcProvider(config.rpcUrl);
+  // let signer = new ethers.Wallet(config.privateKey, provider);
 
   const [account, setAccount] = useState("");
   const [smartWallet, setSmartWallet] = useState();
   const [livepeerClient, setLivepeerClient] = useState();
 
   const client = createClient({
-    url: 'https://api.studio.thegraph.com/query/56822/vidversegraph/version/latest',
+    url: 'https://api.studio.thegraph.com/query/56822/vidversegraph/v0.0.34',
   });
 
   useEffect(() => {
@@ -70,17 +70,26 @@ export const VidverseProvider = ({ children }) => {
 
   }, []);
 
+  const connectToWallet = async () => {
+    const account1 = await connectWallet()
+    setAccount(account1);
+  }
+
 
 
   const allVideo = async () => {
     const query = `{
       videoDatas {
-        title
         totalTipAmount
-        ipfsHash
-        VideoPlatform_id
-        description
+        username
+        title
         owner
+        likes
+        ipfsHash
+        genre
+        dislikes
+        description
+        VideoPlatform_id
       }
     }`;
 
@@ -96,12 +105,16 @@ export const VidverseProvider = ({ children }) => {
   const allMyVideos = async (account) => {
     const query = `{
       videoDatas(where: {owner: "${account}"}) {
-        title
         totalTipAmount
-        ipfsHash
-        VideoPlatform_id
-        description
+        username
+        title
         owner
+        likes
+        ipfsHash
+        genre
+        dislikes
+        description
+        VideoPlatform_id
       }
     }`;
 
@@ -138,18 +151,32 @@ export const VidverseProvider = ({ children }) => {
       console.error('Error fetching liveStreamDatas data:', error);
     }
   };
+  const registeredUser = async (account1 = account) => {
+    const query = `{
+      userRegistereds(where: {userAddress: "${account1}"}) {
+        username
+        userAddress
+      }
+    }`;
+
+    try {
+      const result = await client.query(query).toPromise();
+      if (result.data) {
+        return result.data.userRegistereds;
+      }
+    } catch (error) {
+      console.error('Error fetching liveStreamDatas data:', error);
+    }
+  };
 
 
-
-
-
-  const uploadVideos = async (name, desc, cid, account1 = account) => {
+  const uploadVideos = async (name, desc, cid, genre = "Comedy", account1 = account) => {
     try {
       const connectedAccount = await checkIfWalletConnected();
       if (!connectedAccount) throw new Error("Wallet not connected");
       console.log("Addres==", account1);
       const contract = await connectingWithContract();
-      const uploadVideoTxData = contract.interface.encodeFunctionData("uploadVideo", [account1, name, desc, cid]);
+      const uploadVideoTxData = contract.interface.encodeFunctionData("uploadVideo", [account1, name, desc, cid, genre]);
 
       const uploadVideoTx = {
         to: smartContractAddress,
@@ -168,6 +195,7 @@ export const VidverseProvider = ({ children }) => {
       console.error("Error while uploading videos", error);
     }
   };
+
   const createLiveStream = async (name, playbackId, streamKey, strId, desc = "", account1 = account) => {
     try {
       const connectedAccount = await checkIfWalletConnected();
@@ -240,6 +268,29 @@ export const VidverseProvider = ({ children }) => {
       console.error("Error while tipping video owner", error);
     }
   };
+  const registerUser = async (username, useAddre) => {
+    try {
+      // const _amount = await toWei(tipAmount);
+      const contract = await connectingWithContract();
+
+      // console.log("Tip data === ", _videoId, "Amo =", _amount, "OW =>", useAddre);
+      const tipVideoOwnerTxData = contract.interface.encodeFunctionData("registerUser", [username, useAddre]);
+
+      const tipVideoOwnerTx = {
+        to: smartContractAddress,
+        data: tipVideoOwnerTxData,
+      };
+
+      const tipVideoOwnerResponse = await smartWallet.sendTransaction(tipVideoOwnerTx, {
+        paymasterServiceData: { mode: PaymasterMode.SPONSORED },
+      });
+
+      const tipVideoOwnerTxHash = await tipVideoOwnerResponse.waitForTxHash();
+      console.log("Tip Video Owner Transaction Hash", tipVideoOwnerTxHash);
+    } catch (error) {
+      console.error("Error while tipping video owner", error);
+    }
+  };
 
 
 
@@ -248,7 +299,7 @@ export const VidverseProvider = ({ children }) => {
     try {
       const contractObj = await connectingWithContract();
       const address = await contractObj.myToken();
-      console.log("Token Address === ",address);
+      console.log("Token Address === ", address);
       const tokenContractObj = await tokenContract(address);
       const data = await tokenContractObj.allowance(
         owner,
@@ -318,6 +369,9 @@ export const VidverseProvider = ({ children }) => {
         stopStreamByStreamID,
         allMyVideos,
         getAllLiveStreamData,
+        registerUser,
+        connectToWallet,
+        registeredUser
         // getAllActiveLiveStreams,
         // getMyActiveLiveStreams,
       }}
@@ -423,44 +477,44 @@ export const VidverseProvider = ({ children }) => {
 // };
 
 
-  // const getAllActiveLiveStreams = async () => {
-  //   try {
-  //     const contract = await connectingWithContract();
-  //     const vid = await contract.getAllActiveLiveStreams();
-  //     const processedVideos = vid.map((video) => {
-  //       const processedVideo = { ...video };
-  //       processedVideo.id = ethers.BigNumber.from(video.id._hex).toNumber();
-  //       processedVideo.tipAmount = ethers.BigNumber.from(
-  //         video.tipAmount._hex
-  //       ).toString();
-  //       return processedVideo;
-  //     });
+// const getAllActiveLiveStreams = async () => {
+//   try {
+//     const contract = await connectingWithContract();
+//     const vid = await contract.getAllActiveLiveStreams();
+//     const processedVideos = vid.map((video) => {
+//       const processedVideo = { ...video };
+//       processedVideo.id = ethers.BigNumber.from(video.id._hex).toNumber();
+//       processedVideo.tipAmount = ethers.BigNumber.from(
+//         video.tipAmount._hex
+//       ).toString();
+//       return processedVideo;
+//     });
 
-  //     console.log("All LiveStreams = ", processedVideos);
-  //     return processedVideos;
-  //   } catch (error) {
-  //     console.error("Currently you have no LiveStream .....😑", error);
-  //   }
-  // };
+//     console.log("All LiveStreams = ", processedVideos);
+//     return processedVideos;
+//   } catch (error) {
+//     console.error("Currently you have no LiveStream .....😑", error);
+//   }
+// };
 
-  // const getMyActiveLiveStreams = async (account1) => {
-  //   try {
+// const getMyActiveLiveStreams = async (account1) => {
+//   try {
 
-  //     // console.log("Add = ",account1);
-  //     const contract = await connectingWithContract();
-  //     const vid = await contract.getMyActiveLiveStreams(account1);
-  //     const processedVideos = vid.map((video) => {
-  //       const processedVideo = { ...video };
-  //       processedVideo.id = ethers.BigNumber.from(video.id._hex).toNumber();
-  //       processedVideo.tipAmount = ethers.BigNumber.from(
-  //         video.tipAmount._hex
-  //       ).toString();
-  //       return processedVideo;
-  //     });
+//     // console.log("Add = ",account1);
+//     const contract = await connectingWithContract();
+//     const vid = await contract.getMyActiveLiveStreams(account1);
+//     const processedVideos = vid.map((video) => {
+//       const processedVideo = { ...video };
+//       processedVideo.id = ethers.BigNumber.from(video.id._hex).toNumber();
+//       processedVideo.tipAmount = ethers.BigNumber.from(
+//         video.tipAmount._hex
+//       ).toString();
+//       return processedVideo;
+//     });
 
-  //     console.log("All My LiveStreams = ", processedVideos);
-  //     return processedVideos;
-  //   } catch (error) {
-  //     console.error("Error in get Active LiveStream .....😑", error);
-  //   }
-  // };
+//     console.log("All My LiveStreams = ", processedVideos);
+//     return processedVideos;
+//   } catch (error) {
+//     console.error("Error in get Active LiveStream .....😑", error);
+//   }
+// };

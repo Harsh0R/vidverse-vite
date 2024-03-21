@@ -75,7 +75,11 @@ contract VideoPlatform {
         address owner,
         string title,
         string description,
-        string ipfsHash
+        string ipfsHash,
+        string username,
+        uint256 likes,
+        uint256 dislikes,
+        string genre
     );
 
     event VideoTipped(
@@ -94,9 +98,13 @@ contract VideoPlatform {
         string playBackId,
         bool status,
         string streamKey,
-        string streamID
+        string streamID,
+        string username,
+        uint256 likes,
+        uint256 dislikes,
+        string genre
     );
-    
+
     event StreamTipped(
         uint256 indexed streamId,
         address indexed owner,
@@ -158,7 +166,17 @@ contract VideoPlatform {
             )
         );
         myToken.transfer(userAddr, 100 * 10 ** 18);
-        emit VideoUploaded(id, userAddr, _title, _description, _ipfsHash);
+        emit VideoUploaded(
+            id,
+            userAddr,   
+            _title,
+            _description,
+            _ipfsHash,
+            users[userAddr].username,
+            0,
+            0,
+            _genre
+        );
     }
 
     function likeVideo(uint256 _videoId) public {
@@ -237,7 +255,11 @@ contract VideoPlatform {
             _playbackId,
             true,
             streamKey,
-            _streamID
+            _streamID,
+            users[userAddr].username,
+            0,
+            0,
+            _genre
         );
     }
 
@@ -374,5 +396,4 @@ contract VideoPlatform {
             stream.tipAmount
         ); // Emit event here
     }
-
 }

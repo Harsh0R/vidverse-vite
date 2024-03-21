@@ -6,6 +6,7 @@ import Livestreams from "./Pages/Livestream/livestream.jsx";
 import { VidverseProvider } from "./Context/VidverseContext.jsx";
 import Navbar from "./Components/Navbar/Navbar";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import Register from './Pages/Register/Register.jsx';
 
 
 function App() {
@@ -18,6 +19,7 @@ function App() {
           <Navbar />
           <Routes>
             <Route exact path="/" element={<Home />} />
+            <Route exact path="/register" element={<Register />} />
             <Route path="/about" element={<About />} />
             <Route path="/myAccount" element={<Myaccount />} />
             <Route path="/livestream" element={<Livestreams />} />

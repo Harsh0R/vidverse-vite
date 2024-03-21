@@ -2,24 +2,65 @@
   color: #ffffff;
   padding: 5px;
 }
+.listGroup{
+  /* border: 2px solid wheat; */
+  display: flex;
+}
+
+.listGroupItem {
+  width: 20%;
+  height: auto;
+  background-color: #222222;
+  margin: 5px;
+  padding: 5px;
+  border-radius: 10px;
+  color: #fff;
+}
+.videoTitle{
+  color: #6be1ff;
+  font-weight: bolder;
+}
 
 .listgroupitem {
   padding: 10px 15px;
-  text-align: left;
-  border: none;
   border: 2px solid rgb(28, 143, 189);
   border-radius: 20px;
   margin: auto 10px;
   cursor: pointer;
   transition: background-color 0.3s;
-  color: rgb(28, 143, 189);
+  color: rgb(0, 0, 0);
 }
 
 .listgroupitem:hover {
   background-color: rgb(0, 183, 255);
-  color: #000000;
 }
 
+.videoDetails{
+  text-align: start;
+  color: #24f1c5;
+}
+
+.videoDetails img{
+  height: 200px;
+  border-radius: 10px;
+  width: 100%;
+  text-align: start;
+  color: #24f1c5;
+}
+
+.likes{
+  margin-right: 10px;
+}
+
+.username{
+  display: flex;
+  justify-content: space-between;
+}
+.likeDislike{
+  margin: 0 10px;
+  align-items:end;
+  width: fit-content;
+}
 
 .heading1 {
   color: #24f1c5;
@@ -83,20 +124,8 @@
   text-decoration: none;
   color: #ffffff;
 }
-.listgroupitem {
-  background-color: #1e1e1e;
-  color: #fff;
-  border-color: #333;
-  margin-bottom: 10px;
-}
-
-.listgroupitem small {
-  color: #777;
-}
 
 video {
   width: 100%;
   height: auto;
-  border-radius: 8px;
-  margin-top: 10px;
 }

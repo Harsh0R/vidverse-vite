@@ -3,16 +3,40 @@ import { Link } from 'react-router-dom';
 import { VidverseContext } from '../../Context/VidverseContext';
 import imgs from '../../assets/imgs';
 import styles from "./Navbar.module.css";
+import { useNavigate } from "react-router-dom";
 
 const Navbar = () => {
-  const { account, connectWallet, disconnectFromMetaMask, getBalance } = useContext(VidverseContext);
+  const { account, connectToWallet, disconnectFromMetaMask, registeredUser, getBalance } = useContext(VidverseContext);
   const [balance, setBalance] = useState(0);
+  const [userName, setUserName] = useState();
+  const [rnum , setRnum] = useState();
+  const Rnum = Math.floor(Math.random() * 10);
+  
+  let navigate = useNavigate();
+
+  const getUserName = async () => {
+    const name = await registeredUser();
+    console.log("name ===> ", name[0].username);
+    setUserName(name[0].username)
+  }
+  const handleRegisterFunc = async () => {
+    if (userName) {
+      let path = `/myAccount`;
+      navigate(path);
+    } else {
+      let path = `/register`;
+      navigate(path);
+    }
+  }
 
   useEffect(() => {
+
     if (account) {
+      getUserName()
+      setRnum(Rnum);
       getBalance(account).then(setBalance);
     }
-  }, [account, getBalance]);
+  }, [account, getBalance, registeredUser]);
 
   const copyToClipboard = () => {
     navigator.clipboard.writeText(account);
@@ -27,6 +51,7 @@ const Navbar = () => {
     { menu: "My Account", link: "/myAccount" },
     { menu: "Setting", link: "/setting" },
     { menu: "FAQs", link: "/faqs" },
+    { menu: "Register", link: "/register" },
     { menu: "Terms of Use", link: "/terms" },
   ];
 
@@ -50,8 +75,18 @@ const Navbar = () => {
             <span className={styles.balance}>Balance: {balance} NVT</span>
           </>
         )}
-        <button className={styles.connectButton} onClick={account ? disconnectFromMetaMask : connectWallet}>
+        <button className={styles.connectButton} onClick={account ? disconnectFromMetaMask : connectToWallet}>
           {account ? 'Disconnect' : 'Connect Wallet'}
+        </button>
+        <button className={userName ? (styles.connectButton1) : (styles.connectButton)} onClick={handleRegisterFunc}>
+          {userName &&
+            (
+              <img className={styles.userImg} src={imgs[`image${rnum}`]} alt="Copy" />
+            )
+          }
+          <div>
+            {userName ? `${userName}` : 'Register'}
+          </div>
         </button>
       </div>
     </nav>

@@ -4,17 +4,23 @@ import { Link } from 'react-router-dom';
 import Style from "./myaccount.module.css";
 
 const MyAccount = () => {
-  const { allVideo, uploadVideos, account ,allMyVideos} = useContext(VidverseContext);
+  const { allVideo, uploadVideos, account, allMyVideos } = useContext(VidverseContext);
   const [toggle, setToggle] = useState('');
   const [videoName, setVideoName] = useState('');
   const [videoDescription, setVideoDescription] = useState('');
   const [uploadedVid, setUploadedVid] = useState([]);
-
+  const [vidGenre, setVidGenre] = useState("");
   const [selectedFile, setSelectedFile] = useState();
   const [cid, setCid] = useState();
   const changeHandler = (event) => {
     setSelectedFile(event.target.files[0]);
   };
+
+  const handleRoyaltyChange = (event) => {
+    setVidGenre(event.target.value);
+  };
+
+  const genreArr = ["Gaming", "Comedy", "Drama", "Tech", "Education", "SciFi", "Social", "News"];
 
   useEffect(() => {
     const fetchData = async () => {
@@ -59,13 +65,13 @@ const MyAccount = () => {
       );
       const resData = await res.json();
       setCid(resData.IpfsHash)
-      await uploadVideos(videoName, videoDescription, resData.IpfsHash);
-      setUploadedVid([...uploadedVid, {
-        title: videoName,
-        description: videoDescription,
-        ipfsHash: resData.IpfsHash,
-        owner: account,
-      }]);
+      await uploadVideos(videoName, videoDescription, resData.IpfsHash, vidGenre);
+      // setUploadedVid([...uploadedVid, {
+      //   title: videoName,
+      //   description: videoDescription,
+      //   ipfsHash: resData.IpfsHash,
+      //   owner: account,
+      // }]);
       setVideoName('');
       setVideoDescription('');
       console.log(resData);
@@ -112,6 +118,21 @@ const MyAccount = () => {
               />
             </div>
             <div className={Style.inputGroup}>
+              <div>Select Your Video Genre : </div>
+              <select
+                value={vidGenre}
+                onChange={handleRoyaltyChange}
+                className={Style.input}
+              >
+                <option value="">Select Video Genre</option>
+                {genreArr.map((genre) => (
+                  <option key={genre} value={genre}>
+                    {genre}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div className={Style.inputGroup}>
               <div>Upload New Video :</div>
               <input
                 className={Style.formControl}
@@ -124,40 +145,45 @@ const MyAccount = () => {
             </div>
           </div>
         )}
- 
+
       <div className={Style.uploadedVidBlock}>
+
         <h2 className={Style.heading}>Uploaded Videos</h2>
+
         <div className={Style.listGroup}>
           {uploadedVid.map((video, index) => (
             <div key={index} className={Style.listGroupItem}>
               <div className={Style.videoDetails}>
-                <h5 className={Style.videoTitle}>Title = {video.title}</h5>
-                <p className={Style.videoDescription}>des = {video.description}</p>
-                <small className={Style.videoCID}>CID: {video.ipfsHash}
+                {video.ipfsHash && (
+                  <>
+                    <img
+                      src={`https://${VITE_GATEWAY_URL}/ipfs/${video.ipfsHash}`}
+                      alt="ipfs image"
+                    />
+                  </>
+                )}
+                <h3 className={Style.videoTitle}>{video.title}</h3>
+                <div className={Style.username}>{video.username}
+                  <div className={Style.likeDislike}>
+                    <small className={Style.likes}>Like = {video.likes}</small>
+                    <small className={Style.dislikes}>Dislike = {video.dislikes}</small>
+                  </div>
+                </div>
+                <small className={Style.videoDescription}>des = {video.description}</small>
+                <small className={Style.genre}>Genre = {video.genre}</small>
+                <p className={Style.cardText}>Tip Amount: {video.totalTipAmount}</p>
+                {/* <small className={Style.videoCID}>CID: {video.ipfsHash}
                   <br />
                   https://{VITE_GATEWAY_URL}/ipfs/${video.ipfsHash}
-                </small>
+                </small> */}
               </div>
-              {video.ipfsHash && (
-                <>
-                  <img
-                    src={`https://${VITE_GATEWAY_URL}/ipfs/${video.ipfsHash}`}
-                    alt="ipfs image"
-                  />
-                </>
-              )}
-              <p className={Style.cardText}>Tip Amount: {video.totalTipAmount}</p>
-          <form
-            onSubmit={(e) => {
-              e.preventDefault();
-              const tipAmount = e.target.elements.totalTipAmount.value;
-              handleTip(video.VideoPlatform_id, tipAmount);
-            }}
-          ></form>
-              <br></br>
-              <br></br>
-              <br></br>
-              <br></br>
+              {/* <form
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  const tipAmount = e.target.elements.totalTipAmount.value;
+                  handleTip(video.VideoPlatform_id, tipAmount);
+                }}
+              ></form> */}
             </div>
           ))}
         </div>
@@ -172,4 +198,4 @@ export default MyAccount;
 
 // https://violet-rare-crawdad-98.mypinata.cloud/ipfs/QmVFmFMYYFxkhcV7Zse5ATHXaW3ix8bExBmZaf94GhMpYh
 // violet-rare-crawdad-98.mypinata.cloud/ipfs/$QmeXWi16h1Ca7ZzJGHAsft6Qfsbw22z9hKWrNqng2sTnZp
-{/* <video className={Style.videoPlayer} controls src={`https://gateway.lighthouse.storage/ipfs/${video.ipfsHash}`} /> */}
+{/* <video className={Style.videoPlayer} controls src={`https://gateway.lighthouse.storage/ipfs/${video.ipfsHash}`} /> */ }
