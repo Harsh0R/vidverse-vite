@@ -1,79 +1,120 @@
 /* VideoCard.module.css */
 
 .card {
-    display: flex;
-    flex-direction: column;
-    background-color: #1e1e1e; /* Dark background */
-    color: #fff; /* Light text */
-    margin: 10px;
-    width: calc(100% - 20px); /* Adjust width for 2 cards per row, considering margin */
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5); /* Soft shadow for depth */
-    border-radius: 8px; /* Rounded corners */
-  }
-  
-  .row {
-    display: flex;
-    flex-wrap: wrap;
-    padding: 15px;
-  }
-  
-  .colMd4,
-  .colMd8 {
-    flex: 1; /* Flex grow to utilize available space */
-  }
-  
-  .imgFluid {
-    max-width: 100%;
+  display: flex;
+  flex-direction: column;
+  background-color: #1e1e1e;
+  /* Dark background */
+  color: #fff;
+  /* Light text */
+  width: 30%;
+  justify-content: space-between;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+  /* Soft shadow for depth */
+  border-radius: 8px;
+  /* Rounded corners */
+  margin: 10px;
+  padding: 10px;
+}
 
-    margin-top: 22px;
-    height: auto;
-    border-radius: 8px 8px 0 0; /* Rounded top corners */
-  }
-  
-  .cardBody {
-    margin: 10px;
-    padding: 15px;
-  }
-  
-  .cardTitle {
-    text-align: start;
-    color: #00e1ff; /* YouTube-like red for titles */
-  }
-  
-  .cardText {
-    font-size: 14px;
-    text-align: start;
-    color: #ccc; /* Lighter text for less emphasis */
-  }
-  
-  .textMuted {
-    color: #777; /* Muted text color */
-  }
-  
-  .inputGroup {
-    display: flex;
-  }
-  
-  .formControl {
-    flex: 1;
-    padding: 10px;
-    border: 1px solid #555; /* Darker border for input */
-    background-color: #333; /* Dark input background */
-    color: #fff; /* Light text */
-    margin-right: 5px; /* Space between input and button */
-  }
-  
-  .btn {
-    padding: 10px 15px;
-    background-color: #42abc5; /* YouTube-like red for buttons */
-    color: #fff;
-    border: none;
-    cursor: pointer;
-    transition: background-color 0.2s ease-in-out;
-  }
-  
-  .btn:hover {
-    background-color: #b9b9b9; /* Darker red on hover */
-    color: black;
-  }
-  
+.card a{
+  text-decoration: none;
+  color: #ffffff;
+}
+
+.colMd4 {
+  /* border: 1px solid blue; */
+  width: 100%;
+}
+
+.colMd8 {
+  /* border: 1px solid red; */
+  width: 100%;
+}
+
+.likes,
+.dislikes {
+  font-size: smaller;
+  border-radius: 10px;
+  padding: 3px 10px;
+  background-color: black;
+  margin-right: 10px;
+}
+
+.username {
+  display: flex;
+  justify-content: space-between;
+}
+
+.likeDislike {
+  margin: 0 10px;
+  align-items: end;
+  width: fit-content;
+}
+
+
+
+.imgFluid {
+  /* width: 100%; */
+  margin-top: 22px;
+  height: auto;
+  border-radius: 10px;
+  /* Rounded top corners */
+}
+
+.cardBody {
+  margin: 10px;
+  padding: 15px;
+}
+
+
+.cardTitle {
+  text-align: start;
+  color: #00e1ff;
+  /* YouTube-like red for titles */
+}
+
+.cardText {
+  font-size: 14px;
+  text-align: start;
+  color: #ccc;
+  /* Lighter text for less emphasis */
+}
+
+.textMuted {
+  color: #777;
+  /* Muted text color */
+}
+
+.inputGroup {
+  display: flex;
+}
+
+.formControl {
+  flex: 1;
+  padding: 10px;
+  border: 1px solid #555;
+  /* Darker border for input */
+  background-color: #333;
+  /* Dark input background */
+  color: #fff;
+  /* Light text */
+  margin-right: 5px;
+  /* Space between input and button */
+}
+
+.btn {
+  padding: 10px 15px;
+  background-color: #42abc5;
+  /* YouTube-like red for buttons */
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.btn:hover {
+  background-color: #b9b9b9;
+  /* Darker red on hover */
+  color: black;
+}

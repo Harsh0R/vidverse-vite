@@ -64,7 +64,7 @@ export const connectingWithContract = async () => {
     const provider = new ethers.providers.Web3Provider(window.ethereum);
     const signer = provider.getSigner();
     const contract = new ethers.Contract(smartContractAddress, smartContractABI, signer)
-    console.log("Contract = ",contract);
+    // console.log("Contract = ",contract);
     return contract;
   } catch (error) {
     console.log("Error connecting with contract:", error);

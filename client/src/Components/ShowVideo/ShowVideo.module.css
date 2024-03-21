@@ -1,0 +1,96 @@
+.mainContainder{
+    width: 70%;
+    /* border: 3px solid wheat; */
+}
+.imgContainer{
+    padding: 10px;
+}
+.imgContainer img{
+    width: 100%;
+    height: 70vh;
+}
+.dataContainer{
+    /* border: 3px solid red; */
+}
+.nameAndTip{
+    display: flex;
+    justify-content: space-between;
+}
+.cardTitle{
+    margin: 0px 10px;
+    padding: 0px 10px;
+    font-weight: bolder;
+    font-size: 30px;
+}
+.tipForm{
+    height:auto;
+}
+.inputGroup{
+    margin: 0px 10px;
+    padding: 0px 10px;
+}
+.inputGroup input{
+    background-color: transparent;
+    color: aliceblue;
+}
+.userDatas{
+    display: flex;
+    flex-direction: row;
+    margin: 20px;
+    justify-content: space-between;
+}
+
+.userImgAndName{
+    cursor: pointer;
+    background-color: transparent;
+    display: flex;
+    color: aliceblue;
+    border: none;
+    flex-direction: row;
+}
+.username{
+    font-weight: bolder;
+    padding: 0 10px;
+    padding-top: 13px;
+    text-align: center;
+    margin:0 5px;
+}
+.userImg{
+    border-radius: 50%;
+    width: 50px;
+}
+.inputGroup button{
+    background-color: aqua;
+    color: black;
+    border-radius: 5px;
+}
+.likeDislike{
+    /* padding-top: 5px; */
+    color: aliceblue;
+    margin: 10px;
+}
+.likes , .dislikes{
+    cursor: pointer;
+    background-color: #7777;
+    margin:0 5px;
+    font-size: 15px;
+    color: aliceblue;
+    padding:3px 10px;
+    border-radius: 10px;
+}
+.subscribBtn button{
+    border-radius: 50px;
+    border: 3px solid rgb(27, 121, 150);
+    background-color: transparent;
+    color: aliceblue;
+    width: 300px;
+    height: 30px;
+}
+.subscribBtn button:hover{
+    cursor: pointer;
+    border-radius: 50px;
+    background-color: rgb(27, 121, 150);
+    color: rgb(0, 0, 0);
+    width: 300px;
+    height: 30px;
+}

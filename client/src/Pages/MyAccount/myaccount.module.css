@@ -48,7 +48,11 @@
   color: #24f1c5;
 }
 
-.likes{
+.likes , .dislikes{
+  font-size: smaller;
+  border-radius: 10px;
+  padding: 3px;
+  background-color: black;
   margin-right: 10px;
 }
 

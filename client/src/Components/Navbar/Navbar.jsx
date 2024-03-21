@@ -9,15 +9,15 @@ const Navbar = () => {
   const { account, connectToWallet, disconnectFromMetaMask, registeredUser, getBalance } = useContext(VidverseContext);
   const [balance, setBalance] = useState(0);
   const [userName, setUserName] = useState();
-  const [rnum , setRnum] = useState();
+  const [rnum, setRnum] = useState();
   const Rnum = Math.floor(Math.random() * 10);
-  
+
   let navigate = useNavigate();
 
   const getUserName = async () => {
     const name = await registeredUser();
-    console.log("name ===> ", name[0].username);
-    setUserName(name[0].username)
+    // console.log("name ===> ", name[0].username);
+    setUserName(name)
   }
   const handleRegisterFunc = async () => {
     if (userName) {
@@ -50,7 +50,6 @@ const Navbar = () => {
     { menu: "About", link: "/about" },
     { menu: "My Account", link: "/myAccount" },
     { menu: "Setting", link: "/setting" },
-    { menu: "FAQs", link: "/faqs" },
     { menu: "Register", link: "/register" },
     { menu: "Terms of Use", link: "/terms" },
   ];

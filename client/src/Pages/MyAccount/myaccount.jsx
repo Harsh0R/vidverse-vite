@@ -1,16 +1,18 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { VidverseContext } from '../../Context/VidverseContext';
 import { Link } from 'react-router-dom';
+import Error from '../../Components/Error/Error.jsx'
 import Style from "./myaccount.module.css";
 
 const MyAccount = () => {
-  const { allVideo, uploadVideos, account, allMyVideos } = useContext(VidverseContext);
+  const { allVideo, uploadVideos, account, allMyVideos, userName } = useContext(VidverseContext);
   const [toggle, setToggle] = useState('');
   const [videoName, setVideoName] = useState('');
   const [videoDescription, setVideoDescription] = useState('');
   const [uploadedVid, setUploadedVid] = useState([]);
   const [vidGenre, setVidGenre] = useState("");
   const [selectedFile, setSelectedFile] = useState();
+  const [error, setError] = useState('')
   const [cid, setCid] = useState();
   const changeHandler = (event) => {
     setSelectedFile(event.target.files[0]);
@@ -27,7 +29,7 @@ const MyAccount = () => {
       try {
         const acc = await account;
         const data = await allMyVideos(acc);
-        console.log('fetching videos:', data);
+        // console.log('fetching videos:', data);
         setUploadedVid(data);
       } catch (error) {
         console.error('Error fetching videos:', error);
@@ -84,11 +86,11 @@ const MyAccount = () => {
     <div className={Style.myAccountContainer}>
       <h2 className={Style.heading1}>My Account : {account}</h2>
 
-      <button className={`${Style.listgroupitem} ${toggle === 'videos' ? Style.active : ''}`} onClick={() => setToggle('videos')}>
+      <button className={`${Style.listgroupitem} ${toggle === 'videos' ? Style.active : ''}`} onClick={() => { userName !== '' ? setToggle('videos') : setError('Register First Then Upload') }}>
         Upload Videos
       </button>
       <Link to='/livestream' className={Style.btnPrimary}>
-        <button className={`${Style.listgroupitem} ${toggle === 'livestream' ? Style.active : ''}`} onClick={() => setToggle('livestream')}>
+        <button className={`${Style.listgroupitem} ${toggle === 'livestream' ? Style.active : ''}`} onClick={() => { userName !== '' ? setToggle('livestream') : setError('Register First Then Go Live') }}>
           Create LiveStream
         </button>
       </Link>
@@ -165,13 +167,14 @@ const MyAccount = () => {
                 <h3 className={Style.videoTitle}>{video.title}</h3>
                 <div className={Style.username}>{video.username}
                   <div className={Style.likeDislike}>
-                    <small className={Style.likes}>Like = {video.likes}</small>
-                    <small className={Style.dislikes}>Dislike = {video.dislikes}</small>
+                    <small className={Style.likes}>
+                      Like : {video.likes}</small>
+                    <small className={Style.dislikes}>Dislike : {video.dislikes}</small>
                   </div>
                 </div>
                 <small className={Style.videoDescription}>des = {video.description}</small>
                 <small className={Style.genre}>Genre = {video.genre}</small>
-                <p className={Style.cardText}>Tip Amount: {video.totalTipAmount}</p>
+                <p className={Style.cardText}>Tip Amount: {(video.totalTipAmount)/10**18} NVT</p>
                 {/* <small className={Style.videoCID}>CID: {video.ipfsHash}
                   <br />
                   https://{VITE_GATEWAY_URL}/ipfs/${video.ipfsHash}
@@ -188,7 +191,7 @@ const MyAccount = () => {
           ))}
         </div>
       </div>
-
+      {error && <Error error={error} />}
     </div>
   );
 };

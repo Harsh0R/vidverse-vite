@@ -32,9 +32,10 @@ export const VidverseProvider = ({ children }) => {
   const [account, setAccount] = useState("");
   const [smartWallet, setSmartWallet] = useState();
   const [livepeerClient, setLivepeerClient] = useState();
+  const [userName, setUserName] = useState('')
 
   const client = createClient({
-    url: 'https://api.studio.thegraph.com/query/56822/vidversegraph/v0.0.34',
+    url: 'https://api.studio.thegraph.com/query/56822/vidversegraph/v0.0.41',
   });
 
   useEffect(() => {
@@ -128,6 +129,32 @@ export const VidverseProvider = ({ children }) => {
       console.error('Error fetching stake data:', error);
     }
   };
+  const getVid = async (vidId) => {
+    const query = `{
+      videoDatas(where: {VideoPlatform_id: ${vidId}}) {
+        username
+        totalTipAmount
+        title
+        owner
+        likes
+        ipfsHash
+        genre
+        dislikes
+        description
+        VideoPlatform_id
+      }
+    }`;
+
+    try {
+      const result = await client.query(query).toPromise();
+      if (result.data) {
+        return result.data.videoDatas;
+      }
+
+    } catch (error) {
+      console.error('Error fetching stake data:', error);
+    }
+  };
   const getAllLiveStreamData = async () => {
     const query = `{
       liveStreamDatas(where: {status: true}) {
@@ -162,10 +189,14 @@ export const VidverseProvider = ({ children }) => {
     try {
       const result = await client.query(query).toPromise();
       if (result.data) {
-        return result.data.userRegistereds;
+        const name1 = result.data.userRegistereds;
+        const name = name1[0].username;
+        // console.log("name ===> ", name);
+        setUserName(name);
+        return name;
       }
     } catch (error) {
-      console.error('Error fetching liveStreamDatas data:', error);
+      console.error('Error fetching register User name data:', error);
     }
   };
 
@@ -195,7 +226,6 @@ export const VidverseProvider = ({ children }) => {
       console.error("Error while uploading videos", error);
     }
   };
-
   const createLiveStream = async (name, playbackId, streamKey, strId, desc = "", account1 = account) => {
     try {
       const connectedAccount = await checkIfWalletConnected();
@@ -286,9 +316,99 @@ export const VidverseProvider = ({ children }) => {
       });
 
       const tipVideoOwnerTxHash = await tipVideoOwnerResponse.waitForTxHash();
-      console.log("Tip Video Owner Transaction Hash", tipVideoOwnerTxHash);
+      console.log("Register User Transaction Hash", tipVideoOwnerTxHash);
     } catch (error) {
-      console.error("Error while tipping video owner", error);
+      console.error("Error while Register User", error);
+    }
+  };
+  const likeVideo = async (_videoId , account1 = account) => {
+    try {
+      const contract = await connectingWithContract();
+
+      const tipVideoOwnerTxData = contract.interface.encodeFunctionData("likeVideo", [_videoId , account1]);
+
+      const tipVideoOwnerTx = {
+        to: smartContractAddress,
+        data: tipVideoOwnerTxData,
+      };
+
+      const tipVideoOwnerResponse = await smartWallet.sendTransaction(tipVideoOwnerTx, {
+        paymasterServiceData: { mode: PaymasterMode.SPONSORED },
+      });
+
+      const tipVideoOwnerTxHash = await tipVideoOwnerResponse.waitForTxHash();
+      console.log("Like Video Transaction Hash", tipVideoOwnerTxHash);
+    } catch (error) {
+      console.error("Error while Like video", error);
+    }
+  };
+  const dislikeVideo = async (_videoId , account1 = account) => {
+    try {
+      // const _amount = await toWei(tipAmount);
+      const contract = await connectingWithContract();
+
+      // console.log("Tip data === ", _videoId, "Amo =", _amount, "OW =>", useAddre);
+      const tipVideoOwnerTxData = contract.interface.encodeFunctionData("dislikeVideo", [_videoId , account1]);
+
+      const tipVideoOwnerTx = {
+        to: smartContractAddress,
+        data: tipVideoOwnerTxData,
+      };
+
+      const tipVideoOwnerResponse = await smartWallet.sendTransaction(tipVideoOwnerTx, {
+        paymasterServiceData: { mode: PaymasterMode.SPONSORED },
+      });
+
+      const tipVideoOwnerTxHash = await tipVideoOwnerResponse.waitForTxHash();
+      console.log("Like Video Transaction Hash", tipVideoOwnerTxHash);
+    } catch (error) {
+      console.error("Error while Like video", error);
+    }
+  };
+  const subscribeToCreator = async (creatorAddress , account1 = account) => {
+    try {
+      // const _amount = await toWei(tipAmount);
+      const contract = await connectingWithContract();
+
+      // console.log("Tip data === ", _videoId, "Amo =", _amount, "OW =>", useAddre);
+      const tipVideoOwnerTxData = contract.interface.encodeFunctionData("subscribeToCreator", [creatorAddress , account1]);
+
+      const tipVideoOwnerTx = {
+        to: smartContractAddress,
+        data: tipVideoOwnerTxData,
+      };
+
+      const tipVideoOwnerResponse = await smartWallet.sendTransaction(tipVideoOwnerTx, {
+        paymasterServiceData: { mode: PaymasterMode.SPONSORED },
+      });
+
+      const tipVideoOwnerTxHash = await tipVideoOwnerResponse.waitForTxHash();
+      console.log("Subscribe creater Transaction Hash", tipVideoOwnerTxHash);
+    } catch (error) {
+      console.error("Error while Subscribe creator", error);
+    }
+  };
+  const unsubscribeFromCreator = async (creatorAddress , account1 = account) => {
+    try {
+      // const _amount = await toWei(tipAmount);
+      const contract = await connectingWithContract();
+
+      // console.log("Tip data === ", _videoId, "Amo =", _amount, "OW =>", useAddre);
+      const tipVideoOwnerTxData = contract.interface.encodeFunctionData("unsubscribeFromCreator", [creatorAddress , account1]);
+
+      const tipVideoOwnerTx = {
+        to: smartContractAddress,
+        data: tipVideoOwnerTxData,
+      };
+
+      const tipVideoOwnerResponse = await smartWallet.sendTransaction(tipVideoOwnerTx, {
+        paymasterServiceData: { mode: PaymasterMode.SPONSORED },
+      });
+
+      const tipVideoOwnerTxHash = await tipVideoOwnerResponse.waitForTxHash();
+      console.log("UnSubscribe creater Transaction Hash", tipVideoOwnerTxHash);
+    } catch (error) {
+      console.error("Error while UnSubscribe creator", error);
     }
   };
 
@@ -334,7 +454,7 @@ export const VidverseProvider = ({ children }) => {
       const tokenContractObj = await tokenContract(address1);
       const balance = await tokenContractObj.balanceOf(address);
       const balEth = await toEth(balance);
-      console.log("Token Balance at context = ", balEth);
+      // console.log("Token Balance at context = ", balEth);
       return balEth;
     } catch (error) {
       console.error("Error accor while uploading videos.....😑");
@@ -355,6 +475,7 @@ export const VidverseProvider = ({ children }) => {
     <VidverseContext.Provider
       value={{
         account,
+        userName,
         livepeerClient,
         connectWallet,
         checkIfWalletConnected,
@@ -371,7 +492,12 @@ export const VidverseProvider = ({ children }) => {
         getAllLiveStreamData,
         registerUser,
         connectToWallet,
-        registeredUser
+        registeredUser,
+        likeVideo,
+        dislikeVideo,
+        subscribeToCreator,
+        unsubscribeFromCreator,
+        getVid,
         // getAllActiveLiveStreams,
         // getMyActiveLiveStreams,
       }}

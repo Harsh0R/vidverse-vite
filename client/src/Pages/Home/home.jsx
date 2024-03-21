@@ -36,21 +36,21 @@ const Home = () => {
     fetchVideos();
   }, [contentToShow, allVideo]);
 
-  const handleTip = async (vidID, tipAmount) => {
-    try {
+  // const handleTip = async (vidID, tipAmount) => {
+  //   try {
 
-      const allowance = await hasValideAllowance();
+  //     const allowance = await hasValideAllowance();
 
-      if (allowance < tipAmount) {
-        await increaseAllowance(tipAmount);
-      } else {
-        console.log("Tip amount => ", tipAmount);
-        await tipVideoOwner(vidID, tipAmount);
-      }
-    } catch (error) {
-      console.error('Error tipping video owner:', error);
-    }
-  };
+  //     if (allowance < tipAmount) {
+  //       await increaseAllowance(tipAmount);
+  //     } else {
+  //       console.log("Tip amount => ", tipAmount);
+  //       await tipVideoOwner(vidID, tipAmount);
+  //     }
+  //   } catch (error) {
+  //     console.error('Error tipping video owner:', error);
+  //   }
+  // };
 
   return (
     <div className={styles.container}>
@@ -61,11 +61,11 @@ const Home = () => {
           <img src={imgs[`image${2}`]} alt="Copy" height="50" />
         </button> */}
       </div>
-      <div className={styles.content}>
+      <div >
         {contentToShow === 'videos' && (
-          <div>
+          <div className={styles.content}>
             {videos.length ? videos.map((video, index) => (
-              <VideoCard key={index} video={video} handleTip={handleTip} />
+              <VideoCard key={index} video={video} />
             )) : <p className={styles.noVideos}>No videos available.</p>}
           </div>
         )}

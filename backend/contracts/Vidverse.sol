@@ -82,6 +82,11 @@ contract VideoPlatform {
         string genre
     );
 
+    event VideoLiked(uint256 indexed videoId, address indexed user);
+    event VideoDisliked(uint256 indexed videoId, address indexed user);
+    event StreamLiked(uint256 indexed streamId, address indexed user);
+    event StreamDisliked(uint256 indexed streamId, address indexed user);
+
     event VideoTipped(
         uint256 indexed videoId,
         address indexed owner,
@@ -168,7 +173,7 @@ contract VideoPlatform {
         myToken.transfer(userAddr, 100 * 10 ** 18);
         emit VideoUploaded(
             id,
-            userAddr,   
+            userAddr,
             _title,
             _description,
             _ipfsHash,
@@ -179,31 +184,44 @@ contract VideoPlatform {
         );
     }
 
-    function likeVideo(uint256 _videoId) public {
+    function likeVideo(uint256 _videoId, address addr) public {
         require(_videoId < videos.length, "Invalid video ID");
-        require(!videoLikes[_videoId][msg.sender], "Already liked this video");
+        require(!videoLikes[_videoId][addr], "Already liked this video");
         require(
-            !videoDislikes[_videoId][msg.sender],
+            !videoDislikes[_videoId][addr],
             "Already disliked this video, cannot like"
         );
 
-        videoLikes[_videoId][msg.sender] = true;
+        videoLikes[_videoId][addr] = true;
         videos[_videoId].likes += 1;
+        emit VideoLiked(_videoId, addr); // Emit the like event
     }
 
-    function dislikeVideo(uint256 _videoId) public {
+    function dislikeVideo(uint256 _videoId, address addr) public {
         require(_videoId < videos.length, "Invalid video ID");
+        require(!videoDislikes[_videoId][addr], "Already disliked this video");
         require(
-            !videoDislikes[_videoId][msg.sender],
-            "Already disliked this video"
-        );
-        require(
-            !videoLikes[_videoId][msg.sender],
+            !videoLikes[_videoId][addr],
             "Already liked this video, cannot dislike"
         );
 
-        videoDislikes[_videoId][msg.sender] = true;
+        videoDislikes[_videoId][addr] = true;
         videos[_videoId].dislikes += 1;
+        emit VideoDisliked(_videoId, addr); // Emit the dislike event
+    }
+
+    function likeStream(uint256 _streamId, address addr) public {
+        // Assuming you have a similar mechanism for liking streams
+        streamLikes[_streamId][addr] = true;
+        liveStreams[_streamId].likes += 1;
+        emit StreamLiked(_streamId, addr); // Emit the like event for streams
+    }
+
+    function dislikeStream(uint256 _streamId, address addr) public {
+        // Assuming you have a similar mechanism for disliking streams
+        streamDislikes[_streamId][addr] = true;
+        liveStreams[_streamId].dislikes += 1;
+        emit StreamDisliked(_streamId, addr); // Emit the dislike event for streams
     }
 
     function createStream(
@@ -297,8 +315,8 @@ contract VideoPlatform {
         );
     }
 
-    function subscribeToCreator(address creatorAddress) public {
-        User storage user = users[msg.sender];
+    function subscribeToCreator(address creatorAddress, address addr) public {
+        User storage user = users[addr];
         require(user.addr != address(0), "User must be registered");
         for (uint i = 0; i < user.subscriptions.length; i++) {
             require(
@@ -307,11 +325,14 @@ contract VideoPlatform {
             );
         }
         user.subscriptions.push(creatorAddress);
-        emit SubscribedToCreator(msg.sender, creatorAddress); // Emit event here
+        emit SubscribedToCreator(addr, creatorAddress); // Emit event here
     }
 
-    function unsubscribeFromCreator(address creatorAddress) public {
-        User storage user = users[msg.sender];
+    function unsubscribeFromCreator(
+        address creatorAddress,
+        address addr
+    ) public {
+        User storage user = users[addr];
         require(user.addr != address(0), "User must be registered");
         int256 index = -1;
         for (uint i = 0; i < user.subscriptions.length; i++) {
@@ -325,11 +346,13 @@ contract VideoPlatform {
             user.subscriptions.length - 1
         ];
         user.subscriptions.pop();
-        emit UnsubscribedFromCreator(msg.sender, creatorAddress); // Emit event here
+        emit UnsubscribedFromCreator(addr, creatorAddress); // Emit event here
     }
 
-    function getMySubscriptions() public view returns (address[] memory) {
-        return users[msg.sender].subscriptions;
+    function getMySubscriptions(
+        address addr
+    ) public view returns (address[] memory) {
+        return users[addr].subscriptions;
     }
 
     function tipVideoOwner(

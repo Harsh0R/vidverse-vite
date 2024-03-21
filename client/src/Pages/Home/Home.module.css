@@ -22,14 +22,17 @@
   background-color: #000;
   color: rgb(28, 143, 189);
 }
-
 .active {
   background-color: rgb(0, 132, 255);
   color: #fff;
 }
 
 .content {
+  display: flex;
+  flex-direction: row;
+  /* border: 3px solid wheat; */
   padding: 20px;
+  justify-content: center;
 }
 
 .videoGrid {
