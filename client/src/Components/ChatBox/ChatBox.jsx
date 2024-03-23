@@ -15,7 +15,7 @@ import protobuf from "protobufjs";
 const ChatBox = ({ chat }) => {
 
 
-  console.log("name in chat box = ", chat);
+  // console.log("name in chat box = ", chat);
   const [status, setStatus] = useState("connecting...");
   const [localPeerId, setLocalPeerId] = useState("");
   const [remotePeerIds, setRemotePeerIds] = useState([]);
@@ -52,7 +52,7 @@ const ChatBox = ({ chat }) => {
 
 
 
-  console.log("Node and Decoder = ", decoderD, nodeD);
+  // console.log("Node and Decoder = ", decoderD, nodeD);
 
   // const { messages: storeMessages } = useStoreMessages({ nodeD, decoderD });
 
@@ -75,7 +75,7 @@ const ChatBox = ({ chat }) => {
 
 
 
-  console.log("messageObj ==> ", messageObj);
+  // console.log("messageObj ==> ", messageObj);
   async function initWakuContext({ contentTopic, onMessageReceived }) {
     console.log("init is running = ", contentTopic);
     const Decoder = createDecoder(contentTopic);
@@ -86,7 +86,7 @@ const ChatBox = ({ chat }) => {
       .add(new protobuf.Field("nick", 2, "string"))
       .add(new protobuf.Field("text", 3, "bytes"));
     const node = await createLightNode({ defaultBootstrap: true });
-    console.log("node = ", node);
+    // console.log("node = ", node);
     setNode(node);
     await node.start();
     await waitForRemotePeer(node);
@@ -95,7 +95,7 @@ const ChatBox = ({ chat }) => {
       [Decoder],
       (wakuMessage) => {
         const messageObj = ChatMessage.decode(wakuMessage.payload);
-        console.log("=-=-=-=-=-=-==-=", messageObj);
+        // console.log("=-=-=-=-=-=-==-=", messageObj);
 
         const timestamp = new Date(messageObj.timestamp).toLocaleString();
         const text = bytesToUtf8(messageObj.text);

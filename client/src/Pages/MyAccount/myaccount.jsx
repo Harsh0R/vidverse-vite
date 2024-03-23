@@ -190,8 +190,12 @@ const MyAccount = () => {
             </div>
           ))}
         </div>
+
+
       </div>
+
       {error && <Error error={error} />}
+      
     </div>
   );
 };

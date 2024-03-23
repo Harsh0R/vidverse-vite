@@ -1,19 +1,27 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { Broadcast, LivepeerConfig, createReactClient, studioProvider, useCreateStream } from "@livepeer/react";
 import ChatBox from '../ChatBox/ChatBox';
-import Style from "./StreamCss.module.css"
+import Style from "./StartLivestream.module.css"
 import { VidverseContext } from '../../Context/VidverseContext';
+import Error from '../Error/Error';
+import imgs from '../../assets/imgs';
+import { Link } from 'react-router-dom';
 
 const LivestreamCom = () => {
     const [streamName, setStreamName] = useState('');
     const [error, setError] = useState('');
     const [activeStream, setActiveStream] = useState(null);
+    const [vidGenre, setVidGenre] = useState("");
     const { createLiveStream, getAllLiveStreamData, stopStreamByStreamID, account } = useContext(VidverseContext);
 
+    const [rnum, setRnum] = useState();
+    const Rnum = Math.floor(Math.random() * 9);
     const apiToken = '45cddd3a-e60e-4a8b-b121-e353f8b107b0';
     const { mutate: createStream, data: createdStream, status } = useCreateStream(
         streamName ? { name: streamName } : null
     );
+
+    const genreArr = ["Gaming", "Comedy", "Drama", "Tech", "Education", "SciFi", "Social", "News"];
 
     useEffect(() => {
         const fetchActiveStreams = async () => {
@@ -21,9 +29,11 @@ const LivestreamCom = () => {
                 if (account) {
                     const streams = await getAllLiveStreamData(account);
                     if (streams.length > 0) {
-                        setActiveStream(streams[0]); 
+                        setActiveStream(streams[0]);
                     }
                 }
+
+                setRnum(Rnum);
             } catch (error) {
                 console.error("Error fetching active live streams:", error);
             }
@@ -31,9 +41,15 @@ const LivestreamCom = () => {
         fetchActiveStreams();
     }, [account]);
 
+    const handleRoyaltyChange = (event) => {
+        setVidGenre(event.target.value);
+    };
+
+
     const updateInContract = async () => {
         try {
-            await createLiveStream(createdStream.name, createdStream.playbackId, createdStream.streamKey, createdStream.id);
+            console.log("creat stream data ===> ", vidGenre);
+            await createLiveStream(createdStream.name, createdStream.playbackId, createdStream.streamKey, createdStream.id, vidGenre);
             setActiveStream({ ...createdStream, status: true });
         } catch (error) {
             console.error("Error updating stream in contract:", error);
@@ -60,7 +76,7 @@ const LivestreamCom = () => {
             if (response.status === 204) {
                 console.log('Livestream terminated successfully.');
                 await stopStreamByStreamID(activeStream.streamID);
-                setActiveStream(null); 
+                setActiveStream(null);
             } else {
                 console.error('Failed to terminate livestream.');
                 setError('Failed to terminate the livestream. Please try again.');
@@ -71,35 +87,119 @@ const LivestreamCom = () => {
         }
     };
 
+    const handleLikeVid = async (vidId) => {
+        // await likeVideo(vidId)
+    }
+    const handleDislikeVid = async (vidId) => {
+        // await dislikeVideo(vidId)
+    }
+    const handleSubscribe = async (vidMaker) => {
+        // console.log("Sun to ====> ", vidMaker);
+        // await subscribeToCreator(vidMaker)
+    }
+
+
     return (
         <div className={Style.container}>
-            <div>Enter Stream Name:</div>
-            <input
-                type="text"
-                className="form-control mb-3"
-                placeholder="Stream Name"
-                value={streamName}
-                onChange={(e) => setStreamName(e.target.value)}
-            />
-            <button className="btn btn-primary" onClick={handleCreateStream} disabled={status === "loading"}>
-                {status === "loading" ? 'Creating Stream...' : 'Create Stream'}
-            </button>
+            <div className={Style.container1}>
+                <h3 className={Style.streamName}>Stream Name : </h3>
+                <input
+                    type="text"
+                    placeholder="Enter Stream Name"
+                    value={streamName}
+                    onChange={(e) => setStreamName(e.target.value)}
+                />
+
+                <div className={Style.inputGroup}>
+                    <div>Select Your Video Genre : </div>
+                    <select
+                        value={vidGenre}
+                        onChange={handleRoyaltyChange}
+                        className={Style.input}
+                    >
+                        <option value="">Select Video Genre</option>
+                        {genreArr.map((genre) => (
+                            <option key={genre} value={genre}>
+                                {genre}
+                            </option>
+                        ))}
+                    </select>
+                </div>
+                <button className={Style.streamBtn} onClick={handleCreateStream} disabled={status === "loading"}>
+                    {status === "loading" ? 'Creating Stream...' : 'Create Stream'}
+                </button>
+
+            </div>
             {createdStream && (
-                <button className="btn btn-success" onClick={updateInContract} disabled={!createdStream}>
+                <button className={Style.startStream} onClick={updateInContract} disabled={!createdStream}>
                     Start Stream
                 </button>
             )}
-            {error && <p className="text-danger mt-3">{error}</p>}
+            {error && <Error error={error} />}
+
             {activeStream && (
-                <div className="mt-3" style={{ width: "80%", margin:'auto' }}>
-                    <p>Stream: {activeStream.stramName}</p>
-                    <p>Playback ID: {activeStream.playBackId}</p>
-                    <Broadcast streamKey={activeStream.streamKey} onError={console.error} />
-                    <ChatBox chat={activeStream.stramName} />
-                    <button className="btn btn-danger" onClick={handleStopStream}>
-                        Stop Stream
-                    </button>
-                </div>
+                <>
+                    <div className={Style.broadcastBox}>
+                        <div className={Style.streamBox}>
+                            <Broadcast streamKey={activeStream.streamKey} onError={console.error} />
+                            <div className={Style.nameAndTip}>
+                                <div className={Style.cardTitle}>{activeStream.stramName}</div>
+                                <div className={Style.tipForm}>
+                                    {/* <form
+                                        onSubmit={(e) => {
+                                            e.preventDefault();
+                                            const tipAmount = e.target.elements.tipAmount.value;
+                                            handleTip(vidData.VideoPlatform_id, tipAmount);
+                                        }}
+                                    >
+                                        <div className={Style.inputGroup}>
+                                            <input
+                                                type="number"
+                                                className={Style.formControl}
+                                                name="tipAmount"
+                                                placeholder="Tip Amount"
+                                            />
+                                            <button className={Style.btn} type="submit">
+                                                Give Tip
+                                            </button>
+                                        </div>
+                                    </form> */}
+                                </div>
+                            </div>
+
+                            <div className={Style.userDatas}>
+                                <Link to={`/creator/${activeStream.owner}`}>
+                                    <div className={Style.userImgAndName} >
+
+                                        <img className={Style.userImg} src={imgs[`image${rnum}`]} alt="Copy" />
+
+                                        <div className={Style.username}>{activeStream.username}
+                                        </div>
+                                    </div>
+                                </Link>
+                                <div className={Style.subscribBtn}>
+                                    <button onClick={() => handleSubscribe(account.username)}>Subscribe</button>
+                                </div>
+                                <div className={Style.likeDislike}>
+                                    <button onClick={handleLikeVid} className={Style.likes}>
+                                        <small >Like : 0</small>
+                                    </button>
+                                    <button onClick={handleDislikeVid} className={Style.dislikes}>
+                                        <small >Dislike : 0</small>
+                                    </button>
+                                </div>
+
+                            </div>
+
+                            <p>Playback ID : {activeStream.playBackId}</p>
+                            <p>Genre : {activeStream.genre}</p>
+                            <button className="btn btn-danger" onClick={handleStopStream}>
+                                Stop Stream
+                            </button>
+                        </div>
+                        <ChatBox chat={activeStream.stramName} />
+                    </div>
+                </>
             )}
         </div>
     );

@@ -1,0 +1,189 @@
+.container {
+    padding: 10px;
+    overflow-y: scroll;
+    height: 100vh;
+}
+
+.container::-webkit-scrollbar {
+    width: 15px;
+}
+
+.container::-webkit-scrollbar-track {
+    background: rgb(0, 0, 0);
+}
+
+.container::-webkit-scrollbar-thumb {
+    background-color: rgb(58, 225, 247);
+    border-radius: 20px;
+    border: 3px solid rgb(0, 0, 0);
+}
+
+.container1 {
+    display: flex;
+}
+
+.container1 input {
+    background-color: transparent;
+    margin: 0 10px;
+    color: aliceblue;
+    border-radius: 10px;
+}
+
+.inputName {
+    height: fit-content;
+    display: flex;
+}
+
+.streamName {
+    color: aquamarine;
+}
+
+.streamBtn {
+    padding: 10px;
+    border-radius: 5px;
+    background-color: aqua;
+    cursor: pointer;
+}
+
+.startStream {
+    cursor: pointer;
+    font-weight: bolder;
+    padding: 10px;
+    border-radius: 5px;
+    background-color: aqua;
+}
+
+.inputGroup {
+    margin: 10px;
+    display: flex;
+}
+
+.inputGroup select {
+    padding: 5px;
+    background-color: transparent;
+    color: aliceblue;
+}
+
+option {
+    padding: 5px;
+    background-color: transparent;
+    color: aliceblue;
+}
+
+.inputGroup div {
+    margin-right: 10px;
+    display: flex;
+}
+
+.inputGroup input {
+    background-color: transparent;
+    display: flex;
+    color: white;
+}
+
+.broadcastBox {
+    display: flex;
+    /* border: 3px solid red; */
+}
+
+.streamBox {
+    width: 75%;
+    padding: 10px;
+}
+
+.nameAndTip {
+    display: flex;
+    justify-content: space-between;
+}
+
+.cardTitle {
+    margin: 0px 10px;
+    padding: 0px 10px;
+    font-weight: bolder;
+    font-size: 30px;
+}
+
+.tipForm {
+    height: auto;
+}
+
+.inputGroup {
+    margin: 0px 10px;
+    padding: 0px 10px;
+}
+
+.inputGroup input {
+    background-color: transparent;
+    color: aliceblue;
+}
+
+.userDatas {
+    display: flex;
+    flex-direction: row;
+    margin: 20px;
+    justify-content: space-between;
+}
+
+.userImgAndName {
+    cursor: pointer;
+    background-color: transparent;
+    display: flex;
+    color: aliceblue;
+    border: none;
+    flex-direction: row;
+}
+
+.username {
+    font-weight: bolder;
+    padding: 0 10px;
+    padding-top: 13px;
+    text-align: center;
+    margin: 0 5px;
+}
+
+.userImg {
+    border-radius: 50%;
+    width: 50px;
+}
+
+.inputGroup button {
+    background-color: aqua;
+    color: black;
+    border-radius: 5px;
+}
+
+.likeDislike {
+    /* padding-top: 5px; */
+    color: aliceblue;
+    margin: 10px;
+}
+
+.likes,
+.dislikes {
+    cursor: pointer;
+    background-color: #7777;
+    margin: 0 5px;
+    font-size: 15px;
+    color: aliceblue;
+    padding: 3px 10px;
+    border-radius: 10px;
+}
+
+.subscribBtn button {
+    border-radius: 50px;
+    border: 3px solid rgb(27, 121, 150);
+    background-color: transparent;
+    color: aliceblue;
+    width: 300px;
+    height: 30px;
+}
+
+.subscribBtn button:hover {
+    cursor: pointer;
+    border-radius: 50px;
+    background-color: rgb(27, 121, 150);
+    color: rgb(0, 0, 0);
+    width: 300px;
+    height: 30px;
+}
+

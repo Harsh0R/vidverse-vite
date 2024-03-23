@@ -29,13 +29,19 @@ const Navbar = () => {
     }
   }
 
-  useEffect(() => {
+  const fetchData = async (account) => {
 
     if (account) {
+      console.log("Account ==> ", account);
       getUserName()
       setRnum(Rnum);
-      getBalance(account).then(setBalance);
+      const bal = await getBalance(account);
+      setBalance(bal)
     }
+  }
+
+  useEffect(() => {
+    fetchData(account)
   }, [account, getBalance, registeredUser]);
 
   const copyToClipboard = () => {
@@ -53,6 +59,8 @@ const Navbar = () => {
     { menu: "Register", link: "/register" },
     { menu: "Terms of Use", link: "/terms" },
   ];
+
+  // console.log("Balamce ==> ", balance);
 
   return (
     <nav className={styles.navbar}>
