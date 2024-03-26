@@ -6,7 +6,7 @@ import { VidverseContext } from "../../Context/VidverseContext";
 const Webplayer = () => {
   const [liveStreams, setLiveStreams] = useState([]); 
 
-  const { getAllLiveStreamData } = useContext(VidverseContext);
+  const { getAllLiveStreamData , userName } = useContext(VidverseContext);
 
   const handleShowLiveStream = async () => {
     const streams = await getAllLiveStreamData(); // Assume this returns an array of streams
@@ -41,7 +41,7 @@ const Webplayer = () => {
                       radii: { containerBorderRadius: "10px" },
                     }}
                   />
-                  <ChatBox chat={stream.stramName}></ChatBox>
+                  <ChatBox chat={stream.stramName} name1={userName}></ChatBox>
                 </>
               </div>
 

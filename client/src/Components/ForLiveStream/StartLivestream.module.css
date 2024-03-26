@@ -174,16 +174,12 @@ option {
     border: 3px solid rgb(27, 121, 150);
     background-color: transparent;
     color: aliceblue;
-    width: 300px;
-    height: 30px;
 }
 
 .subscribBtn button:hover {
     cursor: pointer;
     border-radius: 50px;
-    background-color: rgb(27, 121, 150);
+    background-color: rgb(126, 196, 218);
     color: rgb(0, 0, 0);
-    width: 300px;
-    height: 30px;
 }
 

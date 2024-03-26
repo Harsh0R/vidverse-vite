@@ -48,7 +48,20 @@ const VideoCard = ({ video, handleTip }) => {
               </div>
             </div>
             <p className={styles.cardText}>{video.description}</p>
-            {/* <p className={styles.cardText}>
+          
+          </div>
+        </div>
+      </Link>
+    </div>
+  );
+};
+export default VideoCard;
+
+
+
+
+
+  {/* <p className={styles.cardText}>
             <small className={styles.textMuted}>CID: {CID}</small>
             </p>
             <p className={styles.cardText}>
@@ -79,10 +92,3 @@ const VideoCard = ({ video, handleTip }) => {
               </button>
             </div>
           </form> */}
-          </div>
-        </div>
-      </Link>
-    </div>
-  );
-};
-export default VideoCard;

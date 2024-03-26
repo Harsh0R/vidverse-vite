@@ -12,7 +12,7 @@ const LivestreamCom = () => {
     const [error, setError] = useState('');
     const [activeStream, setActiveStream] = useState(null);
     const [vidGenre, setVidGenre] = useState("");
-    const { createLiveStream, getAllLiveStreamData, stopStreamByStreamID, account } = useContext(VidverseContext);
+    const { createLiveStream, getAllLiveStreamData, stopStreamByStreamID, account , userName } = useContext(VidverseContext);
 
     const [rnum, setRnum] = useState();
     const Rnum = Math.floor(Math.random() * 9);
@@ -197,7 +197,7 @@ const LivestreamCom = () => {
                                 Stop Stream
                             </button>
                         </div>
-                        <ChatBox chat={activeStream.stramName} />
+                        <ChatBox chat={activeStream.stramName} name1={userName} />
                     </div>
                 </>
             )}

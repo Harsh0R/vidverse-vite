@@ -8,11 +8,12 @@ import {
   createDecoder,
   createEncoder,
 } from "https://unpkg.com/@waku/sdk@0.0.18/bundle/index.js";
+import Style from "./ChatBox.module.css"
 // import { useFilterMessages, useStoreMessages } from "@waku/react";
 import protobuf from "protobufjs";
 
 
-const ChatBox = ({ chat }) => {
+const ChatBox = ({ chat , name1 }) => {
 
 
   // console.log("name in chat box = ", chat);
@@ -24,7 +25,7 @@ const ChatBox = ({ chat }) => {
   const [messageObj, setMessageObj] = useState({});
   const [nodeD, setNode] = useState()
   const [decoderD, setDecoderD] = useState()
-  const [nick, setNick] = useState("");
+  const [nick, setNick] = useState(name1);
   const [messageText, setMessageText] = useState("");
   const CONTENT_TOPIC = `/toy-chat/1/${chat}/proto`;
   let sendMessageFunc = null;
@@ -157,8 +158,8 @@ const ChatBox = ({ chat }) => {
   };
   //   const { name } = useContext(ChatContext);
   return (
-    <div className="content">
-      <div className="header">
+    <div className={Style.content}>
+      <div className={Style.header}>
         <h3>
           Status:
           <span id="status">{status}</span>
@@ -181,12 +182,12 @@ const ChatBox = ({ chat }) => {
           </div>
         ))}
       </div>
-      <div className="footer">
-        <div className="inputArea">
+      <div className={Style.footer}>
+        <div className={Style.inputArea}>
           <input
             type="text"
             id="nickText"
-            placeholder="Nickname"
+            placeholder={name1}
             value={nick}
             onChange={(e) => setNick(e.target.value)}
           />
@@ -197,7 +198,7 @@ const ChatBox = ({ chat }) => {
             onChange={(e) => setMessageText(e.target.value)}
           ></textarea>
         </div>
-        <div className="controls">
+        <div className={Style.controls}>
           <button id="send" onClick={sendMessage}>
             Send
           </button>
