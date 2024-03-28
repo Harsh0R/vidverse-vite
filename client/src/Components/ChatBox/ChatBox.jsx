@@ -29,9 +29,11 @@ const ChatBox = ({ chat , name1 }) => {
   const [messageText, setMessageText] = useState("");
   const CONTENT_TOPIC = `/toy-chat/1/${chat}/proto`;
   let sendMessageFunc = null;
+
   useEffect(() => {
     setMessageObj(fetchData());
   }, []);
+  
   async function fetchData() {
     try {
       const context = await initWakuContext({
@@ -50,7 +52,6 @@ const ChatBox = ({ chat , name1 }) => {
       setStatus(`Error: ${error.message}`);
     }
   }
-
 
 
   // console.log("Node and Decoder = ", decoderD, nodeD);
@@ -141,6 +142,7 @@ const ChatBox = ({ chat , name1 }) => {
       },
     };
   }
+  
   const sendMessage = () => {
     if (!messageObj) {
       console.error("Waku context not initialized");

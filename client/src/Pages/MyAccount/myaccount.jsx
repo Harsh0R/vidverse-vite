@@ -94,6 +94,11 @@ const MyAccount = () => {
           Create LiveStream
         </button>
       </Link>
+      <Link to='/chatroom' className={Style.btnPrimary}>
+        <button className={`${Style.listgroupitem} ${toggle === 'livestream' ? Style.active : ''}`} >
+          Create ChatRoom
+        </button>
+      </Link>
 
       {toggle == 'videos' &&
         (

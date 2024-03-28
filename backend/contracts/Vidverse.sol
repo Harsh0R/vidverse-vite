@@ -41,6 +41,7 @@ contract VideoPlatform {
     struct User {
         address addr;
         string username;
+        string chatRoom;
         address[] subscriptions; // Add this line
     }
 
@@ -60,7 +61,11 @@ contract VideoPlatform {
 
     event StreamStopped(uint256 indexed id, address owner);
 
-    event UserRegistered(address indexed userAddress, string username);
+    event UserRegistered(
+        address indexed userAddress,
+        string username,
+        string chatRoom
+    );
     event SubscribedToCreator(
         address indexed subscriber,
         address indexed creator
@@ -130,9 +135,23 @@ contract VideoPlatform {
             "Address already registered"
         );
 
-        users[userAddress] = User(userAddress, _username, new address[](0));
+        users[userAddress] = User(userAddress, _username, "", new address[](0));
         usernameTaken[_username] = true;
-        emit UserRegistered(userAddress, _username); // Emit event here
+        emit UserRegistered(userAddress, _username, ""); // Emit event here
+    }
+
+    function createChatRoom(
+        string memory _username,
+        address userAddress,
+        string memory chatRoom
+    ) public {
+        require(
+            bytes(users[userAddress].username).length != 0,
+            "Address not registered"
+        );
+        users[userAddress].chatRoom = chatRoom;
+
+        emit UserRegistered(userAddress, _username, chatRoom); // Emit event here
     }
 
     function uploadVideo(

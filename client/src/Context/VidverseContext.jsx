@@ -33,9 +33,10 @@ export const VidverseProvider = ({ children }) => {
   const [smartWallet, setSmartWallet] = useState();
   const [livepeerClient, setLivepeerClient] = useState();
   const [userName, setUserName] = useState('')
+  const [chatRoomName, setChatRoomName] = useState('')
 
   const client = createClient({
-    url: 'https://api.studio.thegraph.com/query/56822/vidversegraph/v0.0.43',
+    url: 'https://api.studio.thegraph.com/query/56822/vidversegraph/v0.0.48',
   });
 
   useEffect(() => {
@@ -181,11 +182,41 @@ export const VidverseProvider = ({ children }) => {
       console.error('Error fetching liveStreamDatas data:', error);
     }
   };
+  const getAllMyLiveStreamData = async (account) => {
+    const query = `{
+      liveStreamDatas(where: {status: true, owner: "${account}"}) {
+        username
+        totalTipAmount
+        streamKey
+        streamID
+        stramName
+        status
+        playBackId
+        owner
+        genre
+        description
+        VideoPlatform_id
+      }
+    }`;
+
+    try {
+      const result = await client.query(query).toPromise();
+      if (result.data) {
+        return result.data.liveStreamDatas;
+      }
+    } catch (error) {
+      console.error('Error fetching liveStreamDatas data:', error);
+    }
+  };
   const registeredUser = async (account1 = account) => {
     const query = `{
-      userRegistereds(where: {userAddress: "${account1}"}) {
+      userRegistereds(
+        orderBy: blockTimestamp
+        orderDirection: desc 
+        where: {userAddress: "${account1}"}) {
         username
         userAddress
+        chatRoom
       }
     }`;
 
@@ -194,8 +225,11 @@ export const VidverseProvider = ({ children }) => {
       if (result.data) {
         const name1 = result.data.userRegistereds;
         const name = name1[0].username;
+        const ChatRoomName = name1[0].chatRoom;
         // console.log("name ===> ", name);
         setUserName(name);
+        console.log("ChatRoom Name  == >> " , name1[0]);
+        setChatRoomName(ChatRoomName);
         return name;
       }
     } catch (error) {
@@ -259,6 +293,7 @@ export const VidverseProvider = ({ children }) => {
       if (!connectedAccount) throw new Error("Wallet not connected");
       console.log("Addres==", account1);
       const contract = await connectingWithContract();
+      // await contract.stopStreamByStreamID(account1 , id)
       const uploadVideoTxData = contract.interface.encodeFunctionData("stopStreamByStreamID", [account1, id]);
 
       const uploadVideoTx = {
@@ -322,6 +357,29 @@ export const VidverseProvider = ({ children }) => {
       console.log("Register User Transaction Hash", tipVideoOwnerTxHash);
     } catch (error) {
       console.error("Error while Register User", error);
+    }
+  };
+  const createChatRoom = async (mychatroom , username, userAddre) => {
+    try {
+      // const _amount = await toWei(tipAmount);
+      console.log("Tip data === ", username, "Amo =",userAddre, "OW =>",mychatroom);
+      const contract = await connectingWithContract();
+      await contract.createChatRoom(username , userAddre , mychatroom)
+      // const tipVideoOwnerTxData = contract.interface.encodeFunctionData("createChatRoom", [username, userAddre , mychatroom]);
+
+      // const tipVideoOwnerTx = {
+      //   to: smartContractAddress,
+      //   data: tipVideoOwnerTxData,
+      // };
+
+      // const tipVideoOwnerResponse = await smartWallet.sendTransaction(tipVideoOwnerTx, {
+      //   paymasterServiceData: { mode: PaymasterMode.SPONSORED },
+      // });
+
+      // const tipVideoOwnerTxHash = await tipVideoOwnerResponse.waitForTxHash();
+      // console.log("Create User ChatRoom Transaction Hash", tipVideoOwnerTxHash);
+    } catch (error) {
+      console.error("Error while Creating User chatRoom ", error);
     }
   };
   const likeVideo = async (_videoId, account1 = account) => {
@@ -480,6 +538,7 @@ export const VidverseProvider = ({ children }) => {
         account,
         userName,
         livepeerClient,
+        chatRoomName,
         connectWallet,
         checkIfWalletConnected,
         disconnectFromMetaMask,
@@ -501,6 +560,8 @@ export const VidverseProvider = ({ children }) => {
         subscribeToCreator,
         unsubscribeFromCreator,
         getVid,
+        getAllMyLiveStreamData,
+        createChatRoom
         // getAllActiveLiveStreams,
         // getMyActiveLiveStreams,
       }}

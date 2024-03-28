@@ -9,6 +9,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Register from './Pages/Register/Register.jsx';
 import WatchVideos from './Pages/WatchVideos/WatchVideos.jsx';
 import UserPage from './Pages/UserPage/UserPage.jsx';
+import ChatRoom from './Pages/ChatRoom/ChatRoom.jsx';
 
 
 function App() {
@@ -25,6 +26,7 @@ function App() {
             <Route path="/about" element={<About />} />
             <Route path="/myAccount" element={<Myaccount />} />
             <Route path="/livestream" element={<Livestreams />} />
+            <Route path="/chatroom" element={<ChatRoom />} />
             <Route
               path="/watch/:id"
               element={<WatchVideos />}

@@ -12,7 +12,7 @@ const LivestreamCom = () => {
     const [error, setError] = useState('');
     const [activeStream, setActiveStream] = useState(null);
     const [vidGenre, setVidGenre] = useState("");
-    const { createLiveStream, getAllLiveStreamData, stopStreamByStreamID, account , userName } = useContext(VidverseContext);
+    const { createLiveStream, getAllLiveStreamData,getAllMyLiveStreamData, stopStreamByStreamID, account, userName } = useContext(VidverseContext);
 
     const [rnum, setRnum] = useState();
     const Rnum = Math.floor(Math.random() * 9);
@@ -27,7 +27,7 @@ const LivestreamCom = () => {
         const fetchActiveStreams = async () => {
             try {
                 if (account) {
-                    const streams = await getAllLiveStreamData(account);
+                    const streams = await getAllMyLiveStreamData(account);
                     if (streams.length > 0) {
                         setActiveStream(streams[0]);
                     }
@@ -74,8 +74,8 @@ const LivestreamCom = () => {
             });
 
             if (response.status === 204) {
-                console.log('Livestream terminated successfully.');
                 await stopStreamByStreamID(activeStream.streamID);
+                console.log('Livestream terminated successfully.');
                 setActiveStream(null);
             } else {
                 console.error('Failed to terminate livestream.');
