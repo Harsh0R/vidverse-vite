@@ -9,6 +9,7 @@ const ChatRoomCompo = ({ chatTopic }) => {
     // console.log("Topic Name ===> " , chatTopic);
     const [inputMessage, setInputMessage] = useState("");
     const [messages, setMessages] = useState([]);
+    // console.log("Chat Topic ====>>>>>" , chatTopic);
 
     const { createChatRoom, userName, account, chatRoomName } = useContext(VidverseContext);
     // Update the inputMessage state as the user input changes

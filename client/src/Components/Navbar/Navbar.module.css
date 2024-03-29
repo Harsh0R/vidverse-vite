@@ -15,7 +15,7 @@
 }
 
 .logo {
-  color: #fff;
+  color: antiquewhite;
   margin: 0;
 }
 
@@ -36,7 +36,9 @@
 }
 
 .item a:hover, .item a.active {
-  background-color: #275e59;
+  padding: 10px;
+  color: #000000;
+  background-color:antiquewhite;
 }
 
 .accountInfo {
@@ -46,21 +48,26 @@
 }
 
 .accountAddress, .balance {
-  color: #fff;
-  background-color: #164b4e;
+  color: #000000;
+  background-color: antiquewhite;
   padding: 5px 15px;
   border-radius: 20px;
 }
 
 .copyButton {
+  padding: 3px;
   background: transparent;
-  border: none;
+  background-color: antiquewhite;
+  border: 2px solid antiquewhite;
   cursor: pointer;
+}
+.copyButton:hover {
+  background-color: rgba(250, 235, 215, 0.548);
 }
 
 .connectButton {
-  background-color: #3e9790;
-  color: #fff;
+  background-color:antiquewhite;
+  color: #000000;
   border: none;
   padding: 10px 20px;
   border-radius: 20px;
@@ -69,7 +76,7 @@
 }
 .connectButton1 {
   background-color: transparent;
-  color: #3e9790;
+  color:antiquewhite;
   border: none;
   border-radius: 20px;
   cursor: pointer;
@@ -77,5 +84,12 @@
 }
 
 .connectButton:hover {
-  background-color: #039e7c;
+  background-color:antiquewhite;
+  /* background-color: #039e7c; */
+}
+
+.connectButton1:hover {
+  background-color:antiquewhite;
+  /* background-color: #039e5d; */
+  color: black;
 }

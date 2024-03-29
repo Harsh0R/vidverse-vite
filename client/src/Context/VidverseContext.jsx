@@ -208,7 +208,7 @@ export const VidverseProvider = ({ children }) => {
       console.error('Error fetching liveStreamDatas data:', error);
     }
   };
-  const registeredUser = async (account1 = account) => {
+  const registeredUser = async (account1) => {
     const query = `{
       userRegistereds(
         orderBy: blockTimestamp
@@ -228,17 +228,56 @@ export const VidverseProvider = ({ children }) => {
         const ChatRoomName = name1[0].chatRoom;
         // console.log("name ===> ", name);
         setUserName(name);
-        console.log("ChatRoom Name  == >> " , name1[0]);
+        console.log("ChatRoom Name  == >> ", name1[0]);
         setChatRoomName(ChatRoomName);
-        return name;
+        return name1;
       }
     } catch (error) {
       console.error('Error fetching register User name data:', error);
     }
   };
+  const getAllUniqueRegisteredUsers = async () => {
+    const query = `{
+      userRegistereds {
+        username
+        userAddress
+        chatRoom
+      }
+    }`;
+
+    try {
+      const result = await client.query(query).toPromise();
+      if (result.data) {
+        const users = result.data.userRegistereds;
+        // Create a map to enforce uniqueness based on userAddress
+        const uniqueUsers = {};
+        users.forEach(user => {
+          if (!uniqueUsers[user.userAddress]) { // If the userAddress hasn't been seen yet
+            uniqueUsers[user.userAddress] = user; // Store the user
+          }
+        });
+
+        // Convert the map back into an array of user objects
+        const uniqueUsersArray = Object.values(uniqueUsers);
+
+        // Example usage
+        console.log("Unique users: ", uniqueUsersArray);
+        // Assuming setUsers is a function to update the state/context with the unique users
+        // setUsers(uniqueUsersArray);
+
+        // Optionally, return the unique users array if needed
+        return uniqueUsersArray;
+      }
+    } catch (error) {
+      console.error('Error fetching registered user data:', error);
+    }
+  };
 
 
-  const uploadVideos = async (name, desc, cid, genre = "Comedy", account1 = account) => {
+
+
+
+  const uploadVideos = async (name, desc, cid, genre, account1 = account) => {
     try {
       const connectedAccount = await checkIfWalletConnected();
       if (!connectedAccount) throw new Error("Wallet not connected");
@@ -359,12 +398,12 @@ export const VidverseProvider = ({ children }) => {
       console.error("Error while Register User", error);
     }
   };
-  const createChatRoom = async (mychatroom , username, userAddre) => {
+  const createChatRoom = async (mychatroom, username, userAddre) => {
     try {
       // const _amount = await toWei(tipAmount);
-      console.log("Tip data === ", username, "Amo =",userAddre, "OW =>",mychatroom);
+      console.log("Tip data === ", username, "Amo =", userAddre, "OW =>", mychatroom);
       const contract = await connectingWithContract();
-      await contract.createChatRoom(username , userAddre , mychatroom)
+      await contract.createChatRoom(username, userAddre, mychatroom)
       // const tipVideoOwnerTxData = contract.interface.encodeFunctionData("createChatRoom", [username, userAddre , mychatroom]);
 
       // const tipVideoOwnerTx = {
@@ -561,7 +600,8 @@ export const VidverseProvider = ({ children }) => {
         unsubscribeFromCreator,
         getVid,
         getAllMyLiveStreamData,
-        createChatRoom
+        createChatRoom,
+        getAllUniqueRegisteredUsers
         // getAllActiveLiveStreams,
         // getMyActiveLiveStreams,
       }}

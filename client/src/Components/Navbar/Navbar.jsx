@@ -10,12 +10,14 @@ const Navbar = () => {
   const [balance, setBalance] = useState(0);
   const [userName, setUserName] = useState();
   const [rnum, setRnum] = useState();
-  const Rnum = Math.floor(Math.random() * 10);
+  const Rnum = Math.floor(Math.random() * 9);
 
   let navigate = useNavigate();
 
-  const getUserName = async () => {
-    const name = await registeredUser();
+  const getUserName = async (account1) => {
+    // const acc = account
+    const data = await registeredUser(account1);
+    const name = data[0].username;
     // console.log("name ===> ", name[0].username);
     setUserName(name)
   }
@@ -33,7 +35,7 @@ const Navbar = () => {
 
     if (account) {
       console.log("Account ==> ", account);
-      getUserName()
+      getUserName(account)
       setRnum(Rnum);
       const bal = await getBalance(account);
       setBalance(bal)

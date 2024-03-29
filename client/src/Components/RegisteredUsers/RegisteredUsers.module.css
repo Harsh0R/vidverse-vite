@@ -1,0 +1,20 @@
+.container a{
+    text-decoration: none;
+    color: aliceblue;
+}
+.userData{
+    margin: 10px;
+    padding: 10px;
+    display: flex;
+}
+.userData:hover{
+    border-radius: 10px;
+    background-color: rgb(69, 69, 69);
+}
+.nameAndAcc{
+    margin: 5px;
+}
+.userData img{
+    border-radius: 50px;
+    margin: 10px;
+}

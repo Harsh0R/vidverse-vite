@@ -1,6 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { VidverseContext } from '../../Context/VidverseContext';
 import Webplayer from '../../Components/ForLiveStream/Webplayer';
+import RegisteredUsers from '../../Components/RegisteredUsers/RegisteredUsers';
 import VideoCard from '../../Components/VideoCard/VideoCard';
 import { LivepeerConfig, createReactClient, studioProvider } from "@livepeer/react";
 import styles from "./Home.module.css";
@@ -55,8 +56,9 @@ const Home = () => {
   return (
     <div className={styles.container}>
       <div className={styles.sidebar}>
-        <button onClick={() => setContentToShow('videos')} className={contentToShow === 'videos' ? styles.active : ''}>Videos</button>
-        <button onClick={() => setContentToShow('livestream')} className={contentToShow === 'livestream' ? styles.active : ''}>LiveStream</button>
+        <button onClick={() => setContentToShow('videos')} className={contentToShow === 'videos' ? styles.active : styles.notActive}>Videos</button>
+        <button onClick={() => setContentToShow('livestream')} className={contentToShow === 'livestream' ? styles.active : styles.notActive}>LiveStream</button>
+        <button onClick={() => setContentToShow('registeredUsers')} className={contentToShow === 'registeredUsers' ? styles.active : styles.notActive}>registeredUsers</button>
         {/* <button onClick={() => setContentToShow('livestream')} className={contentToShow === 'livestream' ? styles.active : ''}>
           <img src={imgs[`image${2}`]} alt="Copy" height="50" />
         </button> */}
@@ -73,6 +75,11 @@ const Home = () => {
           <LivepeerConfig client={livepeerClient}>
             <Webplayer />
           </LivepeerConfig>
+        )}
+        {contentToShow === 'registeredUsers' && (
+          <>
+            <RegisteredUsers/>
+          </>
         )}
       </div>
     </div>

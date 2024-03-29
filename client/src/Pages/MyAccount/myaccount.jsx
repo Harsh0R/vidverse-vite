@@ -5,6 +5,7 @@ import Error from '../../Components/Error/Error.jsx'
 import Style from "./myaccount.module.css";
 
 const MyAccount = () => {
+  
   const { allVideo, uploadVideos, account, allMyVideos, userName } = useContext(VidverseContext);
   const [toggle, setToggle] = useState('');
   const [videoName, setVideoName] = useState('');
@@ -86,16 +87,16 @@ const MyAccount = () => {
     <div className={Style.myAccountContainer}>
       <h2 className={Style.heading1}>My Account : {account}</h2>
 
-      <button className={`${Style.listgroupitem} ${toggle === 'videos' ? Style.active : ''}`} onClick={() => { userName !== '' ? setToggle('videos') : setError('Register First Then Upload') }}>
+      <button className={`${Style.listgroupitem} ${toggle === 'videos' ? Style.active : Style.notActive}`} onClick={() => { userName !== '' ? setToggle('videos') : setError('Register First Then Upload') }}>
         Upload Videos
       </button>
       <Link to='/livestream' className={Style.btnPrimary}>
-        <button className={`${Style.listgroupitem} ${toggle === 'livestream' ? Style.active : ''}`} onClick={() => { userName !== '' ? setToggle('livestream') : setError('Register First Then Go Live') }}>
+        <button className={`${Style.listgroupitem} ${toggle === 'livestream' ? Style.active : Style.notActive}`} onClick={() => { userName !== '' ? setToggle('livestream') : setError('Register First Then Go Live') }}>
           Create LiveStream
         </button>
       </Link>
       <Link to='/chatroom' className={Style.btnPrimary}>
-        <button className={`${Style.listgroupitem} ${toggle === 'livestream' ? Style.active : ''}`} >
+        <button className={`${Style.listgroupitem} ${toggle === 'livestream' ? Style.active : Style.notActive}`} >
           Create ChatRoom
         </button>
       </Link>
@@ -195,8 +196,6 @@ const MyAccount = () => {
             </div>
           ))}
         </div>
-
-
       </div>
 
       {error && <Error error={error} />}
