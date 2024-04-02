@@ -5,7 +5,7 @@ import Error from '../../Components/Error/Error.jsx'
 import Style from "./myaccount.module.css";
 
 const MyAccount = () => {
-  
+
   const { allVideo, uploadVideos, account, allMyVideos, userName } = useContext(VidverseContext);
   const [toggle, setToggle] = useState('');
   const [videoName, setVideoName] = useState('');
@@ -164,9 +164,12 @@ const MyAccount = () => {
               <div className={Style.videoDetails}>
                 {video.ipfsHash && (
                   <>
-                    <img
+                    <video
+                      className={Style.imgFluid}
+                      controls
                       src={`https://${VITE_GATEWAY_URL}/ipfs/${video.ipfsHash}`}
-                      alt="ipfs image"
+                      poster={`https://${VITE_GATEWAY_URL}/ipfs/${video.ipfsHash}`}
+                      type="video/mp4"
                     />
                   </>
                 )}
@@ -180,7 +183,7 @@ const MyAccount = () => {
                 </div>
                 <small className={Style.videoDescription}>des = {video.description}</small>
                 <small className={Style.genre}>Genre = {video.genre}</small>
-                <p className={Style.cardText}>Tip Amount: {(video.totalTipAmount)/10**18} NVT</p>
+                <p className={Style.cardText}>Tip Amount: {(video.totalTipAmount) / 10 ** 18} NVT</p>
                 {/* <small className={Style.videoCID}>CID: {video.ipfsHash}
                   <br />
                   https://{VITE_GATEWAY_URL}/ipfs/${video.ipfsHash}
@@ -199,7 +202,7 @@ const MyAccount = () => {
       </div>
 
       {error && <Error error={error} />}
-      
+
     </div>
   );
 };

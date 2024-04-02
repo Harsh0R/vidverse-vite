@@ -63,7 +63,7 @@
   color: antiquewhite;
 }
 
-.videoDetails img {
+.videoDetails video {
   height: 200px;
   border-radius: 10px;
   width: 100%;

@@ -16,10 +16,13 @@
     "@tanstack/react-query": "^4.29.23",
     "@waku/react": "^0.0.5-5586ceb",
     "@waku/sdk": "^0.0.23",
+    "firebase": "^10.10.0",
     "protobufjs": "^7.2.6",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-icons": "^5.0.1",
     "react-router-dom": "^6.22.3",
+    "react-toastify": "^10.0.5",
     "urql": "^3.0.3"
   },
   "devDependencies": {

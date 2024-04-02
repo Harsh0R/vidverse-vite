@@ -2,13 +2,15 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 10px 20px;
+  padding:0px 10px;
+  /* border: 3px solid red; */
   border-bottom-left-radius: 10px;
   border-bottom-right-radius: 10px;
   background-color: #303438;
   box-shadow: 0 10px 10px rgba(0, 0, 0, 0.1);
   z-index: 100;
 }
+
 .userImg{
   border-radius: 50%;
   width: 50px;
@@ -17,6 +19,7 @@
 .logo {
   color: antiquewhite;
   margin: 0;
+  cursor: pointer;
 }
 
 .menu {
@@ -92,4 +95,67 @@
   background-color:antiquewhite;
   /* background-color: #039e5d; */
   color: black;
+}
+
+
+/* Base styles - already defined */
+
+@media (max-width: 768px) {
+  .navbar {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .logo, .menu, .accountInfo {
+    margin: 10px 0;
+  }
+
+  .menu {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .item a {
+    padding: 5px;
+  }
+
+  .accountInfo {
+    flex-wrap: wrap;
+    justify-content: flex-start;
+  }
+
+  .connectButton, .connectButton1 {
+    padding: 5px 10px;
+  }
+}
+
+.mobileMenuIcon{
+  display: none;
+}
+
+@media (max-width: 480px) {
+  .mobileMenuIcon{
+    display: block;
+  }
+  .navbar {
+    padding: 5px;
+  }
+
+  .logo {
+    font-size: 18px;
+  }
+
+  .item a {
+    font-size: 14px;
+  }
+
+  .accountAddress, .balance, .connectButton, .connectButton1 {
+    font-size: 12px;
+    padding: 5px;
+  }
+}
+
+.userImg {
+  max-width: 100%;
+  height: auto;
 }

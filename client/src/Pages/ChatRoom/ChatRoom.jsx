@@ -3,6 +3,8 @@ import { createLightNode, waitForRemotePeer, Protocols, createEncoder, createDec
 import protobuf from "protobufjs";
 import ChatRoomCompo from '../../Components/ChatRoomCompo/ChatRoomCompo';
 import { LightNodeProvider } from "@waku/react";
+import { useNavigate } from "react-router-dom";
+import Style from "./ChatRoom.module.css"
 import { VidverseContext } from '../../Context/VidverseContext';
 const ChatRoom = () => {
 
@@ -12,7 +14,11 @@ const ChatRoom = () => {
 
 
     const NODE_OPTIONS = { defaultBootstrap: true };
-
+    let navigate = useNavigate();
+    const handleBack = () => {
+        let path = `/myAccount`;
+        navigate(path);
+    }
 
 
     const handleCreateChatRoom = async () => {
@@ -22,6 +28,7 @@ const ChatRoom = () => {
 
     return (
         <div>
+            <button onClick={handleBack} className={Style.backArrow}> {`<`}--- Back</button>
 
             {/* {(chatRoomTopic && flag) ? (
                 <>

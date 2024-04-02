@@ -1,13 +1,19 @@
-import React, { useContext, useState } from "react";
+import React from "react";
 import StreamStarterFile from '../../Components/ForLiveStream/StreamStarterFile'
-import Style from "../Home/Home.module.css"
+import Style from "./livestream.module.css"
+import { useNavigate } from "react-router-dom";
 
 
 const Livestream = () => {
-
+  let navigate = useNavigate();
+  const handleBack = () => {
+    let path = `/myAccount`;
+    navigate(path);
+  }
 
   return (
     <div className={Style.container}>
+      <button onClick={handleBack} className={Style.backArrow}> {`<`}--- Back</button>
       <StreamStarterFile></StreamStarterFile>
     </div>
   )

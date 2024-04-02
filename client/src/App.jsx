@@ -10,6 +10,7 @@ import Register from './Pages/Register/Register.jsx';
 import WatchVideos from './Pages/WatchVideos/WatchVideos.jsx';
 import UserPage from './Pages/UserPage/UserPage.jsx';
 import ChatRoom from './Pages/ChatRoom/ChatRoom.jsx';
+import VideoChat from './Components/VideoChat/VideoChat.jsx';
 
 
 function App() {
@@ -27,6 +28,7 @@ function App() {
             <Route path="/myAccount" element={<Myaccount />} />
             <Route path="/livestream" element={<Livestreams />} />
             <Route path="/chatroom" element={<ChatRoom />} />
+            <Route path="/callroom" element={<VideoChat />} />
             <Route
               path="/watch/:id"
               element={<WatchVideos />}

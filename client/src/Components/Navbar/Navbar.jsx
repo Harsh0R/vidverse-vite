@@ -3,14 +3,17 @@ import { Link } from 'react-router-dom';
 import { VidverseContext } from '../../Context/VidverseContext';
 import imgs from '../../assets/imgs';
 import styles from "./Navbar.module.css";
+import { FaBars, FaTimes } from 'react-icons/fa'; // You can use react-icons for menu icons
+
 import { useNavigate } from "react-router-dom";
 
 const Navbar = () => {
   const { account, connectToWallet, disconnectFromMetaMask, registeredUser, getBalance } = useContext(VidverseContext);
   const [balance, setBalance] = useState(0);
   const [userName, setUserName] = useState();
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [rnum, setRnum] = useState();
-  const Rnum = Math.floor(Math.random() * 9);
+  const Rnum = Math.floor((Math.random() * 9) + 1);
 
   let navigate = useNavigate();
 
@@ -36,6 +39,7 @@ const Navbar = () => {
     if (account) {
       console.log("Account ==> ", account);
       getUserName(account)
+      // console.log(Rnum);
       setRnum(Rnum);
       const bal = await getBalance(account);
       setBalance(bal)
@@ -59,15 +63,21 @@ const Navbar = () => {
     { menu: "My Account", link: "/myAccount" },
     { menu: "Setting", link: "/setting" },
     { menu: "Register", link: "/register" },
-    { menu: "Terms of Use", link: "/terms" },
+    { menu: "Call Room", link: "/callroom" },
   ];
 
-  // console.log("Balamce ==> ", balance);
+  const handleBack = () => {
+    let path = `/`;
+    navigate(path);
+  }
 
   return (
     <nav className={styles.navbar}>
-      <h1 className={styles.logo}>VIDVERSE</h1>
-      <ul className={styles.menu}>
+      <h1 onClick={handleBack} className={styles.logo}>VIDVERSE</h1>
+      <button onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} className={styles.mobileMenuIcon}>
+        {isMobileMenuOpen ? <FaTimes /> : <FaBars />}
+      </button>
+      <ul className={`${styles.menu} ${isMobileMenuOpen ? styles.menuActive : ''}`}>
         {menuItems.map((item, index) => (
           <li key={index} className={styles.item}>
             <Link to={item.link}>{item.menu}</Link>

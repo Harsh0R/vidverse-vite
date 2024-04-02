@@ -3,16 +3,22 @@ import { VidverseContext } from '../../Context/VidverseContext'
 import Style from "./ShowVideo.module.css"
 import imgs from '../../assets/imgs'
 import { Link } from 'react-router-dom'
+import VideoCard from '../VideoCard/VideoCard'
 
 const ShowVideo = ({ vidId }) => {
 
-    const { getVid, hasValideAllowance, tipVideoOwner, increaseAllowance, dislikeVideo, likeVideo } = useContext(VidverseContext);
+    const { getVid, hasValideAllowance, allVideo,tipVideoOwner, increaseAllowance, dislikeVideo, likeVideo } = useContext(VidverseContext);
     const [vidData, setVidData] = useState()
     const [rnum, setRnum] = useState();
-    const Rnum = Math.floor(Math.random() * 9);
+    const Rnum = Math.floor((Math.random() * 9)+1);
+    const [videos, setVideos] = useState([]);
 
     const fetchData = async (vidId) => {
         const vid = await getVid(vidId)
+        const data = await allVideo();
+
+        console.log("Vid =", data);
+        setVideos(data);
         console.log("Vid ===> ", vid[0]);
         setVidData(vid[0]);
     }
@@ -55,25 +61,18 @@ const ShowVideo = ({ vidId }) => {
     const VITE_GATEWAY_URL = 'violet-rare-crawdad-98.mypinata.cloud';
 
     return (
-        <div>
+        <div className={Style.container}>
             <div className={Style.mainContainder}>
                 {vidData && (
                     <>
                         <div className={Style.imgContainer}>
-                            {/* <img
-                                className={Style.imgFluid}
-                                // width="100%"
-                                // height="100%"
-                                controls
-                                src={`https://${VITE_GATEWAY_URL}/ipfs/${vidData.ipfsHash}`}
-                                type="video/mp4"
-                            /> */}
                             <video
                                 className={Style.imgFluid}
                                 width="100%"
                                 height="100%"
                                 controls
                                 src={`https://${VITE_GATEWAY_URL}/ipfs/${vidData.ipfsHash}`}
+                                poster={`https://${VITE_GATEWAY_URL}/ipfs/${vidData.ipfsHash}`}
                                 type="video/mp4"
                             />
                         </div>
@@ -116,7 +115,7 @@ const ShowVideo = ({ vidId }) => {
                                     </div>
                                 </Link>
                                 <div className={Style.subscribBtn}>
-                                    <button onClick={() => handleSubscribe(vidData.owner)}>Subscribe</button>
+                                    <button className={Style.subBtn} onClick={() => handleSubscribe(vidData.owner)}>Subscribe</button>
                                 </div>
                                 <div className={Style.likeDislike}>
                                     <button onClick={handleLikeVid} className={Style.likes}>
@@ -141,6 +140,11 @@ const ShowVideo = ({ vidId }) => {
 
                     </>
                 )}
+            </div>
+            <div className={Style.content}>
+                {videos.length ? videos.map((video, index) => (
+                    <VideoCard key={index} video={video} />
+                )) : <p className={Style.noVideos}>No videos available.</p>}
             </div>
         </div>
     )

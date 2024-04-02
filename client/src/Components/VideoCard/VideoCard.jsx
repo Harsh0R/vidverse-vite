@@ -16,24 +16,16 @@ const VideoCard = ({ video, handleTip }) => {
     <div className={styles.card}>
       <Link to={`/watch/${video.VideoPlatform_id}`}>
         <div className={styles.colMd4}>
-          <img
-            className={styles.imgFluid}
-            // width="100%"
-            // height="100%"
-            controls
-            src={`https://${VITE_GATEWAY_URL}/ipfs/${video.ipfsHash}`}
-            type="video/mp4"
-          />
-          
-          {/* <video
+      
+          <video
             className={styles.imgFluid}
             width="100%"
             height="100%"
             controls
-            src={`https://gateway.lighthouse.storage/ipfs/${video.ipfsHash}`}
+            src={`https://${VITE_GATEWAY_URL}/ipfs/${video.ipfsHash}`}
+            poster={`https://${VITE_GATEWAY_URL}/ipfs/${video.ipfsHash}`}
             type="video/mp4"
-          /> */}
-
+          />
         </div>
         <div className={styles.colMd8}>
           <div className={styles.cardBody}>
@@ -48,7 +40,7 @@ const VideoCard = ({ video, handleTip }) => {
               </div>
             </div>
             <p className={styles.cardText}>{video.description}</p>
-          
+
           </div>
         </div>
       </Link>
@@ -61,19 +53,19 @@ export default VideoCard;
 
 
 
-  {/* <p className={styles.cardText}>
+{/* <p className={styles.cardText}>
             <small className={styles.textMuted}>CID: {CID}</small>
             </p>
             <p className={styles.cardText}>
             <small className={styles.textMuted}>Owner: {makerAdd}</small>
           </p> */}
-            {/* <small className={styles.textMuted}>CID: {video.ipfsHash}</small> */}
-            {/* <p className={styles.cardText}>Tip Amount: {video.totalTipAmount}</p> */}
-            {/* <p className={styles.cardText}>Maker = {video.username}</p> */}
-            {/* <small className={styles.cardText}>Like = {video.likes}</small>
+{/* <small className={styles.textMuted}>CID: {video.ipfsHash}</small> */ }
+{/* <p className={styles.cardText}>Tip Amount: {video.totalTipAmount}</p> */ }
+{/* <p className={styles.cardText}>Maker = {video.username}</p> */ }
+{/* <small className={styles.cardText}>Like = {video.likes}</small>
           <small className={styles.cardText}>Dislike = {video.dislikes}</small> */}
-            {/* <p className={styles.cardText}>Genre = {video.genre}</p> */}
-            {/* <form
+{/* <p className={styles.cardText}>Genre = {video.genre}</p> */ }
+{/* <form
             onSubmit={(e) => {
               e.preventDefault();
               const tipAmount = e.target.elements.tipAmount.value;

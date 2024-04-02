@@ -26,8 +26,8 @@ const RegisteredUsers = () => {
         allUserData && (
           <div>
             {allUserData.map((user, index) => (
-              <div className={Style.userData}>
-                <Link to={`/creator/${user.userAddress}`} key={index}>
+              <div className={Style.userData}  key={index}>
+                <Link to={`/creator/${user.userAddress}`}>
                   <img src={imgs.image3} alt="user Img" width={50} />
                   <div className={Style.nameAndAcc}>
                     <div>User Name : {user.username}</div>
