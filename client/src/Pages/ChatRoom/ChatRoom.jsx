@@ -22,7 +22,7 @@ const ChatRoom = () => {
 
 
     const handleCreateChatRoom = async () => {
-        createChatRoom(chatTopic, userName, account);
+        createChatRoom(chatRoomTopic, userName, account);
         setFlag(true);
     }
 
@@ -47,7 +47,7 @@ const ChatRoom = () => {
             {chatRoomName == '' || chatRoomName == null ?
                 (<>
                     Enter Room Name : <input type="text" onChange={(e) => setChatRoomTopic(e.target.value)} />
-                    <button onClick={handleCreateChatRoom}>Make Chat Room</button>
+                    <button className={Style.btn} onClick={handleCreateChatRoom}>Make Chat Room</button>
                 </>
                 ) : (
                     <>

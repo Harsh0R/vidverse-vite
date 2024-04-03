@@ -1,20 +1,19 @@
 .card {
   display: flex;
   flex-direction: column;
-  background-color: #1e1e1e; /* Dark background */
-  color: #fff; /* Light text */
-  width: 100%; /* Adjusted for responsiveness */
-  max-width: 640px; /* Maximum width */
+  /* background-color: #1e1e1e;  */
+  /* box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);  */
+  color: #fff; 
+  width: 300px;
   justify-content: space-between;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5); /* Soft shadow for depth */
-  border-radius: 8px; /* Rounded corners */
-  margin: 10px auto; /* Centering the card */
+  border-radius: 8px; 
+  margin: 10px auto;
   padding: 10px;
-  transition: transform 0.2s; /* Animation on hover */
+  transition: transform 0.2s;
 }
 
 .card:hover {
-  transform: scale(1.02); /* Slightly increase size on hover */
+  transform: scale(1.02); 
 }
 
 .card a {
@@ -23,17 +22,19 @@
 }
 
 .imgFluid {
-  width: 100%; /* Full width */
-  height: auto; /* Maintain aspect ratio */
-  border-top-left-radius: 8px; /* Rounded top corners */
-  border-top-right-radius: 8px; /* Match card's rounded corners */
+  width: 100%; 
+  height: 200px; 
+  border-top-left-radius: 8px; 
+  border-top-right-radius: 8px; 
 }
 
 .cardBody {
-  padding: 15px;
+  text-align: start;
+  /* padding: 15px; */
 }
 
 .cardTitle {
+  font-weight: bolder;
   text-align: start;
   color: #00e1ff; /* Bright color for titles */
 }
@@ -48,7 +49,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-top: 10px; /* Spacing for user and like/dislike */
+  color: #ccc;
 }
 
 .likes, .dislikes {
@@ -58,6 +59,17 @@
   border-radius: 10px; /* Rounded */
 }
 
+@media (max-width: 1090px) {
+  .card {
+    flex-direction: column;
+    width: 90%; /* Adjust width for tablet and below */
+    margin: 10px auto; /* Centering in viewport */
+  }
+
+  .imgFluid {
+    height: auto; /* Adjust height automatically */
+  }
+}
 @media (max-width: 768px) {
   .card {
     flex-direction: column;
@@ -72,7 +84,8 @@
 
 @media (max-width: 480px) {
   .cardTitle, .cardText {
-    font-size: 12px; /* Smaller text on small devices */
+    font-size: 12px;
+    font-weight: bolder;
   }
 
   .likes, .dislikes {

@@ -7,9 +7,10 @@ import { LivepeerConfig, createReactClient, studioProvider } from "@livepeer/rea
 import styles from "./Home.module.css";
 import imgs from "../../assets/imgs"
 import { apiKey } from '../../Context/constants';
+import SubscriptionUser from '../../Components/SubscriptionUser/SubscriptionUser';
 
 const Home = () => {
-  const { allVideo, tipVideoOwner, hasValideAllowance, increaseAllowance, checkIfWalletConnected } = useContext(VidverseContext);
+  const { allVideo} = useContext(VidverseContext);
   const [contentToShow, setContentToShow] = useState('videos');
   const [videos, setVideos] = useState([]);
   const [livepeerClient, setLivepeerClient] = useState();
@@ -37,35 +38,17 @@ const Home = () => {
     fetchVideos();
   }, [contentToShow, allVideo]);
 
-  // const handleTip = async (vidID, tipAmount) => {
-  //   try {
-
-  //     const allowance = await hasValideAllowance();
-
-  //     if (allowance < tipAmount) {
-  //       await increaseAllowance(tipAmount);
-  //     } else {
-  //       console.log("Tip amount => ", tipAmount);
-  //       await tipVideoOwner(vidID, tipAmount);
-  //     }
-  //   } catch (error) {
-  //     console.error('Error tipping video owner:', error);
-  //   }
-  // };
-
   return (
     <div className={styles.container}>
       <div className={styles.sidebar}>
         <button onClick={() => setContentToShow('videos')} className={contentToShow === 'videos' ? styles.active : styles.notActive}>Videos</button>
         <button onClick={() => setContentToShow('livestream')} className={contentToShow === 'livestream' ? styles.active : styles.notActive}>LiveStream</button>
         <button onClick={() => setContentToShow('registeredUsers')} className={contentToShow === 'registeredUsers' ? styles.active : styles.notActive}>registeredUsers</button>
-        {/* <button onClick={() => setContentToShow('livestream')} className={contentToShow === 'livestream' ? styles.active : ''}>
-          <img src={imgs[`image${2}`]} alt="Copy" height="50" />
-        </button> */}
+        <button onClick={() => setContentToShow('Subscriptions')} className={contentToShow === 'Subscriptions' ? styles.active : styles.notActive}>Subscriptions</button>
       </div>
       <div >
         {contentToShow === 'videos' && (
-          <div className={styles.content}>
+          <div className={styles.videoGrid}>
             {videos.length ? videos.map((video, index) => (
               <VideoCard key={index} video={video} />
             )) : <p className={styles.noVideos}>No videos available.</p>}
@@ -79,6 +62,11 @@ const Home = () => {
         {contentToShow === 'registeredUsers' && (
           <>
             <RegisteredUsers/>
+          </>
+        )}
+        {contentToShow === 'Subscriptions' && (
+          <>
+            <SubscriptionUser/>
           </>
         )}
       </div>

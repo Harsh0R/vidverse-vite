@@ -22,7 +22,7 @@
 video {
     width: 900px;
     height: 700px;
-    background-color: black;
+    background-color: rgb(43, 43, 43);
     border-radius: 5px;
 }
 
@@ -70,8 +70,4 @@ button {
 
 button:disabled {
     background-color: #ccc;
-}
-
-button:hover:not(:disabled) {
-    background-color: #6a61f2;
 }

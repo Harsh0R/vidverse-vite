@@ -9,3 +9,9 @@
     color: rgb(240, 248, 255);
     background-color: transparent;
 }
+.btn{
+    color: black;
+}
+.btn:hover{
+    color: black;
+}

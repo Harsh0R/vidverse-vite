@@ -92,28 +92,29 @@ const ChatRoomCompo = ({ chatTopic }) => {
 
 
     return (
-        <div> <div className="chat-interface">
+        <div className={Style.chatInterface}>
             <h1>{chatTopic} Room</h1>
-            <div className="chat-body">
+            <div className={Style.chatBody}>
                 {messages.map((message, index) => (
-                    <div key={index} className="chat-message">
+                    <div key={index} className={Style.chatMessage}>
                         <span>{new Date(message.timestamp).toUTCString()}</span>
-                        <br /> <span>Fom : {message.name} </span> {/* Display the sender's name */}
-                        <div className="message-text">{message.message}</div>
+                        <br /><span>From: {message.name}</span>
+                        <div className={Style.messageText}>{message.message}</div>
                     </div>
                 ))}
             </div>
-            <div className="chat-footer">
+            <div className={Style.chatFooter}>
                 <input
                     type="text"
                     id="message-input"
                     value={inputMessage}
                     onChange={handleInputChange}
                     placeholder="Type your message..."
+                    className={Style.messageInput} // Add this class if you want to style the input separately
                 />
-                <button className="send-button" onClick={sendMessage}>Send</button>
+                <button className={Style.sendButton} onClick={sendMessage}>Send</button>
             </div>
-        </div></div>
+        </div>
     )
 }
 

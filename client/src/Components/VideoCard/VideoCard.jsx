@@ -16,11 +16,9 @@ const VideoCard = ({ video, handleTip }) => {
     <div className={styles.card}>
       <Link to={`/watch/${video.VideoPlatform_id}`}>
         <div className={styles.colMd4}>
-      
+
           <video
             className={styles.imgFluid}
-            width="100%"
-            height="100%"
             controls
             src={`https://${VITE_GATEWAY_URL}/ipfs/${video.ipfsHash}`}
             poster={`https://${VITE_GATEWAY_URL}/ipfs/${video.ipfsHash}`}
@@ -31,16 +29,15 @@ const VideoCard = ({ video, handleTip }) => {
           <div className={styles.cardBody}>
 
 
-            <h3 className={styles.cardTitle}>{video.title}</h3>
-            <div className={styles.username}>{video.username}
-              <div className={styles.likeDislike}>
+            <div className={styles.cardTitle}>{video.title}</div>
+            <small className={styles.username}>{video.username}
+              {/* <div className={styles.likeDislike}>
                 <small className={styles.likes}>
                   Like : {video.likes}</small>
                 <small className={styles.dislikes}>Dislike : {video.dislikes}</small>
-              </div>
-            </div>
-            <p className={styles.cardText}>{video.description}</p>
-
+              </div> */}
+            </small>
+            {/* <div className={styles.cardText}>{video.description}</div> */}
           </div>
         </div>
       </Link>

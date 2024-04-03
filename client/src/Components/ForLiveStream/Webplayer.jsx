@@ -1,12 +1,12 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Player } from "@livepeer/react";
 import ChatBox from "../ChatBox/ChatBox";
 import { VidverseContext } from "../../Context/VidverseContext";
 
 const Webplayer = () => {
-  const [liveStreams, setLiveStreams] = useState([]); 
+  const [liveStreams, setLiveStreams] = useState([]);
 
-  const { getAllLiveStreamData , userName } = useContext(VidverseContext);
+  const { getAllLiveStreamData, userName } = useContext(VidverseContext);
 
   const handleShowLiveStream = async () => {
     const streams = await getAllLiveStreamData(); // Assume this returns an array of streams
@@ -14,10 +14,16 @@ const Webplayer = () => {
     console.log("Streams = ", streams);
   }
 
+  useEffect(() => {
+    handleShowLiveStream()
+
+  }, [])
+
+
   return (
     <div>
-      <button onClick={handleShowLiveStream}>Show live stream</button>
-      {liveStreams.length > 0 && (
+      {/* <button style={{ color: 'black' }}>Show live stream</button> */}
+      {liveStreams.length > 0 ? (
         <div>
           {liveStreams.map((stream, index) => (
             <div key={index}>
@@ -49,7 +55,10 @@ const Webplayer = () => {
 
           ))}
         </div>
-      )}
+      ):(
+        <p>No stream is live</p>
+      )
+    }
 
     </div>
   );

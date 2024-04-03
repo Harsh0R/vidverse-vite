@@ -9,6 +9,7 @@ import {
   tokenContract
 } from "../Utils/apiFeatures";
 import {
+  aspectRatios,
   createReactClient,
   studioProvider,
 } from "@livepeer/react";
@@ -272,7 +273,109 @@ export const VidverseProvider = ({ children }) => {
       console.error('Error fetching registered user data:', error);
     }
   };
+  const isSubscrobeThisCreator = async (creatorAcc, account1 = account) => {
+    const query = `{
+      subscribedToCreators(where: {creator: "${creatorAcc}", subscriber: "${account1}"}) {
+        subscriber
+        creator
+      }
+    }`
+    const query1 = `{
+      unsubscribedFromCreators(where: {creator: "${creatorAcc}", subscriber: "${account1}"}) {
+        subscriber
+        creator
+      }
+    }`
+    // console.log("sub and Creator  ===>>> ",creatorAcc , account1);
 
+    try {
+      const result = await client.query(query).toPromise();
+      const result1 = await client.query(query1).toPromise();
+      if (result.data && result1.data) {
+        const data = result.data.subscribedToCreators;
+        const data1 = result1.data.unsubscribedFromCreators;
+        // console.log("Sub Data ===>>> ",data.length);
+        // console.log("Sub1 Data ===>>> ",data1.length);
+        if (data.length > 0 && data1.length === 0) {
+          return true
+        } else {
+          return false
+        }
+      } else {
+        console.log("No data found => ", result);
+        return false
+      }
+    } catch (error) {
+      console.error('Error fetching subs data:', error);
+    }
+  }
+  const getSubs = async (account1) => {
+    const subscribeQuery = `{
+      subscribedToCreators(orderBy: subscriber, where: {creator: "${account1}"}) {
+        subscriber
+      }
+    }`;
+    const unsubscribeQuery = `{
+      unsubscribedFromCreators(orderBy: subscriber, where: {creator: "${account1}"}) {
+        subscriber
+      }
+    }`;
+
+    try {
+      const subscribedResult = await client.query(subscribeQuery).toPromise();
+      const unsubscribedResult = await client.query(unsubscribeQuery).toPromise();
+
+      if (subscribedResult.data && unsubscribedResult.data) {
+        const subscribedSubscribers = subscribedResult.data.subscribedToCreators.map(sub => sub.subscriber);
+        const unsubscribedSubscribers = new Set(unsubscribedResult.data.unsubscribedFromCreators.map(sub => sub.subscriber));
+
+        const currentSubscribers = subscribedSubscribers.filter(sub => !unsubscribedSubscribers.has(sub));
+
+        console.log("Current Subscribers ===>>> ", currentSubscribers);
+        return currentSubscribers;
+      } else {
+        console.log("No data found");
+        return [];
+      }
+    } catch (error) {
+      console.error('Error fetching subscription data:', error);
+      return [];
+    }
+  }
+  const getCreators = async (account1 = account) => {
+    const subscribeQuery = `{
+      subscribedToCreators(orderBy: creator, where: {subscriber: "${account1}"}) {
+        creator
+      }
+    }`;
+    console.log("Account in get Creator => " , account1);
+    const unsubscribeQuery = `{
+      unsubscribedFromCreators(orderBy: creator, where: {subscriber: "${account1}"}) {
+        creator
+      }
+    }`;
+
+    try {
+      const subscribedResult = await client.query(subscribeQuery).toPromise();
+      const unsubscribedResult = await client.query(unsubscribeQuery).toPromise();
+
+      if (subscribedResult.data && unsubscribedResult.data) {
+        const subscribedSubscribers = subscribedResult.data.subscribedToCreators.map(sub => sub.creator);
+        const unsubscribedSubscribers = new Set(unsubscribedResult.data.unsubscribedFromCreators.map(sub => sub.creator));
+
+        const currentSubscribers = subscribedSubscribers.filter(sub => !unsubscribedSubscribers.has(sub));
+
+        console.log("Current Subscribers ===>>> ", currentSubscribers);
+        return currentSubscribers;
+      } else {
+        console.log("No data found");
+        return [];
+      }
+    } catch (error) {
+      console.error('Error fetching creator data:', error);
+      return [];
+    }
+  }
 
 
 
@@ -403,20 +506,20 @@ export const VidverseProvider = ({ children }) => {
       // const _amount = await toWei(tipAmount);
       console.log("Tip data === ", username, "Amo =", userAddre, "OW =>", mychatroom);
       const contract = await connectingWithContract();
-      await contract.createChatRoom(username, userAddre, mychatroom)
-      // const tipVideoOwnerTxData = contract.interface.encodeFunctionData("createChatRoom", [username, userAddre , mychatroom]);
+      // await contract.createChatRoom(username, userAddre, mychatroom)
+      const tipVideoOwnerTxData = contract.interface.encodeFunctionData("createChatRoom", [username, userAddre , mychatroom]);
 
-      // const tipVideoOwnerTx = {
-      //   to: smartContractAddress,
-      //   data: tipVideoOwnerTxData,
-      // };
+      const tipVideoOwnerTx = {
+        to: smartContractAddress,
+        data: tipVideoOwnerTxData,
+      };
 
-      // const tipVideoOwnerResponse = await smartWallet.sendTransaction(tipVideoOwnerTx, {
-      //   paymasterServiceData: { mode: PaymasterMode.SPONSORED },
-      // });
+      const tipVideoOwnerResponse = await smartWallet.sendTransaction(tipVideoOwnerTx, {
+        paymasterServiceData: { mode: PaymasterMode.SPONSORED },
+      });
 
-      // const tipVideoOwnerTxHash = await tipVideoOwnerResponse.waitForTxHash();
-      // console.log("Create User ChatRoom Transaction Hash", tipVideoOwnerTxHash);
+      const tipVideoOwnerTxHash = await tipVideoOwnerResponse.waitForTxHash();
+      console.log("Create User ChatRoom Transaction Hash", tipVideoOwnerTxHash);
     } catch (error) {
       console.error("Error while Creating User chatRoom ", error);
     }
@@ -424,7 +527,8 @@ export const VidverseProvider = ({ children }) => {
   const likeVideo = async (_videoId, account1 = account) => {
     try {
       const contract = await connectingWithContract();
-
+      console.log("Liked video Id => ", _videoId , " By => " , account1);
+      // await contract.likeVideo(_videoId , account1)
       const tipVideoOwnerTxData = contract.interface.encodeFunctionData("likeVideo", [_videoId, account1]);
 
       const tipVideoOwnerTx = {
@@ -601,7 +705,10 @@ export const VidverseProvider = ({ children }) => {
         getVid,
         getAllMyLiveStreamData,
         createChatRoom,
-        getAllUniqueRegisteredUsers
+        getAllUniqueRegisteredUsers,
+        isSubscrobeThisCreator,
+        getSubs,
+        getCreators,
         // getAllActiveLiveStreams,
         // getMyActiveLiveStreams,
       }}
