@@ -66,19 +66,12 @@
     margin: 10px auto; /* Centering in viewport */
   }
 
-  .imgFluid {
-    height: auto; /* Adjust height automatically */
-  }
 }
 @media (max-width: 768px) {
   .card {
     flex-direction: column;
     width: 90%; /* Adjust width for tablet and below */
     margin: 10px auto; /* Centering in viewport */
-  }
-
-  .imgFluid {
-    height: auto; /* Adjust height automatically */
   }
 }
 

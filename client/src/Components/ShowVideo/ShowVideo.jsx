@@ -17,12 +17,12 @@ const ShowVideo = ({ vidId }) => {
     const [videos, setVideos] = useState([]);
     const [subsCount, setsubsCount] = useState(0)
     const [error, setError] = useState('')
-    const [isLoading, setIsLoading] = useState(true); // State to manage overall loading
-    const [isSubmitting, setIsSubmitting] = useState(false); // State for loading during form submission
+    const [isLoading, setIsLoading] = useState(true);
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
 
     const fetchData = async (vidId) => {
-        setIsLoading(true); // Start loading
+        setIsLoading(true);
         try {
             const vid = await getVid(vidId)
             const data = await allVideo();
@@ -37,7 +37,7 @@ const ShowVideo = ({ vidId }) => {
             console.log("Vid ===> ", vid[0]);
             setVidData(vid[0]);
         } finally {
-            setIsLoading(false); // End loading
+            setIsLoading(false);
         }
     }
 
@@ -49,6 +49,7 @@ const ShowVideo = ({ vidId }) => {
 
 
     const handleTip = async (vidID, tipAmount) => {
+        setIsSubmitting(true);
         try {
             if (userName && userName !== '') {
                 const allowance = await hasValideAllowance();
@@ -60,16 +61,16 @@ const ShowVideo = ({ vidId }) => {
                     await tipVideoOwner(vidID, tipAmount);
                 }
             } else {
-                setError('Register First Then you can tip other creator')
+                setError('Register First Then you can tip other creator');
             }
-
         } catch (error) {
             console.error('Error tipping video owner:', error);
+        } finally {
+            setIsSubmitting(false);
         }
     };
 
     const handleLikeVid = async (vidId) => {
-        // console.log("Vid id ==> ",vidId);
         if (userName && userName !== '') {
             await likeVideo(vidId)
         }
@@ -88,7 +89,7 @@ const ShowVideo = ({ vidId }) => {
     const handleSubscribe = async (vidMaker) => {
         if (userName && userName !== '') {
             console.log("Sub to ====> ", vidMaker);
-            // await subscribeToCreator(vidMaker)
+            await subscribeToCreator(vidMaker)
         }
         else {
             setError('Register First Then you can Subscribe other creator')
@@ -145,9 +146,8 @@ const ShowVideo = ({ vidId }) => {
                                                         name="tipAmount"
                                                         placeholder="Tip Amount"
                                                     />
-                                                    <button className={Style.btn}
-                                                        type="submit">
-                                                        Give Tip
+                                                    <button className={Style.btn} type="submit" disabled={isSubmitting}>
+                                                        {isSubmitting ? 'Processing...' : 'Give Tip'}
                                                     </button>
                                                 </div>
                                             </form>

@@ -1,10 +1,10 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { Broadcast, LivepeerConfig, createReactClient, studioProvider, useCreateStream } from "@livepeer/react";
-import ChatBox from '../ChatBox/ChatBox';
+import ChatBox from '../../ChatBox/ChatBox';
 import Style from "./StartLivestream.module.css"
-import { VidverseContext } from '../../Context/VidverseContext';
-import Error from '../Error/Error';
-import imgs from '../../assets/imgs';
+import { VidverseContext } from '../../../Context/VidverseContext';
+import Error from '../../Error/Error';
+import imgs from '../../../assets/imgs';
 import { Link } from 'react-router-dom';
 
 const LivestreamCom = () => {
@@ -104,6 +104,7 @@ const LivestreamCom = () => {
             <div className={Style.container1}>
                 <h3 className={Style.streamName}>Stream Name : </h3>
                 <input
+                    className={Style.strInp}
                     type="text"
                     placeholder="Enter Stream Name"
                     value={streamName}
@@ -111,7 +112,7 @@ const LivestreamCom = () => {
                 />
 
                 <div className={Style.inputGroup}>
-                    <div>Select Your Video Genre : </div>
+                    <div className={Style.SelectGen}>Select Your Video Genre : </div>
                     <select
                         value={vidGenre}
                         onChange={handleRoyaltyChange}
@@ -119,7 +120,7 @@ const LivestreamCom = () => {
                     >
                         <option value="">Select Video Genre</option>
                         {genreArr.map((genre) => (
-                            <option key={genre} value={genre}>
+                            <option key={genre} value={genre} >
                                 {genre}
                             </option>
                         ))}

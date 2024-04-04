@@ -29,8 +29,7 @@ const ChatRoomCompo = ({ chatTopic }) => {
     const ChatMessage = new protobuf.Type("ChatMessage")
         .add(new protobuf.Field("timestamp", 1, "uint64"))
         .add(new protobuf.Field("message", 2, "string"))
-        .add(new protobuf.Field("name", 3, "string")); // Add this line to include the sender's name
-
+        .add(new protobuf.Field("name", 3, "string")); 
     // Send the message using Light Push
     const { push } = useLightPush({ node, encoder });
 
@@ -45,9 +44,7 @@ const ChatRoomCompo = ({ chatTopic }) => {
     useEffect(() => {
         const allMessages = storeMessages.concat(filterMessages);
         const uniqueMessages = allMessages.reduce((acc, message) => {
-            // Assuming each message has a unique ID or a combination of timestamp and payload can be used
-            const key = message.id || `${message.timestamp}-${message.payload}-${message.name}`; // Include the sender's name in the key
-
+            const key = message.id || `${message.timestamp}-${message.payload}-${message.name}`; 
             if (!acc.has(key)) {
                 acc.set(key, message);
             }

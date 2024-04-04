@@ -6,7 +6,7 @@ import {
 } from "@livepeer/react";
 import Webplayer from "./Webplayer";
 import { VidverseContext } from "../../Context/VidverseContext";
-import LivestreamCom from "./StartLivestream";
+import LivestreamCom from "./StartLivestream/StartLivestream";
 
 
 const StreamStarterFile = () => {

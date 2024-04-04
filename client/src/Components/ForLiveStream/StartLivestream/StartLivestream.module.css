@@ -12,21 +12,29 @@
     background: rgb(0, 0, 0);
 }
 
-.container::-webkit-scrollbar-thumb {
-    background-color: rgb(58, 225, 247);
-    border-radius: 20px;
-    border: 3px solid rgb(0, 0, 0);
-}
-
-.container1 {
-    display: flex;
-}
-
-.container1 input {
+.strInp {
+    /* border: 3px solid red; */
+    margin: 10px;
     background-color: transparent;
     margin: 0 10px;
     color: aliceblue;
     border-radius: 10px;
+    margin: 15px 10px;
+}
+.input{
+    margin: auto;
+}
+.container::-webkit-scrollbar-thumb {
+    background-color: antiquewhite;
+    border-radius: 20px;
+    border: 3px solid rgb(0, 0, 0);
+}
+.SelectGen{
+    margin: auto;
+}
+
+.container1 {
+    display: flex;
 }
 
 .inputName {
@@ -35,13 +43,16 @@
 }
 
 .streamName {
-    color: aquamarine;
+    font-weight: bolder;
+    color: antiquewhite;
 }
 
 .streamBtn {
-    padding: 10px;
+    margin: auto;
+    margin-left: 10px;
     border-radius: 5px;
-    background-color: aqua;
+    color: black;
+    background-color: antiquewhite;
     cursor: pointer;
 }
 
@@ -59,6 +70,7 @@
 }
 
 .inputGroup select {
+    border-radius: 10px;
     padding: 5px;
     background-color: transparent;
     color: aliceblue;
@@ -67,7 +79,12 @@
 option {
     padding: 5px;
     background-color: transparent;
-    color: aliceblue;
+    color: rgb(0, 0, 0);
+}
+option:hover {
+    padding: 5px;
+    background-color: black;
+    color: rgb(255, 255, 255);
 }
 
 .inputGroup div {
@@ -182,4 +199,3 @@ option {
     background-color: rgb(126, 196, 218);
     color: rgb(0, 0, 0);
 }
-

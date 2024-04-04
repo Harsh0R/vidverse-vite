@@ -4,18 +4,25 @@ import { VidverseContext } from '../../Context/VidverseContext'
 import { Link } from 'react-router-dom'
 import Style from './SubscriptionUser.module.css'
 
-const SubscriptionUser = () => {
+const SubscriptionUser = ({ context }) => {
 
     const [allUserData, setAllUserData] = useState([])
-    const { registeredUser, getCreators } = useContext(VidverseContext)
+    const { registeredUser, getCreators, getSubs } = useContext(VidverseContext)
     const [rnum, setRnum] = useState();
     const Rnum = Math.floor((Math.random() * 9) + 1);
 
     const fetchAllUserData = async () => {
-        const allUser = await getCreators();
-        console.log("All registered user data -->>>", allUser);
+        if (context !== '') {
+            console.log("Context ==>", context);
+            const allUser = await getSubs(context);
+            console.log("Get subs ==> ", allUser);
+            setAllUserData(allUser);
+        } else {
+            const allUser = await getCreators();
+            setAllUserData(allUser);
+        }
+        // console.log("All registered user data -->>>", allUser);
         setRnum(Rnum);
-        setAllUserData(allUser);
     }
 
     useEffect(() => {
@@ -24,13 +31,13 @@ const SubscriptionUser = () => {
 
     return (<div className={Style.container}>
         {
-            allUserData.length>0 ? (
+            allUserData.length > 0 ? (
                 <div className={Style.inContainer}>
                     {allUserData.map((user, index) => (
                         <div className={Style.userData} key={index}>
                             <Link to={`/creator/${user}`}>
-                            <img src={imgs[`image${(rnum + index)%10}`]} alt="user Img" width={50} />
-                             <div className={Style.nameAndAcc}>
+                                <img src={imgs[`image${(rnum + index) % 10}`]} alt="user Img" width={50} />
+                                <div className={Style.nameAndAcc}>
                                     {/* Acc<div>{user}</div> */}
                                     <div>{(user).slice(0, 6)}...{(user).slice(-4)}</div>
                                 </div>
@@ -42,9 +49,19 @@ const SubscriptionUser = () => {
                 </div>
             )
                 : (
-                    <p>
-                        You have not subscribe any creator.
-                    </p>
+                    <div>
+                        {context ? (
+                            <p>
+                                You have no subscriber.
+                            </p>
+                        ) : (
+                            <p>
+                                You have not subscribe any creator.
+                            </p>
+
+                        )
+                        }
+                    </div>
                 )
         }
     </div>

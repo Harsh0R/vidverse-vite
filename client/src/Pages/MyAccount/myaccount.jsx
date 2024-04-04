@@ -5,11 +5,13 @@ import Error from '../../Components/Error/Error.jsx'
 import Style from "./myaccount.module.css";
 import { useNavigate } from "react-router-dom";
 import Loader from '../../Components/Loader/Loader.jsx';
-
+import VideoCard from "../../Components/VideoCard/VideoCard.jsx"
+import SubscriptionUser from '../../Components/SubscriptionUser/SubscriptionUser.jsx';
 const MyAccount = () => {
 
   const { allVideo, uploadVideos, account, allMyVideos, userName } = useContext(VidverseContext);
-  const [toggle, setToggle] = useState('');
+  const [toggleVid, setToggleVid] = useState(false);
+  const [toggleSub, setToggleSub] = useState(false);
   const [videoName, setVideoName] = useState('');
   const [videoDescription, setVideoDescription] = useState('');
   const [uploadedVid, setUploadedVid] = useState([]);
@@ -17,7 +19,7 @@ const MyAccount = () => {
   const [selectedFile, setSelectedFile] = useState();
   const [error, setError] = useState('')
   const [cid, setCid] = useState();
-  const [loading, setLoading] = useState(false); // Added loading state
+  const [loading, setLoading] = useState(false);
   const changeHandler = (event) => {
     setSelectedFile(event.target.files[0]);
   };
@@ -94,7 +96,6 @@ const MyAccount = () => {
   const HandleLivestream = async () => {
     if (userName) {
       let path = `/livestream`;
-      setToggle('livestream')
       navigate(path);
     } else {
       // let path = `/register`;
@@ -102,11 +103,9 @@ const MyAccount = () => {
       // navigate(path);
     }
   }
-
   const HandleChatRoom = async () => {
     if (userName) {
       let path = `/chatroom`;
-      setToggle('livestream')
       navigate(path);
     } else {
       // let path = `/register`;
@@ -114,6 +113,23 @@ const MyAccount = () => {
       // navigate(path);
     }
   }
+  const HandleUploadVid = async () => {
+    if (userName) {
+        setToggleVid(!toggleVid) 
+    } else {
+      setError('Register First Then Upload')
+    }
+  }
+  const HandleShowMySubs = async () => {
+    if (userName) {
+      setToggleSub(!toggleSub)
+    } else {
+      // let path = `/register`;
+      setError('Register First Then Upload')
+      // navigate(path);
+    }
+  }
+
 
   return (
     <div className={Style.myAccountContainer}>
@@ -121,17 +137,20 @@ const MyAccount = () => {
       <h2 className={Style.heading1}>My Account : {account}</h2>
       {!loading && (
         <>
-          <button className={`${Style.listgroupitem} ${toggle === 'videos' ? Style.active : Style.notActive}`} onClick={() => { userName !== '' ? setToggle('videos') : setError('Register First Then Upload') }}>
+          <button className={`${Style.listgroupitem} ${toggleVid ? Style.active : Style.notActive}`} onClick={HandleUploadVid}>
             Upload Videos
           </button>
-          <button className={`${Style.listgroupitem} ${toggle === 'livestream' ? Style.active : Style.notActive}`} onClick={HandleLivestream}>
+          <button className={`${Style.notActive} `} onClick={HandleLivestream}>
             Create LiveStream
           </button>
-          <button className={`${Style.listgroupitem} ${toggle === 'livestream' ? Style.active : Style.notActive}`} onClick={HandleChatRoom} >
+          <button className={`${Style.notActive}`} onClick={HandleChatRoom} >
             Create ChatRoom
           </button>
+          <button className={`${Style.listgroupitem} ${toggleSub ? Style.active : Style.notActive}`} onClick={HandleShowMySubs} >
+            My Subs
+          </button>
 
-          {toggle == 'videos' &&
+          {toggleVid &&
             (
               <div className={Style.uploadVidBlock}>
                 <h2 className={Style.heading}>Upload New Video</h2>
@@ -183,55 +202,60 @@ const MyAccount = () => {
                 </div>
               </div>
             )}
+          {
+            toggleSub && (
+              <>
+                <SubscriptionUser context={account} />
+              </>
+            )
+          }
 
           <div className={Style.uploadedVidBlock}>
-
             <h2 className={Style.heading}>Uploaded Videos</h2>
-
             <div className={Style.listGroup}>
               {uploadedVid.map((video, index) => (
-                <div key={index} className={Style.listGroupItem}>
-                  <Link to={`/watch/${video.VideoPlatform_id}`}>
-                    <div className={Style.videoDetails}>
-                      {video.ipfsHash && (
-                        <>
-                          <video
-                            className={Style.imgFluid}
-                            controls
-                            src={`https://${VITE_GATEWAY_URL}/ipfs/${video.ipfsHash}`}
-                            poster={`https://${VITE_GATEWAY_URL}/ipfs/${video.ipfsHash}`}
-                            type="video/mp4"
-                          />
-                        </>
-                      )}
-                      <h3 className={Style.videoTitle}>{video.title}</h3>
-                      <div className={Style.username}>{video.username}
-                        <div className={Style.likeDislike}>
-                          <small className={Style.likes}>
-                            Like : {video.likes}</small>
-                          <small className={Style.dislikes}>Dislike : {video.dislikes}</small>
-                        </div>
-                      </div>
-                      <small className={Style.videoDescription}>des = {video.description}</small>
-                      <small className={Style.genre}>Genre = {video.genre}</small>
-                      <p className={Style.cardText}>Tip Amount: {(video.totalTipAmount) / 10 ** 18} NVT</p>
-                      {/* <small className={Style.videoCID}>CID: {video.ipfsHash}
-                  <br />
-                  https://{VITE_GATEWAY_URL}/ipfs/${video.ipfsHash}
-                </small> */}
-                    </div>
-                  </Link>
-                  {/* <form
-                onSubmit={(e) => {
-                  e.preventDefault();
-                  const tipAmount = e.target.elements.totalTipAmount.value;
-                  handleTip(video.VideoPlatform_id, tipAmount);
-                }}
-              ></form> */}
-                </div>
+                <VideoCard key={index} video={video} />
+                //   <div key={index} className={Style.listGroupItem}>
+                //     <Link to={`/watch/${video.VideoPlatform_id}`}>
+                //       <div className={Style.videoDetails}>
+                //         {video.ipfsHash && (
+                //           <>
+                //             <video
+                //               className={Style.imgFluid}
+                //               controls
+                //               src={`https://${VITE_GATEWAY_URL}/ipfs/${video.ipfsHash}`}
+                //               poster={`https://${VITE_GATEWAY_URL}/ipfs/${video.ipfsHash}`}
+                //               type="video/mp4"
+                //             />
+                //           </>
+                //         )}
+                //         <h3 className={Style.videoTitle}>{video.title}</h3>
+                //         <div className={Style.username}>{video.username}
+                //           <div className={Style.likeDislike}>
+                //             <small className={Style.likes}>
+                //               Like : {video.likes}</small>
+                //             <small className={Style.dislikes}>Dislike : {video.dislikes}</small>
+                //           </div>
+                //         </div>
+                //         <small className={Style.videoDescription}>des = {video.description}</small>
+                //         <small className={Style.genre}>Genre = {video.genre}</small>
+                //         <p className={Style.cardText}>Tip Amount: {(video.totalTipAmount) / 10 ** 18} NVT</p>
+                //       </div>
+                //         <small className={Style.videoCID}>CID: {video.ipfsHash}
+                //     <br />
+                //     https://{VITE_GATEWAY_URL}/ipfs/${video.ipfsHash}
+                //   </small>
+                //     </Link>
+                //     <form
+                //   onSubmit={(e) => {
+                //     e.preventDefault();
+                //     const tipAmount = e.target.elements.totalTipAmount.value;
+                //     handleTip(video.VideoPlatform_id, tipAmount);
+                //   }}
+                // ></form>
+                //   </div>
               ))}
             </div>
-
           </div>
         </>
       )}

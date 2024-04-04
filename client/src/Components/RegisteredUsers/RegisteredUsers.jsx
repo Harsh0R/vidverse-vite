@@ -30,10 +30,10 @@ const RegisteredUsers = () => {
             {allUserData.map((user, index) => (
               <div className={Style.userData}  key={index}>
                 <Link to={`/creator/${user.userAddress}`}>
-                  <img src={imgs[`image${((rnum + index)%10)}`]} alt="user Img" width={50} />
+                  <img src={imgs[`image${((rnum + index)%9)}`]} alt="user Img" width={50} />
                   <div className={Style.nameAndAcc}>
-                    <div>User Name : {user.username}</div>
-                    <div>User Account : {(user.userAddress).slice(0, 6)}...{(user.userAddress).slice(-4)}</div>
+                    <div>{user.username}</div>
+                    <div> {(user.userAddress).slice(0, 6)}...{(user.userAddress).slice(-4)}</div>
                   </div>
                 </Link>
               </div>

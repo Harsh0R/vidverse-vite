@@ -13,6 +13,7 @@ const Home = () => {
   const { allVideo} = useContext(VidverseContext);
   const [contentToShow, setContentToShow] = useState('videos');
   const [videos, setVideos] = useState([]);
+  const [context, setContext] = useState('')
   const [livepeerClient, setLivepeerClient] = useState();
 
   useEffect(() => {
@@ -66,7 +67,7 @@ const Home = () => {
         )}
         {contentToShow === 'Subscriptions' && (
           <>
-            <SubscriptionUser/>
+            <SubscriptionUser context={''}/>
           </>
         )}
       </div>

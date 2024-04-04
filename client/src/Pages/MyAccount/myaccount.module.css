@@ -26,12 +26,12 @@
 
 
 .listGroup {
-  /* border: 2px solid wheat; */
-  display: flex;
+  display: grid;
+  gap: 10px;
+  grid-template-columns: repeat(5, 1fr);
 }
 
 .listGroupItem {
-  width: 20%;
   height: auto;
   background-color: #222222;
   margin: 5px;
