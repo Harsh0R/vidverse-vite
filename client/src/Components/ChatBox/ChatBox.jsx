@@ -152,6 +152,7 @@ const ChatBox = ({ chat , name1 }) => {
       console.error("Nickname or message text cannot be empty");
       return;
     }
+    console.log("mess ==> " , messageObj);
     messageObj.sendMessage({ messageText: messageText, nick: nick });
     setMessageText(""); // Clear the message text input after sending
   };

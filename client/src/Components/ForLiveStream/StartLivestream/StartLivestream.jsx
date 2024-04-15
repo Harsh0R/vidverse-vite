@@ -6,13 +6,14 @@ import { VidverseContext } from '../../../Context/VidverseContext';
 import Error from '../../Error/Error';
 import imgs from '../../../assets/imgs';
 import { Link } from 'react-router-dom';
+import ChatRoomCompo from '../../ChatRoomCompo/ChatRoomCompo';
 
 const LivestreamCom = () => {
     const [streamName, setStreamName] = useState('');
     const [error, setError] = useState('');
     const [activeStream, setActiveStream] = useState(null);
     const [vidGenre, setVidGenre] = useState("");
-    const { createLiveStream, getAllLiveStreamData,getAllMyLiveStreamData, stopStreamByStreamID, account, userName } = useContext(VidverseContext);
+    const { createLiveStream, getAllLiveStreamData, getAllMyLiveStreamData, stopStreamByStreamID, account, userName } = useContext(VidverseContext);
 
     const [rnum, setRnum] = useState();
     const Rnum = Math.floor(Math.random() * 9);
@@ -101,7 +102,7 @@ const LivestreamCom = () => {
 
     return (
         <div className={Style.container}>
-            <div className={Style.container1}>
+            {!activeStream && <div className={Style.container1}>
                 <h3 className={Style.streamName}>Stream Name : </h3>
                 <input
                     className={Style.strInp}
@@ -130,7 +131,7 @@ const LivestreamCom = () => {
                     {status === "loading" ? 'Creating Stream...' : 'Create Stream'}
                 </button>
 
-            </div>
+            </div>}
             {createdStream && (
                 <button className={Style.startStream} onClick={updateInContract} disabled={!createdStream}>
                     Start Stream
@@ -142,11 +143,13 @@ const LivestreamCom = () => {
                 <>
                     <div className={Style.broadcastBox}>
                         <div className={Style.streamBox}>
-                            <Broadcast streamKey={activeStream.streamKey} onError={console.error} />
+                            <div className={Style.broadcastBox}>
+                                <Broadcast streamKey={activeStream.streamKey} onError={console.error} />
+                            </div>
                             <div className={Style.nameAndTip}>
                                 <div className={Style.cardTitle}>{activeStream.stramName}</div>
                                 <div className={Style.tipForm}>
-                                    {/* <form
+                                    <form
                                         onSubmit={(e) => {
                                             e.preventDefault();
                                             const tipAmount = e.target.elements.tipAmount.value;
@@ -164,7 +167,7 @@ const LivestreamCom = () => {
                                                 Give Tip
                                             </button>
                                         </div>
-                                    </form> */}
+                                    </form>
                                 </div>
                             </div>
 
@@ -194,11 +197,13 @@ const LivestreamCom = () => {
 
                             <p>Playback ID : {activeStream.playBackId}</p>
                             <p>Genre : {activeStream.genre}</p>
-                            <button className="btn btn-danger" onClick={handleStopStream}>
+                            <button className={Style.stopBtn} onClick={handleStopStream}>
                                 Stop Stream
                             </button>
                         </div>
-                        <ChatBox chat={activeStream.stramName} name1={userName} />
+                        {/* <ChatBox chat={activeStream.stramName} name1={userName} /> */}
+                        <ChatRoomCompo chatTopic={activeStream.stramName} />
+
                     </div>
                 </>
             )}

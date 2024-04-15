@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { Player } from "@livepeer/react";
 import ChatBox from "../ChatBox/ChatBox";
 import { VidverseContext } from "../../Context/VidverseContext";
+import StreamCard from "../StreamCard/StreamCard";
 
 const Webplayer = () => {
   const [liveStreams, setLiveStreams] = useState([]);
@@ -27,8 +28,8 @@ const Webplayer = () => {
         <div>
           {liveStreams.map((stream, index) => (
             <div key={index}>
-              <div style={{ width: "20%" }}>
-                <p>Stream Name: {stream.stramName}</p> {/* Note the typo 'stramName' might be a mistake. */}
+              {/* <div style={{ width: "20%" }}>
+                <p>Stream Name: {stream.stramName}</p> 
                 <p>Owner: {stream.owner}</p>
                 <p>Playback ID: {stream.playBackId}</p>
 
@@ -49,8 +50,8 @@ const Webplayer = () => {
                   />
                   <ChatBox chat={stream.stramName} name1={userName}></ChatBox>
                 </>
-              </div>
-
+              </div> */}
+              <StreamCard stream={stream}/>
             </div>
 
           ))}

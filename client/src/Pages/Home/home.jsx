@@ -10,7 +10,7 @@ import { apiKey } from '../../Context/constants';
 import SubscriptionUser from '../../Components/SubscriptionUser/SubscriptionUser';
 
 const Home = () => {
-  const { allVideo} = useContext(VidverseContext);
+  const { allVideo } = useContext(VidverseContext);
   const [contentToShow, setContentToShow] = useState('videos');
   const [videos, setVideos] = useState([]);
   const [context, setContext] = useState('')
@@ -57,17 +57,19 @@ const Home = () => {
         )}
         {contentToShow === 'livestream' && (
           <LivepeerConfig client={livepeerClient}>
-            <Webplayer />
+            <div className={styles.videoGrid}>
+              <Webplayer />
+            </div>
           </LivepeerConfig>
         )}
         {contentToShow === 'registeredUsers' && (
           <>
-            <RegisteredUsers/>
+            <RegisteredUsers />
           </>
         )}
         {contentToShow === 'Subscriptions' && (
           <>
-            <SubscriptionUser context={''}/>
+            <SubscriptionUser context={''} />
           </>
         )}
       </div>

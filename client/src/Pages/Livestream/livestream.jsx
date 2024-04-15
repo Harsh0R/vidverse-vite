@@ -14,7 +14,7 @@ const Livestream = () => {
   return (
     <div className={Style.container}>
       <button onClick={handleBack} className={Style.backArrow}> {`<`}--- Back</button>
-      <StreamStarterFile></StreamStarterFile>
+      <StreamStarterFile/>
     </div>
   )
 }

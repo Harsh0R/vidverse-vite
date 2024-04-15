@@ -67,15 +67,15 @@ const VideoChat = () => {
 
 
     const startWebcam = async () => {
-
+        console.log("Run");
         const stream = await navigator.mediaDevices.getUserMedia({
             video: true,
             audio: true,
         });
         setLocalStream(stream);
         setRemoteStream(new MediaStream());
-
-
+        
+        
         if (!localStream || !remoteStream) {
             console.log(`local ${localStream} and remote ${remoteStream}`);
             console.warn("Local or remote stream is not set.");
@@ -84,22 +84,23 @@ const VideoChat = () => {
             return;
         }
         // console.log(`out loop local ${localStream} and remote ${remoteStream}`);
-
+        
         stream.getTracks().forEach((track) => {
             pc.addTrack(track, stream);
         });
-
+        
         pc.ontrack = (event) => {
             event.streams[0].getTracks().forEach((track) => {
                 remoteStream.addTrack(track);
             });
         };
-
+        
         webcamVideo.current.srcObject = stream;
         remoteVideo.current.srcObject = remoteStream;
-
+        
         setStartFlag(false);
-
+        
+        console.log("Running");
     };
 
     const createCall = async () => {

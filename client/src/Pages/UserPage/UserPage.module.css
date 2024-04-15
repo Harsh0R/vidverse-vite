@@ -10,8 +10,19 @@
 .joinRoomBtn {
     color: black;
 }
+
 .joinRoomBtn:hover {
-    background-color:rgb(255, 217, 168);
+    background-color: rgb(255, 217, 168);
+}
+
+.sendButton {
+    margin: 10px;
+    background-color: antiquewhite;
+    color: black;
+}
+
+.sendButton:hover {
+    background-color: rgb(255, 208, 146);
 }
 
 .card {

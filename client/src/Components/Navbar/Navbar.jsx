@@ -42,6 +42,7 @@ const Navbar = () => {
       // console.log(Rnum);
       setRnum(Rnum);
       const bal = await getBalance(account);
+      console.log("Bal ==> " , bal);
       setBalance(bal)
     }
   }

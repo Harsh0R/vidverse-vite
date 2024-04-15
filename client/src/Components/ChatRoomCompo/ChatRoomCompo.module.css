@@ -9,7 +9,14 @@
     color: #333;
     box-shadow: 0 4px 6px rgba(0,0,0,0.1);
   }
-  
+  .sendButton{
+    margin: 0 10px;
+    background-color: antiquewhite;
+    color: black;
+  }
+  .sendButton:hover{
+    background-color: rgb(255, 208, 146);
+  }
   .chat-body {
     flex-grow: 1;
     margin-bottom: 20px;

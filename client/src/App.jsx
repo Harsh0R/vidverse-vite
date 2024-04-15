@@ -11,6 +11,7 @@ import WatchVideos from './Pages/WatchVideos/WatchVideos.jsx';
 import UserPage from './Pages/UserPage/UserPage.jsx';
 import ChatRoom from './Pages/ChatRoom/ChatRoom.jsx';
 import VideoChat from './Components/VideoChat/VideoChat.jsx';
+import WatchStream from './Pages/WatchStream/WatchStream.jsx';
 
 
 function App() {
@@ -36,6 +37,10 @@ function App() {
             <Route
               path="/creator/:id"
               element={<UserPage />}
+            />
+            <Route
+              path="/WatchStream/:id"
+              element={<WatchStream />}
             />
           </Routes>
         </Router>

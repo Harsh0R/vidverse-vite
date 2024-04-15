@@ -58,26 +58,17 @@
     background-color: antiquewhite;
     cursor: pointer;
 }
-.streamBtn:hover {
-    background-color: rgb(255, 215, 162);
-    cursor: pointer;
-}
 
 .startStream {
     cursor: pointer;
     font-weight: bolder;
     padding: 10px;
-    color: black;
     border-radius: 5px;
     background-color: antiquewhite;
 }
-.startStream:hover {
-    cursor: pointer;
-    background-color: rgb(255, 215, 162);
-}
 
 .stopBtn {
-    background-color: rgb(252, 220, 178);
+    background-color: antiquewhite;
     color: black;
 }
 

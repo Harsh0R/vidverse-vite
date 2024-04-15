@@ -22,9 +22,12 @@ export const VidverseProvider = ({ children }) => {
 
   const config = {
     privateKey: "0xf8610ba275562cbc18233acbc6b0769c943c027ef50610002633de5814e1174d",
-    biconomyPaymasterApiKey: "zk3bMIEHV.caed5756-11fe-449d-954e-5468df49a9a1",
-    bundlerUrl: "https://bundler.biconomy.io/api/v2/80001/nJPK7B3ru.dd7f7861-190d-41bd-af80-6877f74b8f44",
-    rpcUrl: "https://rpc-mumbai.polygon.technology/",
+    // biconomyPaymasterApiKey: "zk3bMIEHV.caed5756-11fe-449d-954e-5468df49a9a1",
+    biconomyPaymasterApiKey: "7f93JnNl8.448a3e6e-ea0b-4a12-a0cd-b72d065650c5",
+    // bundlerUrl: "https://bundler.biconomy.io/api/v2/80001/nJPK7B3ru.dd7f7861-190d-41bd-af80-6877f74b8f44",
+    bundlerUrl: "https://bundler.biconomy.io/api/v2/80002/nJPK7B3ru.dd7f7861-190d-41bd-af80-6877f74b8f44",
+    // rpcUrl: "https://rpc-mumbai.polygon.technology/",
+    rpcUrl: "https://rpc-amoy.polygon.technology/",
   };
 
   // let provider = new ethers.providers.JsonRpcProvider(config.rpcUrl);
@@ -37,7 +40,7 @@ export const VidverseProvider = ({ children }) => {
   const [chatRoomName, setChatRoomName] = useState('')
 
   const client = createClient({
-    url: 'https://api.studio.thegraph.com/query/56822/vidversegraph/v0.0.48',
+    url: 'https://api.studio.thegraph.com/query/56822/vidversegraph/0.0.49',
   });
 
   useEffect(() => {
@@ -66,12 +69,13 @@ export const VidverseProvider = ({ children }) => {
 
     initializeBlockchainConnections();
 
+    window.ethereum.removeListener('chainChanged', window.location.reload);
+    window.ethereum.removeListener('accountsChanged', window.location.reload);
     return () => {
-      window.ethereum.removeListener('chainChanged', window.location.reload);
-      window.ethereum.removeListener('accountsChanged', window.location.reload);
     };
 
   }, []);
+
 
   const connectToWallet = async () => {
     const account1 = await connectWallet()
@@ -79,12 +83,11 @@ export const VidverseProvider = ({ children }) => {
   }
 
 
-
   const allVideo = async () => {
     const query = `{
       videoDatas {
-        totalTipAmount
         username
+        totalTipAmount
         title
         owner
         likes
@@ -98,6 +101,7 @@ export const VidverseProvider = ({ children }) => {
 
     try {
       const result = await client.query(query).toPromise();
+      console.log("result ===> " , result);
       if (result.data) {
         return result.data.videoDatas;
       }
@@ -155,6 +159,33 @@ export const VidverseProvider = ({ children }) => {
 
     } catch (error) {
       console.error('Error fetching stake data:', error);
+    }
+  };
+  const getStream = async (streamId) => {
+    const query = `{
+      liveStreamDatas(where: {VideoPlatform_id: "${streamId}"}) {
+        streamKey
+        streamID
+        totalTipAmount
+        username
+        stramName
+        status
+        playBackId
+        owner
+        genre
+        description
+        VideoPlatform_id
+      }
+    }`;
+
+    try {
+      const result = await client.query(query).toPromise();
+      if (result.data) {
+        return result.data.liveStreamDatas;
+      }
+
+    } catch (error) {
+      console.error('Error fetching Stream data:', error);
     }
   };
   const getAllLiveStreamData = async () => {
@@ -348,7 +379,7 @@ export const VidverseProvider = ({ children }) => {
         creator
       }
     }`;
-    console.log("Account in get Creator => " , account1);
+    console.log("Account in get Creator => ", account1);
     const unsubscribeQuery = `{
       unsubscribedFromCreators(orderBy: creator, where: {subscriber: "${account1}"}) {
         creator
@@ -386,6 +417,7 @@ export const VidverseProvider = ({ children }) => {
       if (!connectedAccount) throw new Error("Wallet not connected");
       console.log("Addres==", account1);
       const contract = await connectingWithContract();
+      // await contract.uploadVideo(account1 , name , desc , cid , genre)
       const uploadVideoTxData = contract.interface.encodeFunctionData("uploadVideo", [account1, name, desc, cid, genre]);
 
       const uploadVideoTx = {
@@ -478,25 +510,26 @@ export const VidverseProvider = ({ children }) => {
       console.error("Error while tipping video owner", error);
     }
   };
-  const registerUser = async (username, useAddre) => {
+  const registerUser = async (username, userAddre) => {
     try {
       // const _amount = await toWei(tipAmount);
       const contract = await connectingWithContract();
 
-      // console.log("Tip data === ", _videoId, "Amo =", _amount, "OW =>", useAddre);
-      const tipVideoOwnerTxData = contract.interface.encodeFunctionData("registerUser", [username, useAddre]);
+      await contract.registerUser(username , userAddre)
+      // console.log("usernamr =", username, "userAddress =>", userAddre);
+      // const tipVideoOwnerTxData = contract.interface.encodeFunctionData("registerUser", [username, userAddre]);
 
-      const tipVideoOwnerTx = {
-        to: smartContractAddress,
-        data: tipVideoOwnerTxData,
-      };
+      // const tipVideoOwnerTx = {
+      //   to: smartContractAddress,
+      //   data: tipVideoOwnerTxData,
+      // };
 
-      const tipVideoOwnerResponse = await smartWallet.sendTransaction(tipVideoOwnerTx, {
-        paymasterServiceData: { mode: PaymasterMode.SPONSORED },
-      });
+      // const tipVideoOwnerResponse = await smartWallet.sendTransaction(tipVideoOwnerTx, {
+      //   paymasterServiceData: { mode: PaymasterMode.SPONSORED },
+      // });
 
-      const tipVideoOwnerTxHash = await tipVideoOwnerResponse.waitForTxHash();
-      console.log("Register User Transaction Hash", tipVideoOwnerTxHash);
+      // const tipVideoOwnerTxHash = await tipVideoOwnerResponse.waitForTxHash();
+      // console.log("Register User Transaction Hash", tipVideoOwnerTxHash);
     } catch (error) {
       console.error("Error while Register User", error);
     }
@@ -507,7 +540,7 @@ export const VidverseProvider = ({ children }) => {
       console.log("Tip data === ", username, "Amo =", userAddre, "OW =>", mychatroom);
       const contract = await connectingWithContract();
       // await contract.createChatRoom(username, userAddre, mychatroom)
-      const tipVideoOwnerTxData = contract.interface.encodeFunctionData("createChatRoom", [username, userAddre , mychatroom]);
+      const tipVideoOwnerTxData = contract.interface.encodeFunctionData("createChatRoom", [username, userAddre, mychatroom]);
 
       const tipVideoOwnerTx = {
         to: smartContractAddress,
@@ -527,7 +560,7 @@ export const VidverseProvider = ({ children }) => {
   const likeVideo = async (_videoId, account1 = account) => {
     try {
       const contract = await connectingWithContract();
-      console.log("Liked video Id => ", _videoId , " By => " , account1);
+      console.log("Liked video Id => ", _videoId, " By => ", account1);
       // await contract.likeVideo(_videoId , account1)
       const tipVideoOwnerTxData = contract.interface.encodeFunctionData("likeVideo", [_videoId, account1]);
 
@@ -654,16 +687,19 @@ export const VidverseProvider = ({ children }) => {
   const getBalance = async (address) => {
     try {
       const contractObj = await connectingWithContract();
+      console.log("contract in balancve == ", contractObj);
       const address1 = await contractObj.myToken();
+      console.log("address of Token == ", address1);
       const tokenContractObj = await tokenContract(address1);
       const balance = await tokenContractObj.balanceOf(address);
       const balEth = await toEth(balance);
       console.log("Token Balance at context = ", balEth);
       return balEth;
     } catch (error) {
-      console.error("Error accor Fetching balance .....😑");
+      console.error("Error accor Fetching balance .....😑😟");
     }
   }
+
   const toWei = async (amount) => {
     const toWie = ethers.utils.parseUnits(amount.toString());
     return toWie.toString();
@@ -709,6 +745,7 @@ export const VidverseProvider = ({ children }) => {
         isSubscrobeThisCreator,
         getSubs,
         getCreators,
+        getStream,
         // getAllActiveLiveStreams,
         // getMyActiveLiveStreams,
       }}
