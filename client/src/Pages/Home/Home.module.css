@@ -4,16 +4,13 @@
   background-color: #121212;
   color: #fff;
 }
-
 .sidebar {
   display: flex;
   justify-content: center;
   background-color: #000;
   padding: 20px;
 }
-
-.listgroupitem,
-.active {
+button {
   padding: 10px 15px;
   border: 2px solid antiquewhite;
   border-radius: 20px;
@@ -23,34 +20,55 @@
   background-color: #000;
   color: antiquewhite;
 }
-
-.active {
+button.notactive {
   background-color: antiquewhite;
   color: #000000;
 }
-
-.active:hover {
+.notActive{
+  color: black;
+}
+button.active {
   background-color: antiquewhite;
   color: #000000;
 }
-
-.notActive:hover {
+button:hover {
   background-color: antiquewhite;
   color: #000000;
 }
-
-.notActive {
-  margin: 10px;
-  background-color: rgba(250, 235, 215, 0.562);
-  color: #000000;
-}
-
 .videoGrid {
   display: grid;
   gap: 10px;
-  grid-template-columns: repeat(5, 1fr);
 }
-
+.videoCard {
+  background-color: #333;
+  padding: 20px;
+  border-radius: 10px;
+}
 .noVideos {
-  color: #ccc;
+  color: #000000;
+}
+@media screen and (min-width: 1200px) {
+  .videoGrid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+@media screen and (max-width: 1200px) {
+  .videoGrid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+@media screen and (max-width: 860px) {
+  .videoGrid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+@media screen and (max-width: 650px) {
+  .videoGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+@media screen and (max-width: 450px) {
+  .videoGrid {
+    grid-template-columns: 1fr;
+  }
 }

@@ -75,12 +75,14 @@ export const VidverseProvider = ({ children }) => {
     };
 
   }, []);
+  
 
 
   const connectToWallet = async () => {
     const account1 = await connectWallet()
     setAccount(account1);
   }
+
 
 
   const allVideo = async () => {
@@ -484,7 +486,7 @@ export const VidverseProvider = ({ children }) => {
       console.log("Stream Start Transaction Hash", uploadVideoTxHash);
       console.log("Stream created by:", connectedAccount);
     } catch (error) {
-      console.error("Error while Createing stream = ", error);
+      console.error("Error while stop stream = ", error);
     }
   };
   const tipVideoOwner = async (_videoId, tipAmount, useAddre = account) => {
@@ -515,21 +517,21 @@ export const VidverseProvider = ({ children }) => {
       // const _amount = await toWei(tipAmount);
       const contract = await connectingWithContract();
 
-      await contract.registerUser(username , userAddre)
-      // console.log("usernamr =", username, "userAddress =>", userAddre);
-      // const tipVideoOwnerTxData = contract.interface.encodeFunctionData("registerUser", [username, userAddre]);
+      // await contract.registerUser(username , userAddre)
+      console.log("usernamr =", username, "userAddress =>", userAddre);
+      const tipVideoOwnerTxData = contract.interface.encodeFunctionData("registerUser", [username, userAddre]);
 
-      // const tipVideoOwnerTx = {
-      //   to: smartContractAddress,
-      //   data: tipVideoOwnerTxData,
-      // };
+      const tipVideoOwnerTx = {
+        to: smartContractAddress,
+        data: tipVideoOwnerTxData,
+      };
 
-      // const tipVideoOwnerResponse = await smartWallet.sendTransaction(tipVideoOwnerTx, {
-      //   paymasterServiceData: { mode: PaymasterMode.SPONSORED },
-      // });
+      const tipVideoOwnerResponse = await smartWallet.sendTransaction(tipVideoOwnerTx, {
+        paymasterServiceData: { mode: PaymasterMode.SPONSORED },
+      });
 
-      // const tipVideoOwnerTxHash = await tipVideoOwnerResponse.waitForTxHash();
-      // console.log("Register User Transaction Hash", tipVideoOwnerTxHash);
+      const tipVideoOwnerTxHash = await tipVideoOwnerResponse.waitForTxHash();
+      console.log("Register User Transaction Hash", tipVideoOwnerTxHash);
     } catch (error) {
       console.error("Error while Register User", error);
     }

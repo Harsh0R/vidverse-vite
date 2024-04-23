@@ -29,7 +29,9 @@ const ChatRoomCompo = ({ chatTopic }) => {
     const ChatMessage = new protobuf.Type("ChatMessage")
         .add(new protobuf.Field("timestamp", 1, "uint64"))
         .add(new protobuf.Field("message", 2, "string"))
-        .add(new protobuf.Field("name", 3, "string")); 
+        .add(new protobuf.Field("name", 3, "string"));
+
+
     // Send the message using Light Push
     const { push } = useLightPush({ node, encoder });
 
@@ -40,11 +42,18 @@ const ChatRoomCompo = ({ chatTopic }) => {
     const { messages: filterMessages } = useFilterMessages({ node, decoder });
 
 
+    useEffect(() => {
+        setMessages(filterMessages.map((wakuMessage) => {
+            if (!wakuMessage.payload) return;
+            return ChatMessage.decode(wakuMessage.payload);
+        }));
+    }, [filterMessages]);
+
     // Render both past and new messages
     useEffect(() => {
         const allMessages = storeMessages.concat(filterMessages);
         const uniqueMessages = allMessages.reduce((acc, message) => {
-            const key = message.id || `${message.timestamp}-${message.payload}-${message.name}`; 
+            const key = message.id || `${message.timestamp}-${message.payload}-${message.name}`;
             if (!acc.has(key)) {
                 acc.set(key, message);
             }
@@ -107,8 +116,7 @@ const ChatRoomCompo = ({ chatTopic }) => {
                     value={inputMessage}
                     onChange={handleInputChange}
                     placeholder="Type your message..."
-                    className={Style.messageInput} // Add this class if you want to style the input separately
-                />
+                    className={Style.messageInput}                />
                 <button className={Style.sendButton} onClick={sendMessage}>Send</button>
             </div>
         </div>

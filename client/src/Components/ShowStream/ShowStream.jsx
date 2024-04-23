@@ -170,8 +170,8 @@ const ShowStream = ({ streamId }) => {
                 <p>Genre : {strData.genre}</p>
             
               </div>
-              {/* <ChatBox chat={strData.stramName} name1={userName} /> */}
-              <ChatRoomCompo chatTopic={strData.stramName}/>
+              <ChatBox chat={strData.stramName} name1={userName} />
+              {/* <ChatRoomCompo chatTopic={strData.stramName}/> */}
             </div>
           </>
         )}
