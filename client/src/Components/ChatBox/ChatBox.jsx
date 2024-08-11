@@ -36,12 +36,14 @@ const ChatBox = ({ chat , name1 }) => {
   
   async function fetchData() {
     try {
+      const messages = '';
       const context = await initWakuContext({
         contentTopic: CONTENT_TOPIC,
         onMessageReceived: messages
       });
       setMessageObj(context);
       sendMessageFunc = context;
+      console.log("Context======================> " , context);
       setStatus("Connected");
       setLocalPeerId(context.info.localPeerId1);
       setRemotePeerIds(context.info.remotePeerIds1);

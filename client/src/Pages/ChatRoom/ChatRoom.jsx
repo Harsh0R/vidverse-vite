@@ -10,7 +10,8 @@ const ChatRoom = () => {
 
     const [chatRoomTopic, setChatRoomTopic] = useState()
     const [flag, setFlag] = useState(false)
-    const { createChatRoom, userName, account, chatRoomName } = useContext(VidverseContext);
+    const [chatRoomName1, setChatRoomName1] = useState('')
+    const { createChatRoom, userName, account, chatRoomName,registeredUser } = useContext(VidverseContext);
 
 
     const NODE_OPTIONS = { defaultBootstrap: true };
@@ -19,6 +20,8 @@ const ChatRoom = () => {
         let path = `/myAccount`;
         navigate(path);
     }
+
+
 
 
     const handleCreateChatRoom = async () => {
@@ -50,11 +53,9 @@ const ChatRoom = () => {
                     <button className={Style.btn} onClick={handleCreateChatRoom}>Make Chat Room</button>
                 </>
                 ) : (
-                    <>
-                        <LightNodeProvider options={NODE_OPTIONS}>
-                            <ChatRoomCompo chatTopic={chatRoomName} />
-                        </LightNodeProvider>
-                    </>
+                    <LightNodeProvider options={NODE_OPTIONS}>
+                        <ChatRoomCompo chatTopic={chatRoomName} />
+                    </LightNodeProvider>
                 )
             }
 

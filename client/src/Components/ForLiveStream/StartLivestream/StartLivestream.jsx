@@ -201,8 +201,8 @@ const LivestreamCom = () => {
                                 Stop Stream
                             </button>
                         </div>
-                        {/* <ChatBox chat={activeStream.stramName} name1={userName} /> */}
-                        <ChatRoomCompo chatTopic={activeStream.stramName} />
+                        <ChatBox chat={activeStream.stramName} name1={userName} />
+                        {/* <ChatRoomCompo chatTopic={activeStream.stramName} /> */}
 
                     </div>
                 </>

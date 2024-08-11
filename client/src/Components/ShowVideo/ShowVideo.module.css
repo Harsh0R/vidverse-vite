@@ -83,6 +83,10 @@
     height: 60px;
 }
 
+.cardText{
+    color: aliceblue;
+}
+
 .subCount {
     font-weight: bolder;
     font-size: 12px;
