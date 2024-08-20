@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { VidverseContext } from '../../Context/VidverseContext';
-import { Link } from 'react-router-dom';
+import { PinataSDK } from "pinata";
 import Error from '../../Components/Error/Error.jsx'
 import Style from "./myaccount.module.css";
 import { useNavigate } from "react-router-dom";
@@ -47,9 +47,14 @@ const MyAccount = () => {
   }, [account, allVideo]);
 
 
-  const apiKeyOfPinata = 'e66bafa167cc3fd38bb6';
-  const apiSecretKeyOfPinata = 'bf1d6fad459aee057b4ec34a0c5b519c62f6c5953c252299cf09a097b2f7a7c4';
-  const VITE_PINATA_JWT = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySW5mb3JtYXRpb24iOnsiaWQiOiJkZGEwYTM0My04ODE1LTQ4MGItODY1MS1iYmEwZDM5NGJjNzAiLCJlbWFpbCI6ImhhcnNocmFkYWRpeWE5OTk5QGdtYWlsLmNvbSIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJwaW5fcG9saWN5Ijp7InJlZ2lvbnMiOlt7ImRlc2lyZWRSZXBsaWNhdGlvbkNvdW50IjoxLCJpZCI6IkZSQTEifSx7ImRlc2lyZWRSZXBsaWNhdGlvbkNvdW50IjoxLCJpZCI6Ik5ZQzEifV0sInZlcnNpb24iOjF9LCJtZmFfZW5hYmxlZCI6ZmFsc2UsInN0YXR1cyI6IkFDVElWRSJ9LCJhdXRoZW50aWNhdGlvblR5cGUiOiJzY29wZWRLZXkiLCJzY29wZWRLZXlLZXkiOiJlNjZiYWZhMTY3Y2MzZmQzOGJiNiIsInNjb3BlZEtleVNlY3JldCI6ImJmMWQ2ZmFkNDU5YWVlMDU3YjRlYzM0YTBjNWI1MTljNjJmNmM1OTUzYzI1MjI5OWNmMDlhMDk3YjJmN2E3YzQiLCJleHAiOjE3NTIxNDQzNjl9.oNE8shFnUWnvAajDe9koMZ9XdENgaglfXqQhHWenWJ4'
+  // const apiKeyOfPinata = 'e66bafa167cc3fd38bb6';
+  const apiKeyOfPinata = 'c81d0f1943ab6badfa87';
+
+  const apiSecretKeyOfPinata = '29cb9226b1caa0dfa4814ff1550f35044c4db94dd20e15e7195fb8eeff91f364';
+  // const apiSecretKeyOfPinata = 'bf1d6fad459aee057b4ec34a0c5b519c62f6c5953c252299cf09a097b2f7a7c4';
+
+  const VITE_PINATA_JWT = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySW5mb3JtYXRpb24iOnsiaWQiOiI1ZWZiMTNlMy0xNDdkLTQwZTUtYmUzMy03MWVmZjFkZTVkOTkiLCJlbWFpbCI6ImhhcnNocnJhZGFkaXlhQGdtYWlsLmNvbSIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJwaW5fcG9saWN5Ijp7InJlZ2lvbnMiOlt7ImRlc2lyZWRSZXBsaWNhdGlvbkNvdW50IjoxLCJpZCI6IkZSQTEifSx7ImRlc2lyZWRSZXBsaWNhdGlvbkNvdW50IjoxLCJpZCI6Ik5ZQzEifV0sInZlcnNpb24iOjF9LCJtZmFfZW5hYmxlZCI6ZmFsc2UsInN0YXR1cyI6IkFDVElWRSJ9LCJhdXRoZW50aWNhdGlvblR5cGUiOiJzY29wZWRLZXkiLCJzY29wZWRLZXlLZXkiOiJjODFkMGYxOTQzYWI2YmFkZmE4NyIsInNjb3BlZEtleVNlY3JldCI6IjI5Y2I5MjI2YjFjYWEwZGZhNDgxNGZmMTU1MGYzNTA0NGM0ZGI5NGRkMjBlMTVlNzE5NWZiOGVlZmY5MWYzNjQiLCJleHAiOjE3NTQ4MjYzNzN9.dkxFMb5O8vUWZq4dMUOAvnalMlXOhyru-ipzV2mi0ko'
+  // const VITE_PINATA_JWT = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySW5mb3JtYXRpb24iOnsiaWQiOiJkZGEwYTM0My04ODE1LTQ4MGItODY1MS1iYmEwZDM5NGJjNzAiLCJlbWFpbCI6ImhhcnNocmFkYWRpeWE5OTk5QGdtYWlsLmNvbSIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJwaW5fcG9saWN5Ijp7InJlZ2lvbnMiOlt7ImRlc2lyZWRSZXBsaWNhdGlvbkNvdW50IjoxLCJpZCI6IkZSQTEifSx7ImRlc2lyZWRSZXBsaWNhdGlvbkNvdW50IjoxLCJpZCI6Ik5ZQzEifV0sInZlcnNpb24iOjF9LCJtZmFfZW5hYmxlZCI6ZmFsc2UsInN0YXR1cyI6IkFDVElWRSJ9LCJhdXRoZW50aWNhdGlvblR5cGUiOiJzY29wZWRLZXkiLCJzY29wZWRLZXlLZXkiOiJlNjZiYWZhMTY3Y2MzZmQzOGJiNiIsInNjb3BlZEtleVNlY3JldCI6ImJmMWQ2ZmFkNDU5YWVlMDU3YjRlYzM0YTBjNWI1MTljNjJmNmM1OTUzYzI1MjI5OWNmMDlhMDk3YjJmN2E3YzQiLCJleHAiOjE3NTIxNDQzNjl9.oNE8shFnUWnvAajDe9koMZ9XdENgaglfXqQhHWenWJ4'
 
 
 
@@ -81,6 +86,10 @@ const MyAccount = () => {
           body: formData,
         }
       );
+
+      console.log("res ===>>> " , res);
+      
+
       const resData = await res.json();
       setCid(resData.IpfsHash)
       await uploadVideos(videoName, videoDescription, resData.IpfsHash, vidGenre);
